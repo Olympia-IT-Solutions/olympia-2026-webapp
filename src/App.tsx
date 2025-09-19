@@ -34,6 +34,7 @@ function App() {
       <div>
         <button onClick={() => changeLanguage('en')}>English</button>
         <button onClick={() => changeLanguage('fr')}>Français</button>
+        <button onClick={() => changeLanguage('it')}>Italiano</button>
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
