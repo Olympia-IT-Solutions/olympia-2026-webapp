@@ -67,8 +67,9 @@ export const NavBar = () => {
           py={5}
           fontWeight="bold"
           _hover={{ bg: '#006666' }}
+          onClick={() => navigate(`/${currentLang}/login`)}
         >
-          Registrieren
+          Login
         </Button>
 
         <Box position="relative">
