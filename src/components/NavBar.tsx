@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { HStack, Button, Text, Image, Box, Flex } from '@chakra-ui/react';
-import { FaChevronDown } from 'react-icons/fa';
+import { FaChevronDown, FaSun, FaMoon } from 'react-icons/fa';
 import logo from '../assets/milano-cortina-2026.gif';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router';
 import { getCurrentUser, logout } from '../logic/rights';
+import { useTheme } from '../logic/theme';
 
 // Styled-component for the main container
 const NavContainer = styled.nav`
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: var(--bg-color);
   border-radius: 50px;
   padding: 10px 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
@@ -31,6 +32,7 @@ export const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSportsOpen, setIsSportsOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(getCurrentUser());
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     // Aktualisiere den User-Status bei Änderungen (z.B. nach Login/Logout)
@@ -169,6 +171,20 @@ export const NavBar = () => {
             onClick={currentUser ? handleLogout : () => navigate(`/${currentLang}/login`)}
           >
             {currentUser ? 'Logout' : 'Login'}
+          </Button>
+
+          <Button
+            bg="transparent"
+            color={theme === 'light' ? '#003049' : 'white'}
+            borderRadius="full"
+            px={4}
+            py={2}
+            border="1px solid #eee"
+            boxShadow="sm"
+            _hover={{ borderColor: '#ccc' }}
+            onClick={toggleTheme}
+          >
+            {theme === 'light' ? <FaMoon size={16} /> : <FaSun size={16} />}
           </Button>
 
           <Box position="relative">

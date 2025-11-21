@@ -1,0 +1,21 @@
+/* Light theme (default) */
+:root {
+  --bg-color: rgba(255, 255, 255, 0.95);
+  --text-color: #003049;
+  --border-color: #eee;
+  --hover-border: #ccc;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --bg-color: rgba(0, 0, 0, 0.95);
+  --text-color: white;
+  --border-color: #444;
+  --hover-border: #666;
+}
+
+/* Apply to body or specific elements */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}

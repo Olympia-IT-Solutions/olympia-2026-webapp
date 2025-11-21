@@ -7,7 +7,7 @@ const PageContainer = styled.div`
   display: flex;
   height: 100vh;
   width: 100vw;
-  background-color: #003049;
+  background-color: #00313d;
 `;
 
 const ImageSection = styled.div`
@@ -28,7 +28,7 @@ const FormSection = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #003049;
+  background-color: #00313d;
   padding: 40px;
 `;
 
@@ -74,7 +74,7 @@ const Button = styled.button`
   width: 100%;
   padding: 12px 30px;
   background-color: white;
-  color: #003049;
+  color: #00313d;
   border: none;
   font-weight: bold;
   font-size: 1rem;
