@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import { login } from '../logic/rights';
 
 const PageContainer = styled.div`
   display: flex;
@@ -91,10 +92,16 @@ export function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate(`/${lang}/dashboard`);
+    const user = login(email, password);
+    if (user) {
+      navigate(`/${lang}/dashboard`);
+    } else {
+      setError('Ungültige Anmeldedaten');
+    }
   };
 
   return (
@@ -129,6 +136,7 @@ export function Login() {
 
             <Button type="submit">Weiter</Button>
           </form>
+          {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
         </FormContainer>
       </FormSection>
     </PageContainer>

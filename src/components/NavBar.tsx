@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { HStack, Button, Text, Image, Box, Flex } from '@chakra-ui/react';
 import { FaChevronDown } from 'react-icons/fa';
 import logo from '../assets/milano-cortina-2026.gif';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router';
+import { getCurrentUser, logout } from '../logic/rights';
 
 // Styled-component for the main container
 const NavContainer = styled.nav`
@@ -29,6 +30,20 @@ export const NavBar = () => {
   const { lang } = useParams<{ lang: string }>();
   const [isOpen, setIsOpen] = useState(false);
   const [isSportsOpen, setIsSportsOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(getCurrentUser());
+
+  useEffect(() => {
+    // Aktualisiere den User-Status bei Änderungen (z.B. nach Login/Logout)
+    const handleStorageChange = () => setCurrentUser(getCurrentUser());
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    setCurrentUser(null);
+    navigate(`/${lang}/login`);
+  };
 
   const currentLang = lang || i18n.language || 'de';
   
@@ -151,9 +166,9 @@ export const NavBar = () => {
             py={5}
             fontWeight="bold"
             _hover={{ bg: '#006666' }}
-            onClick={() => navigate(`/${currentLang}/login`)}
+            onClick={currentUser ? handleLogout : () => navigate(`/${currentLang}/login`)}
           >
-            Login
+            {currentUser ? 'Logout' : 'Login'}
           </Button>
 
           <Box position="relative">
