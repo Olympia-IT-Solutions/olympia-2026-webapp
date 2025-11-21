@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Routes, Route, useParams, Link, Navigate, Outlet } from 'react-router'
 import { NavBar } from './components/NavBar'
+import { Banner } from './components/Banner'
 import { Box } from '@chakra-ui/react'
 import { Login } from './pages/Login'
 import { Admin } from './pages/Admin'
@@ -19,6 +20,7 @@ function Layout() {
 
   return (
     <Box minH="100vh" bgGradient="linear(to-r, #003049, #007f80, #d62828)">
+      <Banner />
       <NavBar />
       <Outlet />
     </Box>
