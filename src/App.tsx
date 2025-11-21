@@ -1,13 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Routes, Route, useParams, Link, Navigate } from 'react-router-dom'
 
-function App() {
+function MainApp() {
   const { t, i18n } = useTranslation()
+  const { lang } = useParams<{ lang: string }>()
   const [count, setCount] = useState(0)
 
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng)
-  }
+  useEffect(() => {
+    if (lang) {
+      i18n.changeLanguage(lang)
+    }
+  }, [lang, i18n])
 
   return (
     <>
@@ -21,14 +25,24 @@ function App() {
         </p>
       </div>
       <div>
-        <button onClick={() => changeLanguage('en')}>English</button>
-        <button onClick={() => changeLanguage('fr')}>Français</button>
-        <button onClick={() => changeLanguage('it')}>Italiano</button>
+        <Link to="/en">English</Link>
+        <Link to="/fr">Français</Link>
+        <Link to="/it">Italiano</Link>
+        <Link to="/de">Deutsch</Link>
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
     </>
+  )
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/:lang" element={<MainApp />} />
+      <Route path="/" element={<Navigate to="/de" />} />
+    </Routes>
   )
 }
 
