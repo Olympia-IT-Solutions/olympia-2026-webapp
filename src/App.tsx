@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Routes, Route, useParams, Link, Navigate } from 'react-router-dom'
+import { Routes, Route, useParams, Link, Navigate } from 'react-router'
 
 function MainApp() {
   const { t, i18n } = useTranslation()
