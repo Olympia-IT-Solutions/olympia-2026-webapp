@@ -28,6 +28,7 @@ export const NavBar = () => {
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
   const [isOpen, setIsOpen] = useState(false);
+  const [isSportsOpen, setIsSportsOpen] = useState(false);
 
   const currentLang = lang || i18n.language || 'de';
   
@@ -36,6 +37,16 @@ export const NavBar = () => {
     en: 'English',
     fr: 'Français',
     it: 'Italiano',
+  };
+
+  const sports: Record<string, string> = {
+    biathlon: 'Biathlon',
+    bobsport: 'Bobsport',
+    curling: 'Curling',
+    eishockey: 'Eishockey',
+    eiskunstlauf: 'Eiskunstlauf',
+    skilanglauf: 'Skilanglauf',
+    skispringen: 'Skispringen',
   };
 
   const handleLanguageChange = (newLang: string) => {
@@ -57,71 +68,145 @@ export const NavBar = () => {
         />
       </Flex>
 
-      {/* Right Side: Actions */}
-      <HStack gap={3}>
-        <Button
-          bg="#007f80"
-          color="white"
-          borderRadius="full"
-          px={6}
-          py={5}
-          fontWeight="bold"
-          _hover={{ bg: '#006666' }}
-          onClick={() => navigate(`/${currentLang}/login`)}
-        >
-          Login
-        </Button>
+      {/* Center: Countries and Sports */}
+      <Flex align="center">
+        <HStack gap={3}>
+          <Button
+            bg="#007f80"
+            color="white"
+            borderRadius="full"
+            px={6}
+            py={5}
+            fontWeight="bold"
+            _hover={{ bg: '#006666' }}
+            onClick={() => navigate(`/${currentLang}/countries`)}
+          >
+            Länderübersicht
+          </Button>
 
-        <Box position="relative">
+          <Box position="relative">
             <HStack 
-                bg="white" 
-                borderRadius="full" 
-                px={4} 
-                py={2} 
-                cursor="pointer"
-                border="1px solid #eee"
-                boxShadow="sm"
-                _hover={{ borderColor: '#ccc' }}
-                onClick={() => setIsOpen(!isOpen)}
+              bg="#007f80"
+              color="white"
+              borderRadius="full" 
+              px={4} 
+              py={2} 
+              cursor="pointer"
+              border="1px solid #007f80"
+              boxShadow="sm"
+              _hover={{ bg: '#006666' }}
+              onClick={() => setIsSportsOpen(!isSportsOpen)}
             >
-                <Text fontWeight="bold" fontSize="sm" color="#003049">
-                    {languages[currentLang] || 'Deutsch'}
-                </Text>
-                <FaChevronDown size={10} color="#003049" />
+              <Text fontWeight="bold" fontSize="sm">
+                Sportarten
+              </Text>
+              <FaChevronDown size={10} />
             </HStack>
             
-            {isOpen && (
-                <Box
-                    position="absolute"
-                    top="100%"
-                    right="0"
-                    mt={2}
-                    bg="white"
-                    borderRadius="xl"
-                    boxShadow="lg"
+            {isSportsOpen && (
+              <Box
+                position="absolute"
+                top="100%"
+                left="0"
+                mt={2}
+                bg="white"
+                borderRadius="xl"
+                boxShadow="lg"
+                py={2}
+                minW="150px"
+                zIndex={200}
+                overflow="hidden"
+              >
+                {Object.entries(sports).map(([key, label]) => (
+                  <Box
+                    key={key}
+                    px={4}
                     py={2}
-                    minW="150px"
-                    zIndex={200}
-                    overflow="hidden"
-                >
-                    {Object.entries(languages).map(([code, label]) => (
-                        <Box
-                            key={code}
-                            px={4}
-                            py={2}
-                            cursor="pointer"
-                            _hover={{ bg: 'gray.50', color: '#007f80' }}
-                            onClick={() => handleLanguageChange(code)}
-                        >
-                            <Text fontSize="sm" fontWeight={currentLang === code ? 'bold' : 'normal'}>
-                                {label}
-                            </Text>
-                        </Box>
-                    ))}
-                </Box>
+                    cursor="pointer"
+                    _hover={{ bg: 'gray.50', color: '#007f80' }}
+                    onClick={() => {
+                      navigate(`/${currentLang}/${key}`);
+                      setIsSportsOpen(false);
+                    }}
+                  >
+                    <Text fontSize="sm">
+                      {label}
+                    </Text>
+                  </Box>
+                ))}
+              </Box>
             )}
-        </Box>
-      </HStack>
+          </Box>
+        </HStack>
+      </Flex>
+
+      {/* Right Side: Login and Language */}
+      <Flex align="center">
+        <HStack gap={3}>
+          <Button
+            bg="#007f80"
+            color="white"
+            borderRadius="full"
+            px={6}
+            py={5}
+            fontWeight="bold"
+            _hover={{ bg: '#006666' }}
+            onClick={() => navigate(`/${currentLang}/login`)}
+          >
+            Login
+          </Button>
+
+          <Box position="relative">
+              <HStack 
+                  bg="white" 
+                  borderRadius="full" 
+                  px={4} 
+                  py={2} 
+                  cursor="pointer"
+                  border="1px solid #eee"
+                  boxShadow="sm"
+                  _hover={{ borderColor: '#ccc' }}
+                  onClick={() => setIsOpen(!isOpen)}
+              >
+                  <Text fontWeight="bold" fontSize="sm" color="#003049">
+                      {languages[currentLang] || 'Deutsch'}
+                  </Text>
+                  <FaChevronDown size={10} color="#003049" />
+              </HStack>
+              
+              {isOpen && (
+                  <Box
+                      position="absolute"
+                      top="100%"
+                      right="0"
+                      mt={2}
+                      bg="white"
+                      borderRadius="xl"
+                      boxShadow="lg"
+                      py={2}
+                      minW="150px"
+                      zIndex={200}
+                      overflow="hidden"
+                  >
+                      {Object.entries(languages).map(([code, label]) => (
+                          <Box
+                              key={code}
+                              px={4}
+                              py={2}
+                              cursor="pointer"
+                              _hover={{ bg: 'gray.50', color: '#007f80' }}
+                              onClick={() => handleLanguageChange(code)}
+                          >
+                              <Text fontSize="sm" fontWeight={currentLang === code ? 'bold' : 'normal'}>
+                                  {label}
+                              </Text>
+                          </Box>
+                      ))}
+                  </Box>
+              )}
+          </Box>
+        </HStack>
+      </Flex>
     </NavContainer>
   );
 };

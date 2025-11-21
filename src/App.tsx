@@ -7,6 +7,14 @@ import { Box } from '@chakra-ui/react'
 import { Login } from './pages/Login'
 import { Admin } from './pages/Admin'
 import { Dashboard } from './pages/Dashboard'
+import { Countries } from './pages/Countries'
+import { Biathlon } from './pages/Biathlon'
+import { Bobsport } from './pages/Bobsport'
+import { Curling } from './pages/Curling'
+import { Eishockey } from './pages/Eishockey'
+import { Eiskunstlauf } from './pages/Eiskunstlauf'
+import { Skilanglauf } from './pages/Skilanglauf'
+import { Skispringen } from './pages/Skispringen'
 
 function Layout() {
   const { i18n } = useTranslation()
@@ -62,6 +70,14 @@ function App() {
         <Route index element={<Home />} />
         <Route path="admin" element={<Admin />} />
         <Route path="dashboard" element={<Dashboard />} />
+        <Route path="countries" element={<Countries />} />
+        <Route path="biathlon" element={<Biathlon />} />
+        <Route path="bobsport" element={<Bobsport />} />
+        <Route path="curling" element={<Curling />} />
+        <Route path="eishockey" element={<Eishockey />} />
+        <Route path="eiskunstlauf" element={<Eiskunstlauf />} />
+        <Route path="skilanglauf" element={<Skilanglauf />} />
+        <Route path="skispringen" element={<Skispringen />} />
       </Route>
       <Route path="/:lang/login" element={<Login />} />
       <Route path="/" element={<Navigate to="/de" />} />

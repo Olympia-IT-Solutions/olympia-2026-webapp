@@ -26,7 +26,7 @@ export const Banner = () => {
   return (
     <BannerContainer>
       <ContentWrapper>
-        <Text fontSize="sm">Milano Cortina 2026</Text>
+        <Text fontSize="sm">Olympische Winterspiele™ · 6. bis 22. Februar 2026 | Paralympische Winterspiele™ · 6. bis 15. März 2026</Text>
         <HStack gap={4}>
           <Button 
             size="xs" 
