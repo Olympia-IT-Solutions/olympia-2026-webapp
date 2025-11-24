@@ -82,6 +82,8 @@ export const NavBar = () => {
           height="60px" 
           objectFit="contain" 
           mr={8}
+          cursor="pointer"
+          onClick={() => navigate(`/${currentLang}`)}
         />
       </Flex>
 
