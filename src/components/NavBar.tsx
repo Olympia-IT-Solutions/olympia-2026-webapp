@@ -144,7 +144,7 @@ export const NavBar = () => {
                     cursor="pointer"
                     _hover={{ bg: 'gray.50', color: '#007f80' }}
                     onClick={() => {
-                      navigate(`/${currentLang}/${key}`);
+                      navigate(`/${currentLang}/sports/${key}`);
                       setIsSportsOpen(false);
                     }}
                   >
