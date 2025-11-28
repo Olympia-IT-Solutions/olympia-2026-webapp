@@ -18,9 +18,9 @@ export const Footer = () => {
         </Container>
 
         <Container maxW="container.xl">
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 5 }} spacing={8}>
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 5 }} gap={8}>
                 {/* Logo and App Links */}
-                <Stack spacing={6}>
+                <Stack gap={6}>
                     <Box>
                          <Image src={logo} alt="Milano Cortina 2026" maxW="120px" filter="brightness(0) invert(1)" />
                     </Box>
@@ -30,20 +30,20 @@ export const Footer = () => {
                     <Box>
                         <Text mb={2} fontSize="sm">Download the Official App</Text>
                         <Flex gap={2}>
-                            <Flex as="a" href="#" bg="black" p={2} borderRadius="md" align="center" gap={2} border="1px solid white" _hover={{ bg: 'gray.800' }}>
+                            <Link href="#" bg="black" p={2} borderRadius="md" alignItems="center" gap={2} border="1px solid white" _hover={{ bg: 'gray.800', textDecoration: 'none' }} display="flex">
                                 <Icon as={FaGooglePlay} boxSize={5} />
                                 <Box lineHeight="1">
                                     <Text fontSize="xs">GET IT ON</Text>
                                     <Text fontSize="sm" fontWeight="bold">Google Play</Text>
                                 </Box>
-                            </Flex>
-                            <Flex as="a" href="#" bg="black" p={2} borderRadius="md" align="center" gap={2} border="1px solid white" _hover={{ bg: 'gray.800' }}>
+                            </Link>
+                            <Link href="#" bg="black" p={2} borderRadius="md" alignItems="center" gap={2} border="1px solid white" _hover={{ bg: 'gray.800', textDecoration: 'none' }} display="flex">
                                 <Icon as={FaApple} boxSize={5} />
                                 <Box lineHeight="1">
                                     <Text fontSize="xs">Download on the</Text>
                                     <Text fontSize="sm" fontWeight="bold">App Store</Text>
                                 </Box>
-                            </Flex>
+                            </Link>
                         </Flex>
                     </Box>
                 </Stack>

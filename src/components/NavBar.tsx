@@ -5,7 +5,7 @@ import { FaChevronDown, FaSun, FaMoon } from 'react-icons/fa';
 import logo from '../assets/milano-cortina-2026.gif';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router';
-import { getCurrentUser, logout } from '../logic/rights';
+import { getCurrentUser, logout, Role } from '../logic/rights';
 import { useTheme } from '../logic/theme';
 
 // Styled-component for the main container
@@ -156,6 +156,36 @@ export const NavBar = () => {
               </Box>
             )}
           </Box>
+
+          {currentUser && (
+            <Button
+              bg="#007f80"
+              color="white"
+              borderRadius="full"
+              px={6}
+              py={5}
+              fontWeight="bold"
+              _hover={{ bg: '#006666' }}
+              onClick={() => navigate(`/${currentLang}/dashboard`)}
+            >
+              Dashboard
+            </Button>
+          )}
+
+          {currentUser?.role === Role.Admin && (
+            <Button
+              bg="#007f80"
+              color="white"
+              borderRadius="full"
+              px={6}
+              py={5}
+              fontWeight="bold"
+              _hover={{ bg: '#006666' }}
+              onClick={() => navigate(`/${currentLang}/admin`)}
+            >
+              Admin
+            </Button>
+          )}
         </HStack>
       </Flex>
 

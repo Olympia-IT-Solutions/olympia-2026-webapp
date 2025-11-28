@@ -64,6 +64,7 @@ export function login(email: string, password: string): User | null {
 
   if (user) {
     localStorage.setItem('currentUser', JSON.stringify(user));
+    window.dispatchEvent(new Event('storage'));
     DebugManager.log(`Benutzer ${email} eingeloggt mit Rolle ${user.role}`);
   }
 
@@ -101,5 +102,6 @@ export function isReferee(): boolean {
  */
 export function logout(): void {
   localStorage.removeItem('currentUser');
+  window.dispatchEvent(new Event('storage'));
   DebugManager.log('Benutzer ausgeloggt');
 }

@@ -4,6 +4,7 @@ import { Routes, Route, useParams, Link, Navigate, Outlet, useLocation } from 'r
 import { NavBar } from './components/NavBar'
 import { Banner } from './components/Banner'
 import { Slider } from './components/Slider'
+import { DisciplinesSection } from './components/DisciplinesSection'
 import { Footer } from './components/Footer'
 import { Box } from '@chakra-ui/react'
 import { Login } from './pages/Login'
@@ -38,32 +39,11 @@ function Layout() {
 }
 
 function Home() {
-  const { t } = useTranslation()
-  const [count, setCount] = useState(0)
 
   return (
     <Box>
       <Slider />
-      <Box p={10} textAlign="center">
-        <h1>{t('welcome')}</h1>
-        <div className="card">
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is {count}
-          </button>
-          <p>
-            {t('description')}
-          </p>
-        </div>
-        <div>
-          <Link to="/en" style={{ margin: '0 10px' }}>English</Link>
-          <Link to="/fr" style={{ margin: '0 10px' }}>Français</Link>
-          <Link to="/it" style={{ margin: '0 10px' }}>Italiano</Link>
-          <Link to="/de" style={{ margin: '0 10px' }}>Deutsch</Link>
-        </div>
-        <p className="read-the-docs">
-          Click on the Vite and React logos to learn more
-        </p>
-      </Box>
+      <DisciplinesSection />
     </Box>
   )
 }

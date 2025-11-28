@@ -5,16 +5,16 @@ import { FaChevronLeft, FaChevronRight, FaCircle } from 'react-icons/fa';
 export const Slider = () => {
   const slides = [
     {
-      img: 'https://placehold.co/1200x400/2a4365/ffffff?text=Slide+1',
-      text: 'Slide 1 Placeholder',
+      img: 'https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w1460/f_auto/primary/wkgt7nhskdmxpitx7qxh',
+      text: '',
     },
     {
-      img: 'https://placehold.co/1200x400/2c5282/ffffff?text=Slide+2',
-      text: 'Slide 2 Placeholder',
+      img: 'https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w1920/f_auto/v1758291674/primary/arulztf7bhnkmojvxvyo',
+      text: '',
     },
     {
-      img: 'https://placehold.co/1200x400/2b6cb0/ffffff?text=Slide+3',
-      text: 'Slide 3 Placeholder',
+      img: 'https://img.olympics.com/images/image/private/t_16-9_760/f_auto/primary/lztk2wi1ieptmu527rqq',
+      text: '',
     },
   ];
 
@@ -55,12 +55,13 @@ export const Slider = () => {
       <Flex
         transition="transform 0.5s ease-in-out"
         transform={`translateX(-${currentSlide * 100}%)`}
-        width={`${slides.length * 100}%`}
+        width="100%"
       >
         {slides.map((slide, index) => (
           <Box
             key={index}
             width="100%"
+            flex="0 0 100%"
             height={{ base: '300px', md: '400px', lg: '500px' }}
             backgroundImage={`url(${slide.img})`}
             backgroundSize="cover"
@@ -96,7 +97,6 @@ export const Slider = () => {
       {/* Left Arrow */}
       <IconButton
         aria-label="Previous Slide"
-        icon={<FaChevronLeft />}
         position="absolute"
         left="2"
         top="50%"
@@ -106,12 +106,13 @@ export const Slider = () => {
         variant="ghost"
         color="white"
         _hover={{ bg: 'whiteAlpha.300' }}
-      />
+      >
+        <FaChevronLeft />
+      </IconButton>
 
       {/* Right Arrow */}
       <IconButton
         aria-label="Next Slide"
-        icon={<FaChevronRight />}
         position="absolute"
         right="2"
         top="50%"
@@ -121,7 +122,9 @@ export const Slider = () => {
         variant="ghost"
         color="white"
         _hover={{ bg: 'whiteAlpha.300' }}
-      />
+      >
+        <FaChevronRight />
+      </IconButton>
 
       {/* Dots */}
       <Flex
@@ -136,7 +139,7 @@ export const Slider = () => {
           <Box
             key={index}
             as={FaCircle}
-            size="10px"
+            boxSize="10px"
             color={currentSlide === index ? 'white' : 'whiteAlpha.500'}
             cursor="pointer"
             onClick={() => setSlide(index)}

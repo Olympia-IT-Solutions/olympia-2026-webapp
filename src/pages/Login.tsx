@@ -29,12 +29,12 @@ const FormSection = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #00313d;
-  padding: 40px;
+  padding: 300px;
 `;
 
 const FormContainer = styled.div`
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
   color: white;
 `;
 
@@ -107,7 +107,7 @@ export function Login() {
   return (
     <PageContainer>
       <ImageSection>
-        <span style={{ color: '#666', fontSize: '1.5rem' }}>Image Placeholder</span>
+        <img alt="Login Illustration" src="https://img.olympics.com/images/image/private/t_s_w960/primary/lhn24fjdqgglv3wlvxbw" style={{ maxWidth: '100%', maxHeight: '120%' }} />
       </ImageSection>
       <FormSection>
         <FormContainer>
