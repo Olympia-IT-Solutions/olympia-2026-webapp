@@ -25,7 +25,7 @@ function Layout() {
   const isInternalPage = location.pathname.includes('/admin') || location.pathname.includes('/dashboard')
 
   return (
-    <Box minH="100vh" bgGradient="linear(to-r, #003049, #007f80, #d62828)" display="flex" flexDirection="column">
+    <Box minH="100vh" display="flex" flexDirection="column">
       <Banner />
       <NavBar />
       <Box flex="1">
@@ -41,7 +41,7 @@ function Home() {
   const [count, setCount] = useState(0)
 
   return (
-    <Box p={10} textAlign="center" color="white">
+    <Box p={10} textAlign="center">
       <h1>{t('welcome')}</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
@@ -52,10 +52,10 @@ function Home() {
         </p>
       </div>
       <div>
-        <Link to="/en" style={{ color: 'white', margin: '0 10px' }}>English</Link>
-        <Link to="/fr" style={{ color: 'white', margin: '0 10px' }}>Français</Link>
-        <Link to="/it" style={{ color: 'white', margin: '0 10px' }}>Italiano</Link>
-        <Link to="/de" style={{ color: 'white', margin: '0 10px' }}>Deutsch</Link>
+        <Link to="/en" style={{ margin: '0 10px' }}>English</Link>
+        <Link to="/fr" style={{ margin: '0 10px' }}>Français</Link>
+        <Link to="/it" style={{ margin: '0 10px' }}>Italiano</Link>
+        <Link to="/de" style={{ margin: '0 10px' }}>Deutsch</Link>
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more

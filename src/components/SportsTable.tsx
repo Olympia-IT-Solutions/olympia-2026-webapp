@@ -43,23 +43,23 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data }) => {
   return (
     <Box width="100%" overflowX="auto">
       <Table.ScrollArea>
-        <Table.Root variant='outline' colorScheme="whiteAlpha">
+        <Table.Root variant='outline'>
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader color="white">Platz</Table.ColumnHeader>
-              <Table.ColumnHeader color="white">Name</Table.ColumnHeader>
-              <Table.ColumnHeader color="white">Land</Table.ColumnHeader>
-              <Table.ColumnHeader color="white" textAlign="right">Ergebnis</Table.ColumnHeader>
-              <Table.ColumnHeader color="white" textAlign="center">Medaille</Table.ColumnHeader>
+              <Table.ColumnHeader>Platz</Table.ColumnHeader>
+              <Table.ColumnHeader>Name</Table.ColumnHeader>
+              <Table.ColumnHeader>Land</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="right">Ergebnis</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="center">Medaille</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
             {data.map((row, index) => (
               <Table.Row key={row.id}>
-                <Table.Cell color="white">{index + 1}</Table.Cell>
-                <Table.Cell color="white" fontWeight="bold">{row.name}</Table.Cell>
-                <Table.Cell color="white">{row.country}</Table.Cell>
-                <Table.Cell color="white" textAlign="right">{row.result}</Table.Cell>
+                <Table.Cell>{index + 1}</Table.Cell>
+                <Table.Cell fontWeight="bold">{row.name}</Table.Cell>
+                <Table.Cell>{row.country}</Table.Cell>
+                <Table.Cell textAlign="right">{row.result}</Table.Cell>
                 <Table.Cell textAlign="center">
                   {row.medal && <MedalIcon medal={row.medal} />}
                 </Table.Cell>

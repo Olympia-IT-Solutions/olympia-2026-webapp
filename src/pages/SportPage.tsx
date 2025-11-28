@@ -76,7 +76,7 @@ export function SportPage() {
 
   if (!sportData) {
     return (
-      <Box p={10} textAlign="center" color="white">
+      <Box p={10} textAlign="center">
         <Heading>Sportart nicht gefunden</Heading>
         <Text mt={4}>Die gesuchte Sportart "{sportId}" existiert nicht oder es liegen keine Daten vor.</Text>
       </Box>
@@ -84,7 +84,7 @@ export function SportPage() {
   }
 
   return (
-    <Container maxW="container.xl" py={10} color="white">
+    <Container maxW="container.xl" py={10}>
       <Heading mb={6} textAlign="center">{sportData.title}</Heading>
       <Box bg="whiteAlpha.200" p={6} borderRadius="lg" boxShadow="lg">
         <SportsTable data={sportData.results} />

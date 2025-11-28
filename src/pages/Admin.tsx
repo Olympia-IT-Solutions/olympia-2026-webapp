@@ -4,7 +4,7 @@ import { isAdmin } from '../logic/rights'
 export function Admin() {
   if (!isAdmin()) {
     return (
-      <Box p={10} textAlign="center" color="white">
+      <Box p={10} textAlign="center">
         <Heading>Zugriff verweigert</Heading>
         <p>Sie haben keine Berechtigung, diese Seite zu betreten.</p>
       </Box>
@@ -12,7 +12,7 @@ export function Admin() {
   }
 
   return (
-    <Box p={10} textAlign="center" color="white">
+    <Box p={10} textAlign="center">
       <Heading>Admin Page</Heading>
     </Box>
   )
