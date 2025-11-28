@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Routes, Route, useParams, Link, Navigate, Outlet } from 'react-router'
+import { Routes, Route, useParams, Link, Navigate, Outlet, useLocation } from 'react-router'
 import { NavBar } from './components/NavBar'
 import { Banner } from './components/Banner'
+import { Footer } from './components/Footer'
 import { Box } from '@chakra-ui/react'
 import { Login } from './pages/Login'
 import { Admin } from './pages/Admin'
@@ -19,6 +20,7 @@ import { Skispringen } from './pages/Skispringen'
 function Layout() {
   const { i18n } = useTranslation()
   const { lang } = useParams<{ lang: string }>()
+  const location = useLocation()
 
   useEffect(() => {
     if (lang) {
@@ -26,11 +28,16 @@ function Layout() {
     }
   }, [lang, i18n])
 
+  const isInternalPage = location.pathname.includes('/admin') || location.pathname.includes('/dashboard')
+
   return (
-    <Box minH="100vh" bgGradient="linear(to-r, #003049, #007f80, #d62828)">
+    <Box minH="100vh" bgGradient="linear(to-r, #003049, #007f80, #d62828)" display="flex" flexDirection="column">
       <Banner />
       <NavBar />
-      <Outlet />
+      <Box flex="1">
+        <Outlet />
+      </Box>
+      {!isInternalPage && <Footer />}
     </Box>
   )
 }

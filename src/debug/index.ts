@@ -4,7 +4,7 @@
  */
 
 export class DebugManager {
-  private static _isDebugMode: boolean = false;
+  private static _isDebugMode: boolean = true;
 
   /**
    * Gibt zurück, ob der Debug-Modus aktiviert ist.

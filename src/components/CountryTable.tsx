@@ -51,7 +51,7 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [] }) => {
   return (
     <Box width="100%" overflowX="auto">
       <Table.ScrollArea>
-        <Table.Root variant='simple'>
+        <Table.Root variant='outline'>
           <Table.Header>
             <Table.Row>
               <Table.ColumnHeader>Land</Table.ColumnHeader>
