@@ -19,3 +19,8 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
 }
+
+@font-face {
+  font-family: 'MilanoCortina2026-Bold';
+  src: url('/MilanoCortina2026-Bold.otf') format('opentype');
+}

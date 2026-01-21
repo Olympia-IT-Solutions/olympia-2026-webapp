@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Routes, Route, useParams, Link, Navigate, Outlet, useLocation } from 'react-router'
+import { Routes, Route, useParams, Navigate, Outlet, useLocation } from 'react-router'
 import { NavBar } from './components/NavBar'
 import { Banner } from './components/Banner'
 import { Slider } from './components/Slider'
 import { DisciplinesSection } from './components/DisciplinesSection'
 import { Footer } from './components/Footer'
-import { Box } from '@chakra-ui/react'
+import { FooterBanner } from './components/FooterBanner'
+import { Box, Heading } from '@chakra-ui/react'
 import { Login } from './pages/Login'
 import { Admin } from './pages/Admin'
 import { Dashboard } from './pages/Dashboard'
@@ -33,15 +34,18 @@ function Layout() {
       <Box flex="1">
         <Outlet />
       </Box>
+      {!isInternalPage && <FooterBanner />}
       {!isInternalPage && <Footer />}
     </Box>
   )
 }
 
 function Home() {
+  const { t } = useTranslation()
 
   return (
     <Box>
+      <Heading fontFamily="'MilanoCortina2026-Bold'" size="2xl" textAlign="center" mb={4}>{t('welcome')}</Heading>
       <Slider />
       <DisciplinesSection />
     </Box>

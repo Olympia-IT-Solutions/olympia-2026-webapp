@@ -1,6 +1,5 @@
-import { Box, SimpleGrid, Text, Image, Flex, Icon, IconButton, Heading } from '@chakra-ui/react';
+import { Box, SimpleGrid, Text, Image, Flex, Heading } from '@chakra-ui/react';
 import { Link } from 'react-router';
-import { FaRegHeart } from 'react-icons/fa';
 
 const disciplines = [
   { id: 'biathlon', name: 'Biathlon', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/BTH.svg' },
@@ -30,33 +29,21 @@ export const DisciplinesSection = () => {
               transition="transform 0.2s"
               _hover={{ transform: 'translateY(-5px)', boxShadow: 'lg' }}
             >
-              <Box height="200px" overflow="hidden">
-                <Image 
-                  src={sport.img} 
-                  alt={sport.name} 
-                  objectFit="cover" 
-                  width="100%" 
-                  height="100%" 
+              <Box height="200px" display="flex" alignItems="center" justifyContent="center" bg="gray.50">
+                <Image
+                  src={sport.img}
+                  alt={sport.name}
+                  objectFit="contain"
+                  width="100%"
+                  height="100%"
+                  objectPosition="center"
                 />
               </Box>
-              
-              <Flex align="center" p={4} justify="space-between">
-                <Flex align="center" gap={3}>
-                  <IconButton
-                    aria-label="Favorite"
-                    variant="ghost"
-                    colorPalette="teal"
-                    rounded="full"
-                    size="sm"
-                    border="1px solid"
-                    borderColor="gray.200"
-                  >
-                    <Icon as={FaRegHeart} color="teal.600" />
-                  </IconButton>
-                  <Text fontWeight="bold" fontSize="lg" color="gray.800">
-                    {sport.name}
-                  </Text>
-                </Flex>
+
+              <Flex align="center" p={4}>
+                <Text fontWeight="bold" fontSize="lg" color="gray.800">
+                  {sport.name}
+                </Text>
               </Flex>
             </Box>
           </Link>

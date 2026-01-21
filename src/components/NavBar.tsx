@@ -19,7 +19,7 @@ const NavContainer = styled.nav`
   justify-content: space-between;
   width: 95%;
   max-width: 1400px;
-  margin: 20px auto;
+  margin: 0 auto;
   backdrop-filter: blur(10px);
   position: relative;
   z-index: 100;
