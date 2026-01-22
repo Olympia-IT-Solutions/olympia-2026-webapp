@@ -1,5 +1,5 @@
 import { Box, SimpleGrid, Text, Image, Flex, Heading } from '@chakra-ui/react';
-import { Link } from 'react-router';
+import { Link, useParams } from 'react-router';
 
 const disciplines = [
   { id: 'biathlon', name: 'Biathlon', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/BTH.svg' },
@@ -12,15 +12,18 @@ const disciplines = [
 ];
 
 export const DisciplinesSection = () => {
+  const { lang } = useParams<{ lang: string }>();
+  const currentLang = lang || 'de';
+
   return (
     <Box width="90%" maxW="1200px" mx="auto" my={12}>
       <Heading as="h2" size="xl" mb={6} textAlign="left" color="teal.800">
-        Disziplinen
+        Die Disziplinen
       </Heading>
       
       <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} gap={6}>
         {disciplines.map((sport) => (
-          <Link key={sport.id} to={`/sports/${sport.id}`} style={{ textDecoration: 'none' }}>
+          <Link key={sport.id} to={`/${currentLang}/sports/${sport.id}`} style={{ textDecoration: 'none' }}>
             <Box 
               bg="white" 
               borderRadius="xl" 

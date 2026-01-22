@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Routes, Route, useParams, Navigate, Outlet, useLocation } from 'react-router'
-import { NavBar } from './components/NavBar'
 import { Banner } from './components/Banner'
 import { Slider } from './components/Slider'
+import { CountriesFeature } from './components/CountriesFeature'
 import { DisciplinesSection } from './components/DisciplinesSection'
 import { Footer } from './components/Footer'
 import { FooterBanner } from './components/FooterBanner'
@@ -13,6 +13,7 @@ import { Admin } from './pages/Admin'
 import { Dashboard } from './pages/Dashboard'
 import { Countries } from './pages/Countries'
 import { SportPage } from './pages/SportPage'
+import { NotFound } from './pages/NotFound'
 
 function Layout() {
   const { i18n } = useTranslation()
@@ -30,7 +31,6 @@ function Layout() {
   return (
     <Box minH="100vh" display="flex" flexDirection="column">
       <Banner />
-      <NavBar />
       <Box flex="1">
         <Outlet />
       </Box>
@@ -45,9 +45,13 @@ function Home() {
 
   return (
     <Box>
-      <Heading fontFamily="'MilanoCortina2026-Bold'" size="2xl" textAlign="center" mb={4}>{t('welcome')}</Heading>
-      <Slider />
+      <Heading fontFamily="'MilanoCortina2026-Bold'" size="4xl" textAlign="center" mb={4} marginTop={50}>{t('welcome')}</Heading>
+      <Box height={50} />
+      <Slider />      
+      <Box height={50} />
       <DisciplinesSection />
+      <Box height={50} />
+      <CountriesFeature />      
     </Box>
   )
 }
@@ -61,6 +65,7 @@ function App() {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="countries" element={<Countries />} />
         <Route path="sports/:sportId" element={<SportPage />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
       <Route path="/:lang/login" element={<Login />} />
       <Route path="/" element={<Navigate to="/de" />} />

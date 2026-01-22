@@ -5,15 +5,43 @@ import { FaChevronLeft, FaChevronRight, FaCircle } from 'react-icons/fa';
 export const Slider = () => {
   const slides = [
     {
-      img: 'https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w1460/f_auto/primary/wkgt7nhskdmxpitx7qxh',
+      img: 'https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w1460/f_auto/primary/qtsazotmahptlkashww7',
       text: '',
     },
     {
-      img: 'https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w1920/f_auto/v1758291674/primary/arulztf7bhnkmojvxvyo',
+      img: 'https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w1460/f_auto/primary/qkxoxyrkn7xx3wsfnhvd',
       text: '',
     },
     {
-      img: 'https://img.olympics.com/images/image/private/t_16-9_760/f_auto/primary/lztk2wi1ieptmu527rqq',
+      img: 'https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w1460/f_auto/primary/avf6qhulfjovaoetfvoh',
+      text: '',
+    },
+    {
+      img: 'https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w1460/f_auto/primary/gbpfuabneuviirakyy8p',
+      text: '',
+    },
+    {
+      img: 'https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w1460/f_auto/primary/seheidquxgezpftax7zp',
+      text: '',
+    },
+    {
+      img: 'https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w1460/f_auto/primary/wvbz1k2qvhgjrp42jmdf',
+      text: '',
+    },
+    {
+      img: 'https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w1460/f_auto/primary/l9bhajwtsejpgsriwdbw',
+      text: '',
+    },
+    {
+      img: 'https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w1460/f_auto/primary/gqilopdm6xl27qzbhfdv',
+      text: '',
+    },
+    {
+      img: 'https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w1460/f_auto/primary/dwynqbdiuwfsmb8h5dvb',
+      text: '',
+    },
+    {
+      img: 'https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w1460/f_auto/primary/ak92l9nzr5qke99tkltm',
       text: '',
     },
   ];
@@ -44,7 +72,8 @@ export const Slider = () => {
     <Box
       position="relative"
       width="90%"
-      maxW="1200px"
+      maxW="1400px"
+      maxH="800px"
       mx="auto"
       borderRadius="3xl"
       overflow="hidden"
@@ -62,7 +91,7 @@ export const Slider = () => {
             key={index}
             width="100%"
             flex="0 0 100%"
-            height={{ base: '300px', md: '400px', lg: '500px' }}
+            height={{ base: '300px', md: '400px', lg: '800px' }}
             backgroundImage={`url(${slide.img})`}
             backgroundSize="cover"
             backgroundPosition="center"

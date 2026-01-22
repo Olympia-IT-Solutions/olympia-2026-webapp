@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router';
 import { login } from '../logic/rights';
 
 const PageContainer = styled.div`
+  position: relative;
   display: flex;
   height: 100vh;
   width: 100vw;
@@ -12,13 +13,36 @@ const PageContainer = styled.div`
 
 const ImageSection = styled.div`
   flex: 1;
-  background-color: #e0e0e0;
+  overflow: hidden;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  
+  align-items: stretch;
+  justify-content: stretch;
+  position: relative;
+
   @media (max-width: 768px) {
     display: none;
+  }
+`;
+
+const BackButton = styled.button`
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 2000;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,0,0,0.55);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.35);
+
+  &:hover {
+    background: rgba(0,0,0,0.7);
   }
 `;
 
@@ -29,7 +53,7 @@ const FormSection = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #00313d;
-  padding: 300px;
+  padding: 80px;
 `;
 
 const FormContainer = styled.div`
@@ -106,9 +130,21 @@ export function Login() {
 
   return (
     <PageContainer>
+      <BackButton onClick={() => navigate(-1)} aria-label="Zurück">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        Zurück
+      </BackButton>
+
       <ImageSection>
-        <img alt="Login Illustration" src="https://img.olympics.com/images/image/private/t_s_w960/primary/lhn24fjdqgglv3wlvxbw" style={{ maxWidth: '100%', maxHeight: '120%' }} />
+        <img
+          alt="Login Illustration"
+          src="https://img.olympics.com/images/image/private/t_s_w960/primary/lhn24fjdqgglv3wlvxbw"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+        />
       </ImageSection>
+
       <FormSection>
         <FormContainer>
           <Title>Willkommen</Title>

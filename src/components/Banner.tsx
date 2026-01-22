@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Text, Button, HStack } from '@chakra-ui/react';
 import headerImg from '../assets/mc2026_header.png';
+import { NavBar } from './NavBar';
 
 const BannerContainer = styled.div`
   background-color: #00313d;
@@ -52,18 +53,45 @@ export const Banner = () => {
         </ContentWrapper>
       </BannerContainer>
 
-      <HeaderImage role="img" aria-label="MC2026 header image" />
+      <HeaderWrapper>
+        <HeaderImage role="img" aria-label="MC2026 header image" />
+        <NavOverlay>
+          <NavBar />
+        </NavOverlay>
+      </HeaderWrapper>
     </>
   );
 };
 
+const HeaderWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 160px;
+  overflow: visible;
+`;
+
+const NavOverlay = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  z-index: 200;
+  pointer-events: none;
+  & > * {
+    pointer-events: auto;
+  }
+`;
+
 const HeaderImage = styled.div`
   width: 100%;
-  height: 220px;
+  height: 160px;
   background-image: url(${headerImg});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  margin-bottom: -120px;
+  margin-bottom: 20px;
   z-index: 0;
 `;
