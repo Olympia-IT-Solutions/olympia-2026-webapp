@@ -7,13 +7,15 @@ import { CountriesFeature } from './components/CountriesFeature'
 import { DisciplinesSection } from './components/DisciplinesSection'
 import { Footer } from './components/Footer'
 import { FooterBanner } from './components/FooterBanner'
-import { Box, Heading } from '@chakra-ui/react'
+import { Box, Heading, Button, ButtonGroup } from '@chakra-ui/react'
+import { FaChevronDown } from 'react-icons/fa';
 import { Login } from './pages/Login'
 import { Admin } from './pages/Admin'
 import { Dashboard } from './pages/Dashboard'
 import { Countries } from './pages/Countries'
 import { SportPage } from './pages/SportPage'
 import { NotFound } from './pages/NotFound'
+import { HeroVideo } from './components/HeroVideo'
 
 function Layout() {
   const { i18n } = useTranslation()
@@ -46,15 +48,49 @@ function Home() {
   return (
     <Box>
       <Heading fontFamily="'MilanoCortina2026-Bold'" size="4xl" textAlign="center" mb={4} marginTop={50}>{t('welcome')}</Heading>
+
+      <Box my={4} display="flex" justifyContent="center">
+        <ButtonGroup variant="ghost" spacing={4}>
+          <Button
+            leftIcon={<FaChevronDown />}
+            onClick={() => document.getElementById('disciplines')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+            colorScheme="teal"
+            borderRadius="full"
+            bg="gray.50"
+          >
+            Die Disziplinen
+          </Button>
+
+          <Button
+            leftIcon={<FaChevronDown />}
+            onClick={() => document.getElementById('countries-feature')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+            colorScheme="teal"
+            borderRadius="full"
+            bg="gray.50"
+          >
+            Die Länder
+          </Button>
+        </ButtonGroup>
+      </Box>
+
       <Box height={50} />
       <Slider />      
       <Box height={50} />
-      <DisciplinesSection />
+
+      <Box id="disciplines">
+        <DisciplinesSection />
+      </Box>
       <Box height={50} />
-      <CountriesFeature />      
+
+      <HeroVideo />
+
+      <Box height={50} />
+      <Box id="countries-feature">
+        <CountriesFeature id="countries-feature" />      
+      </Box>
     </Box>
   )
-}
+} 
 
 function App() {
   return (

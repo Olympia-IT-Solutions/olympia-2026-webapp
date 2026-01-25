@@ -50,14 +50,14 @@ const Overlay = styled.div`
   }
 `;
 
-export const CountriesFeature = () => {
+export const CountriesFeature = ({ id }: { id?: string }) => {
   const navigate = useNavigate()
   const { lang } = useParams<{ lang: string }>()
   const currentLang = lang || 'de'
 
   return (
     <FeatureWrapper>
-      <Card onClick={() => navigate(`/${currentLang}/countries`)} role="link" aria-label="Zur Länderübersicht">
+      <Card id={id} onClick={() => navigate(`/${currentLang}/countries`)} role="link" aria-label="Zur Länderübersicht">
         <Bg />
         <Overlay>
           <Heading
