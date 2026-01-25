@@ -1,4 +1,9 @@
 {
   "welcome": "Bienvenue aux Jeux Olympiques de Milano Cortina 2026",
-  "description": "Ceci est une application React avec support i18n"
+  "description": "Ceci est une application React avec support i18n",
+  "cookieBanner": {
+    "message": "Nous utilisons des cookies pour améliorer votre expérience sur notre site web. Ceci est une version de démonstration car nous n'utilisons actuellement aucun vrai cookie.",
+    "accept": "Tout accepter",
+    "decline": "Refuser facultatifs"
+  }
 }
