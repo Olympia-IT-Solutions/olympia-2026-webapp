@@ -7,6 +7,7 @@ import { CountriesFeature } from './components/CountriesFeature'
 import { DisciplinesSection } from './components/DisciplinesSection'
 import { Footer } from './components/Footer'
 import { FooterBanner } from './components/FooterBanner'
+import { CookieMenu } from './components/CookieMenu'
 import { Box, Heading, Button, ButtonGroup } from '@chakra-ui/react'
 import { FaChevronDown } from 'react-icons/fa';
 import { Login } from './pages/Login'
@@ -38,6 +39,7 @@ function Layout() {
       </Box>
       {!isInternalPage && <FooterBanner />}
       {!isInternalPage && <Footer />}
+      <CookieMenu />
     </Box>
   )
 }
@@ -50,24 +52,24 @@ function Home() {
       <Heading fontFamily="'MilanoCortina2026-Bold'" size="4xl" textAlign="center" mb={4} marginTop={50}>{t('welcome')}</Heading>
 
       <Box my={4} display="flex" justifyContent="center">
-        <ButtonGroup variant="ghost" spacing={4}>
+        <ButtonGroup variant="ghost" gap={4}>
           <Button
-            leftIcon={<FaChevronDown />}
             onClick={() => document.getElementById('disciplines')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
             colorScheme="teal"
             borderRadius="full"
             bg="gray.50"
           >
+            <FaChevronDown style={{ marginRight: '8px' }} />
             Die Disziplinen
           </Button>
 
           <Button
-            leftIcon={<FaChevronDown />}
             onClick={() => document.getElementById('countries-feature')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
             colorScheme="teal"
             borderRadius="full"
             bg="gray.50"
           >
+            <FaChevronDown style={{ marginRight: '8px' }} />
             Die Länder
           </Button>
         </ButtonGroup>
