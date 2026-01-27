@@ -1,9 +1,138 @@
 {
   "welcome": "Bienvenue aux Jeux Olympiques de Milano Cortina 2026",
   "description": "Ceci est une application React avec support i18n",
+  "hero": {
+    "disciplines": "Les disciplines",
+    "countries": "Les pays"
+  },
   "cookieBanner": {
     "message": "Nous utilisons des cookies pour améliorer votre expérience sur notre site web. Ceci est une version de démonstration car nous n'utilisons actuellement aucun vrai cookie.",
     "accept": "Tout accepter",
     "decline": "Refuser facultatifs"
+  },
+  "nav": {
+    "countries": "Pays",
+    "sports": "Sports",
+    "dashboard": "Tableau de bord",
+    "admin": "Admin",
+    "login": "Connexion",
+    "logout": "Déconnexion"
+  },
+  "login": {
+    "title": "Bienvenue",
+    "invalidCredentials": "Identifiants invalides",
+    "back": "Retour",
+    "email": "E-mail *",
+    "password": "Mot de passe *",
+    "submit": "Continuer"
+  },
+  "notfound": {
+    "title": "Page non trouvée",
+    "text": "La page que vous recherchez n'existe pas ou a été déplacée.",
+    "home": "Accueil",
+    "countries": "Pays"
+  },
+  "countries": {
+    "title": "Pays",
+    "featureAria": "Aller à l'aperçu des pays",
+    "featureHeading": "Aperçu des pays aux Milano Cortina"
+  },
+  "countryTable": {
+    "columns": {
+      "country": "Pays",
+      "bronze": "Bronze",
+      "silver": "Argent",
+      "gold": "Or"
+    },
+    "noData": "Aucune donnée disponible.",
+    "loadMore": "Charger plus d'entrées"
+  },
+  "sport": {
+    "notFoundTitle": "Sport non trouvé",
+    "notFoundText": "Le sport \"{{sport}}\" que vous recherchez n'existe pas ou aucune donnée n'est disponible."
+  },
+  "status": {
+    "pending": "En attente",
+    "approved": "Approuvé",
+    "published": "Publié"
+  },
+  "dashboard": {
+    "title": "Tableau de bord des arbitres",
+    "demoNote": "Version démo - gestion des résultats avec principe des 2 yeux",
+    "loggedInAs": "Connecté en tant que: {{email}} ({{role}})",
+    "infoTitle": "Principe des 2 yeux",
+    "infoText": "Les résultats doivent être approuvés par un autre arbitre avant d'être publiés. Vous ne pouvez pas approuver vos propres soumissions.",
+    "newResultTitle": "Soumettre un nouveau résultat",
+    "addResult": "Ajouter un résultat",
+    "labels": {
+      "sport": "Sport",
+      "event": "Épreuve",
+      "athlete": "Athlète",
+      "country": "Pays",
+      "result": "Résultat",
+      "notes": "Remarques (optionnel)",
+      "notesPlaceholder": "Commentaires supplémentaires..."
+    },
+    "placeholders": {
+      "sportExample": "ex: Ski Alpin",
+      "eventExample": "ex: Downhill Men",
+      "athleteExample": "Nom de l'athlète",
+      "countryExample": "ex: Austria",
+      "resultExample": "ex: 1:42.56"
+    },
+    "buttons": {
+      "submit": "Soumettre",
+      "cancel": "Annuler",
+      "approve": "Approuver",
+      "publish": "Publier"
+    },
+    "table": {
+      "title": "Résultats soumis",
+      "noResults": "Aucun résultat disponible",
+      "waiting": "En attente d'approbation",
+      "publishedCheck": "✓ Publié",
+      "approvedBy": "Approuvé par: {{person}}",
+      "columns": {
+        "sportEvent": "Sport / Épreuve",
+        "athlete": "Athlète",
+        "country": "Pays",
+        "result": "Résultat",
+        "submittedBy": "Soumis par",
+        "status": "Statut",
+        "actions": "Actions"
+      }
+    }
+  },
+  "admin": {
+    "title": "Tableau de bord Admin",
+    "demoNote": "Version démo - gestion des Jeux d'hiver Milano Cortina 2026",
+    "accessDeniedTitle": "Accès refusé",
+    "accessDeniedText": "Vous n'avez pas la permission d'accéder à cette page.",
+    "refereesManage": "Gérer les arbitres",
+    "newReferee": "Nouvel arbitre",
+    "placeholders": {
+      "name": "Nom",
+      "email": "E-mail",
+      "country": "Pays",
+      "sports": "Sports (séparés par des virgules)"
+    },
+    "buttons": {
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "deleteAll": "Supprimer tous les résultats"
+    },
+    "noReferees": "Aucun arbitre disponible",
+    "resultsTitle": "Gérer les résultats",
+    "table": {
+      "columns": {
+        "name": "Nom",
+        "email": "E-mail",
+        "country": "Pays",
+        "sports": "Sports",
+        "createdAt": "Créé le",
+        "actions": "Actions",
+        "status": "Statut"
+      }
+    }
   }
-}
+} 

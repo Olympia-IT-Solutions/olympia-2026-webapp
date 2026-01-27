@@ -1,9 +1,138 @@
 {
   "welcome": "Benvenuto ai Giochi Olimpici di Milano Cortina 2026",
   "description": "Questa è un'applicazione React con supporto i18n",
+  "hero": {
+    "disciplines": "Le discipline",
+    "countries": "I paesi"
+  },
   "cookieBanner": {
     "message": "Utilizziamo i cookie per migliorare la tua esperienza sul nostro sito web. Questa è una versione dimostrativa poiché attualmente non utilizziamo cookie reali.",
     "accept": "Accetta tutto",
     "decline": "Rifiuta opzionali"
+  },
+  "nav": {
+    "countries": "Paesi",
+    "sports": "Sport",
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "login": {
+    "title": "Benvenuto",
+    "invalidCredentials": "Credenziali non valide",
+    "back": "Indietro",
+    "email": "Email *",
+    "password": "Password *",
+    "submit": "Continua"
+  },
+  "notfound": {
+    "title": "Pagina non trovata",
+    "text": "La pagina che stai cercando non esiste o è stata spostata.",
+    "home": "Home",
+    "countries": "Paesi"
+  },
+  "countries": {
+    "title": "Paesi",
+    "featureAria": "Vai alla panoramica dei paesi",
+    "featureHeading": "Panoramica dei paesi a Milano Cortina"
+  },
+  "countryTable": {
+    "columns": {
+      "country": "Paese",
+      "bronze": "Bronzo",
+      "silver": "Argento",
+      "gold": "Oro"
+    },
+    "noData": "Nessun dato disponibile.",
+    "loadMore": "Carica più voci"
+  },
+  "sport": {
+    "notFoundTitle": "Sport non trovato",
+    "notFoundText": "Lo sport \"{{sport}}\" che hai cercato non esiste o non sono disponibili dati."
+  },
+  "status": {
+    "pending": "In attesa",
+    "approved": "Approvato",
+    "published": "Pubblicato"
+  },
+  "dashboard": {
+    "title": "Cruscotto arbitri",
+    "demoNote": "Versione demo - gestione risultati con principio dei 4 occhi",
+    "loggedInAs": "Connesso come: {{email}} ({{role}})",
+    "infoTitle": "Principio dei 4 occhi",
+    "infoText": "I risultati devono essere approvati da un altro arbitro prima di poter essere pubblicati. Non puoi approvare le tue stesse segnalazioni.",
+    "newResultTitle": "Invia un nuovo risultato",
+    "addResult": "Aggiungi risultato",
+    "labels": {
+      "sport": "Sport",
+      "event": "Evento",
+      "athlete": "Atleta",
+      "country": "Paese",
+      "result": "Risultato",
+      "notes": "Note (opzionale)",
+      "notesPlaceholder": "Commenti aggiuntivi..."
+    },
+    "placeholders": {
+      "sportExample": "es: Ski Alpin",
+      "eventExample": "es: Downhill Men",
+      "athleteExample": "Nome dell'atleta",
+      "countryExample": "es: Austria",
+      "resultExample": "es: 1:42.56"
+    },
+    "buttons": {
+      "submit": "Invia",
+      "cancel": "Annulla",
+      "approve": "Approva",
+      "publish": "Pubblica"
+    },
+    "table": {
+      "title": "Risultati inviati",
+      "noResults": "Nessun risultato disponibile",
+      "waiting": "In attesa di approvazione",
+      "publishedCheck": "✓ Pubblicato",
+      "approvedBy": "Approvato da: {{person}}",
+      "columns": {
+        "sportEvent": "Sport / Evento",
+        "athlete": "Atleta",
+        "country": "Paese",
+        "result": "Risultato",
+        "submittedBy": "Inviato da",
+        "status": "Stato",
+        "actions": "Azioni"
+      }
+    }
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "demoNote": "Versione demo - gestione dei Giochi Invernali Milano Cortina 2026",
+    "accessDeniedTitle": "Accesso negato",
+    "accessDeniedText": "Non hai il permesso di accedere a questa pagina.",
+    "refereesManage": "Gestisci arbitri",
+    "newReferee": "Nuovo arbitro",
+    "placeholders": {
+      "name": "Nome",
+      "email": "Email",
+      "country": "Paese",
+      "sports": "Sport (separati da virgola)"
+    },
+    "buttons": {
+      "save": "Salva",
+      "cancel": "Annulla",
+      "deleteAll": "Elimina tutti i risultati"
+    },
+    "noReferees": "Nessun arbitro disponibile",
+    "resultsTitle": "Gestione risultati",
+    "table": {
+      "columns": {
+        "name": "Nome",
+        "email": "Email",
+        "country": "Paese",
+        "sports": "Sport",
+        "createdAt": "Creato il",
+        "actions": "Azioni",
+        "status": "Stato"
+      }
+    }
   }
 }

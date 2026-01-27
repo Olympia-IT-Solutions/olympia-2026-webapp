@@ -1,9 +1,138 @@
 {
   "welcome": "Welcome to Milano Cortina 2026 Olympics",
   "description": "This is a React application with i18n support",
+  "hero": {
+    "disciplines": "Disciplines",
+    "countries": "Countries"
+  },
   "cookieBanner": {
     "message": "We use cookies to improve your experience on our website. This is a dummy version as we currently don't use any real cookies.",
     "accept": "Accept Everything",
     "decline": "Decline Optional"
+  },
+  "nav": {
+    "countries": "Countries",
+    "sports": "Sports",
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "login": {
+    "title": "Welcome",
+    "invalidCredentials": "Invalid credentials",
+    "back": "Back",
+    "email": "Email *",
+    "password": "Password *",
+    "submit": "Continue"
+  },
+  "notfound": {
+    "title": "Page not found",
+    "text": "The page you are looking for does not exist or has been moved.",
+    "home": "Home",
+    "countries": "Countries"
+  },
+  "countries": {
+    "title": "Countries",
+    "featureAria": "Go to countries overview",
+    "featureHeading": "Overview of countries at Milano Cortina"
+  },
+  "countryTable": {
+    "columns": {
+      "country": "Country",
+      "bronze": "Bronze",
+      "silver": "Silver",
+      "gold": "Gold"
+    },
+    "noData": "No data available.",
+    "loadMore": "Load more entries"
+  },
+  "sport": {
+    "notFoundTitle": "Sport not found",
+    "notFoundText": "The sport \"{{sport}}\" you searched for does not exist or no data is available."
+  },
+  "status": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "published": "Published"
+  },
+  "dashboard": {
+    "title": "Referee Dashboard",
+    "demoNote": "Demo version - results management with 4-eye principle",
+    "loggedInAs": "Logged in as: {{email}} ({{role}})",
+    "infoTitle": "4-eye principle",
+    "infoText": "Results must be approved by another referee before they can be published. You cannot approve your own submissions.",
+    "newResultTitle": "Submit a New Result",
+    "addResult": "Add Result",
+    "labels": {
+      "sport": "Sport",
+      "event": "Event",
+      "athlete": "Athlete",
+      "country": "Country",
+      "result": "Result",
+      "notes": "Notes (optional)",
+      "notesPlaceholder": "Additional comments..."
+    },
+    "placeholders": {
+      "sportExample": "e.g. Ski Alpin",
+      "eventExample": "e.g. Downhill Men",
+      "athleteExample": "Athlete name",
+      "countryExample": "e.g. Austria",
+      "resultExample": "e.g. 1:42.56"
+    },
+    "buttons": {
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "approve": "Approve",
+      "publish": "Publish"
+    },
+    "table": {
+      "title": "Submitted Results",
+      "noResults": "No results available",
+      "waiting": "Waiting for approval",
+      "publishedCheck": "✓ Published",
+      "approvedBy": "Approved by: {{person}}",
+      "columns": {
+        "sportEvent": "Sport / Event",
+        "athlete": "Athlete",
+        "country": "Country",
+        "result": "Result",
+        "submittedBy": "Submitted by",
+        "status": "Status",
+        "actions": "Actions"
+      }
+    }
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "demoNote": "Demo version - management of the Milano Cortina 2026 Winter Games",
+    "accessDeniedTitle": "Access denied",
+    "accessDeniedText": "You do not have permission to access this page.",
+    "refereesManage": "Manage referees",
+    "newReferee": "New Referee",
+    "placeholders": {
+      "name": "Name",
+      "email": "E-Mail",
+      "country": "Country",
+      "sports": "Sports (comma separated)"
+    },
+    "buttons": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "deleteAll": "Delete all results"
+    },
+    "noReferees": "No referees available",
+    "resultsTitle": "Results management",
+    "table": {
+      "columns": {
+        "name": "Name",
+        "email": "E-Mail",
+        "country": "Country",
+        "sports": "Sports",
+        "createdAt": "Created at",
+        "actions": "Actions",
+        "status": "Status"
+      }
+    }
   }
-}
+} 
