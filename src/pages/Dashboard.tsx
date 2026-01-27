@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Box, Heading, Text, Button, Input, Stack, Table, Badge, Card, Textarea } from '@chakra-ui/react'
-import { getCurrentUser, isReferee } from '../logic/rights'
+import { getCurrentUser } from '../logic/rights'
 import { FaPlus, FaCheck, FaGlobe, FaClipboardList, FaEye } from 'react-icons/fa'
 
 interface Result {
@@ -184,7 +184,7 @@ export function Dashboard() {
       </Card.Root>
 
       {/* Add New Result Section */}
-      <Card.Root mb={8} p={6} bg="white" boxShadow="md" borderRadius="lg">
+      <Card.Root mb={8} p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
         <Stack direction="row" justify="space-between" align="center" mb={4}>
           <Heading size="lg">
             <FaClipboardList style={{ display: 'inline', marginRight: '10px' }} />
@@ -200,7 +200,7 @@ export function Dashboard() {
         </Stack>
 
         {showAddForm && (
-          <Box bg="gray.50" p={4} borderRadius="md" mb={4}>
+          <Box bg="var(--muted-bg)" p={4} borderRadius="md" mb={4}>
             <Stack gap={3}>
               <Stack direction={{ base: 'column', md: 'row' }} gap={3}>
                 <Box flex={1}>
@@ -268,10 +268,10 @@ export function Dashboard() {
       </Card.Root>
 
       {/* Results Table */}
-      <Card.Root p={6} bg="white" boxShadow="md" borderRadius="lg">
+      <Card.Root p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
         <Heading size="lg" mb={4}>
           Eingereichte Ergebnisse
-        </Heading>
+        </Heading> 
 
         <Box overflowX="auto">
           <Table.Root variant="line">

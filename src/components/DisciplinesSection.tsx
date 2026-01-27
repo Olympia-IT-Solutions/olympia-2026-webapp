@@ -17,7 +17,7 @@ export const DisciplinesSection = () => {
 
   return (
     <Box width="90%" maxW="1200px" mx="auto" my={12}>
-      <Heading as="h2" size="xl" mb={6} textAlign="left" color="teal.800">
+      <Heading as="h2" size="xl" mb={6} textAlign="left" color="#007f80">
         Die Disziplinen
       </Heading>
       
@@ -25,14 +25,14 @@ export const DisciplinesSection = () => {
         {disciplines.map((sport) => (
           <Link key={sport.id} to={`/${currentLang}/sports/${sport.id}`} style={{ textDecoration: 'none' }}>
             <Box 
-              bg="white" 
+              bg="var(--card-bg)" 
               borderRadius="xl" 
               overflow="hidden" 
               boxShadow="md" 
               transition="transform 0.2s"
               _hover={{ transform: 'translateY(-5px)', boxShadow: 'lg' }}
             >
-              <Box height="200px" display="flex" alignItems="center" justifyContent="center" bg="gray.50">
+              <Box height="200px" display="flex" alignItems="center" justifyContent="center" bg="var(--muted-bg)">
                 <Image
                   src={sport.img}
                   alt={sport.name}
@@ -44,7 +44,7 @@ export const DisciplinesSection = () => {
               </Box>
 
               <Flex align="center" p={4}>
-                <Text fontWeight="bold" fontSize="lg" color="gray.800">
+                <Text fontWeight="bold" fontSize="lg" color="var(--card-text)">
                   {sport.name}
                 </Text>
               </Flex>

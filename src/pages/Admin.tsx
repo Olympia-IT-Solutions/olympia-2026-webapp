@@ -95,7 +95,7 @@ export function Admin() {
       <Text color="gray.500" mb={8}>Demo Version - Verwaltung der Olympischen Winterspiele 2026</Text>
 
       {/* Referee Management Section */}
-      <Card.Root mb={8} p={6} bg="white" boxShadow="md" borderRadius="lg">
+      <Card.Root mb={8} p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
         <Stack direction="row" justify="space-between" align="center" mb={4}>
           <Heading size="lg">
             <FaUser style={{ display: 'inline', marginRight: '10px' }} />
@@ -111,7 +111,7 @@ export function Admin() {
         </Stack>
 
         {showAddForm && (
-          <Box bg="gray.50" p={4} borderRadius="md" mb={4}>
+          <Box bg="var(--muted-bg)" p={4} borderRadius="md" mb={4}>
             <Stack gap={3}>
               <Input
                 placeholder="Name"
@@ -180,11 +180,11 @@ export function Admin() {
       </Card.Root>
 
       {/* Results Management Section */}
-      <Card.Root p={6} bg="white" boxShadow="md" borderRadius="lg">
+      <Card.Root p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
         <Stack direction="row" justify="space-between" align="center" mb={4}>
           <Heading size="lg">
             Ergebnisse verwalten
-          </Heading>
+          </Heading> 
           <Button
             colorScheme="red"
             variant="outline"

@@ -10,7 +10,7 @@ import { useTheme } from '../logic/theme';
 
 // Styled-component for the main container
 const NavContainer = styled.nav`
-  background-color: var(--bg-color);
+  background-color: var(--nav-bg);
   border-radius: 50px;
   padding: 10px 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
@@ -128,7 +128,7 @@ export const NavBar = () => {
                 top="100%"
                 left="0"
                 mt={2}
-                bg="white"
+                bg="var(--card-bg)"
                 borderRadius="xl"
                 boxShadow="lg"
                 py={2}
@@ -142,7 +142,7 @@ export const NavBar = () => {
                     px={4}
                     py={2}
                     cursor="pointer"
-                    _hover={{ bg: 'gray.50', color: '#007f80' }}
+                    _hover={{ bg: 'var(--hover-bg)', color: '#007f80' }}
                     onClick={() => {
                       navigate(`/${currentLang}/sports/${key}`);
                       setIsSportsOpen(false);
@@ -154,7 +154,7 @@ export const NavBar = () => {
                   </Box>
                 ))}
               </Box>
-            )}
+            )} 
           </Box>
 
           {currentUser && (
@@ -221,20 +221,20 @@ export const NavBar = () => {
 
           <Box position="relative">
               <HStack 
-                  bg="white" 
+                  bg="var(--card-bg)" 
                   borderRadius="full" 
                   px={4} 
                   py={2} 
                   cursor="pointer"
-                  border="1px solid #eee"
+                  border="1px solid var(--border-color)"
                   boxShadow="sm"
-                  _hover={{ borderColor: '#ccc' }}
+                  _hover={{ borderColor: 'var(--hover-border)' }}
                   onClick={() => setIsOpen(!isOpen)}
               >
-                  <Text fontWeight="bold" fontSize="sm" color="#003049">
+                  <Text fontWeight="bold" fontSize="sm" color="var(--card-text)">
                       {languages[currentLang] || 'Deutsch'}
                   </Text>
-                  <FaChevronDown size={10} color="#003049" />
+                  <FaChevronDown size={10} color="var(--card-text)" />
               </HStack>
               
               {isOpen && (
@@ -243,7 +243,7 @@ export const NavBar = () => {
                       top="100%"
                       right="0"
                       mt={2}
-                      bg="white"
+                      bg="var(--card-bg)"
                       borderRadius="xl"
                       boxShadow="lg"
                       py={2}
@@ -257,7 +257,7 @@ export const NavBar = () => {
                               px={4}
                               py={2}
                               cursor="pointer"
-                              _hover={{ bg: 'gray.50', color: '#007f80' }}
+                              _hover={{ bg: 'var(--hover-bg)', color: '#007f80' }}
                               onClick={() => handleLanguageChange(code)}
                           >
                               <Text fontSize="sm" fontWeight={currentLang === code ? 'bold' : 'normal'}>

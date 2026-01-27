@@ -4,21 +4,67 @@
   --text-color: #003049;
   --border-color: #eee;
   --hover-border: #ccc;
+  --card-bg: white;
+  --card-text: #003049;
+  --muted-bg: #f7f7f7;
+  --btn-bg: white;
+  --btn-text: #003049;
+  --hover-bg: #f0f0f0;
 }
 
 /* Dark theme */
 [data-theme="dark"] {
-  --bg-color: rgba(0, 0, 0, 0.95);
+  --bg-color: #070707;
   --text-color: white;
   --border-color: #444;
   --hover-border: #666;
+  /* Use cohesive greys: nav/header/cards should stand out from page bg */
+  --nav-bg: #1b1b1b; /* Navbar & table headers */
+  --card-bg: #1f1f1f; /* Cards and panels */
+  --card-text: white;
+  --muted-bg: #161616; /* table rows and muted areas */
+  --btn-bg: rgba(255,255,255,0.08);
+  --btn-text: white;
+  --hover-bg: rgba(255,255,255,0.04);
 }
+
+/* Table header should match nav/card background for better contrast */
+table thead,
+table thead th {
+  background-color: var(--nav-bg);
+  color: var(--card-text);
+}
+
+/* Table body rows use muted background to create separation */
+table tbody tr {
+  background-color: var(--muted-bg);
+  color: var(--card-text);
+}
+
+/* Make table header cells visually distinct */
+thead th {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+} 
+
+/* Table header should match card background for better contrast */
+table thead,
+table thead th {
+  background-color: var(--card-bg);
+  color: var(--card-text);
+}
+
+/* Make table header cells visually distinct */
+thead th {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+} 
 
 /* Apply to body or specific elements */
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
-}
+} 
 
 @font-face {
   font-family: 'MilanoCortina2026-Bold';

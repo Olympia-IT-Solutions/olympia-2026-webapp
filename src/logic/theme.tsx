@@ -29,6 +29,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   useEffect(() => {
     localStorage.setItem('theme', theme);
+    // keep Chakra UI color mode in sync so components using color mode behave consistently
+    try { localStorage.setItem('chakra-ui-color-mode', theme); } catch (e) {}
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 

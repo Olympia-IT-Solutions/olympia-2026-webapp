@@ -8,7 +8,7 @@ const PageContainer = styled.div`
   display: flex;
   height: 100vh;
   width: 100vw;
-  background-color: #00313d;
+  background-color: var(--bg-color);
 `;
 
 const ImageSection = styled.div`
@@ -33,7 +33,7 @@ const BackButton = styled.button`
   align-items: center;
   gap: 8px;
   background: rgba(0,0,0,0.55);
-  color: white;
+  color: var(--card-text);
   border: none;
   padding: 8px 12px;
   border-radius: 8px;
@@ -52,14 +52,14 @@ const FormSection = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #00313d;
+  background-color: transparent;
   padding: 80px;
 `;
 
 const FormContainer = styled.div`
   width: 100%;
   max-width: 500px;
-  color: white;
+  color: var(--text-color);
 `;
 
 const Title = styled.h2`
@@ -82,23 +82,23 @@ const Input = styled.input`
   width: 100%;
   padding: 12px;
   border-radius: 0;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--border-color);
   background-color: transparent;
-  color: white;
+  color: var(--text-color);
   font-size: 1rem;
   
   &:focus {
     outline: none;
-    border-color: white;
-    background-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--text-color);
+    background-color: var(--muted-bg);
   }
 `;
 
 const Button = styled.button`
   width: 100%;
   padding: 12px 30px;
-  background-color: white;
-  color: #00313d;
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
   border: none;
   font-weight: bold;
   font-size: 1rem;
@@ -107,9 +107,9 @@ const Button = styled.button`
   margin-top: 1rem;
   
   &:hover {
-    background-color: #f0f0f0;
+    background-color: var(--hover-bg);
   }
-`;
+`; 
 
 export function Login() {
   const { lang } = useParams<{ lang: string }>();

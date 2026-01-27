@@ -60,12 +60,14 @@ export const HeroVideo = ({ title }: { title?: string }) => {
           {title}
         </Heading>
 
-        <ButtonGroup mt={6} variant="ghost">
+        <ButtonGroup mt={6}>
           <Button
             onClick={() => document.getElementById('disciplines')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
             colorScheme="teal"
             borderRadius="full"
-            bg="rgba(255,255,255,0.08)"
+            bg="#007f80"
+            color="white"
+            _hover={{ bg: '#006666' }}
           >
             <FaChevronDown style={{ marginRight: 8 }} />
             Die Disziplinen
@@ -75,7 +77,9 @@ export const HeroVideo = ({ title }: { title?: string }) => {
             onClick={() => document.getElementById('countries-feature')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
             colorScheme="teal"
             borderRadius="full"
-            bg="rgba(255,255,255,0.08)"
+            bg="#007f80"
+            color="white"
+            _hover={{ bg: '#006666' }}
           >
             <FaChevronDown style={{ marginRight: 8 }} />
             Die Länder

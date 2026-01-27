@@ -58,16 +58,16 @@ export const CookieMenu: React.FC = () => {
               variant="outline"
               borderColor="white"
               color="white"
-              _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
+              _hover={{ bg: 'var(--hover-bg)' }}
               onClick={() => handleConsent('decline')}
             >
               {t('cookieBanner.decline')}
             </Button>
             <Button
               size="sm"
-              bg="white"
-              color="#00313d"
-              _hover={{ bg: 'gray.100' }}
+              bg="var(--btn-bg)"
+              color="var(--btn-text)"
+              _hover={{ bg: 'var(--hover-bg)' }}
               onClick={() => handleConsent('accept')}
             >
               {t('cookieBanner.accept')}
