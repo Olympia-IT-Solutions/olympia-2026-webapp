@@ -1,9 +1,139 @@
 {
   "welcome": "Willkommen bei den Milano Cortina 2026 Olympischen Spielen",
   "description": "Dies ist eine React-Anwendung mit i18n-Unterstützung",
+  "hero": {
+    "disciplines": "Die Disziplinen",
+    "countries": "Die Länder"
+  },
   "cookieBanner": {
     "message": "Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern. Dies ist eine Demo-Version, da wir derzeit keine echten Cookies verwenden.",
     "accept": "Alle akzeptieren",
     "decline": "Optionale ablehnen"
+  },
+  "nav": {
+    "countries": "Länderübersicht",
+    "sports": "Sportarten",
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "login": {
+    "title": "Willkommen",
+    "invalidCredentials": "Ungültige Anmeldedaten",
+    "back": "Zurück",
+    "email": "E-Mail *",
+    "password": "Passwort *",
+    "submit": "Weiter"
+  },
+  "notfound": {
+    "title": "Seite nicht gefunden",
+    "text": "Die von dir gesuchte Seite existiert nicht oder wurde verschoben.",
+    "home": "Startseite",
+    "countries": "Länderübersicht"
+  },
+  "countries": {
+    "title": "Länderübersicht",
+    "featureAria": "Zur Länderübersicht",
+    "featureHeading": "Die Länder bei Milano Cortina in der Übersicht"
+  },
+  "countryTable": {
+    "columns": {
+      "country": "Land",
+      "bronze": "Bronze",
+      "silver": "Silber",
+      "gold": "Gold"
+    },
+    "noData": "Keine Daten verfügbar.",
+    "loadMore": "Weitere Einträge laden"
+  },
+  "sport": {
+    "notFoundTitle": "Sportart nicht gefunden",
+    "notFoundText": "Die gesuchte Sportart \"{{sport}}\" existiert nicht oder es liegen keine Daten vor."
+  },
+  "status": {
+    "pending": "Ausstehend",
+    "approved": "Genehmigt",
+    "published": "Veröffentlicht"
+  },
+  "dashboard": {
+    "title": "Schiedsrichter Dashboard",
+    "demoNote": "Demo Version - Ergebnisverwaltung mit 4-Augen-Prinzip",
+    "loggedInAs": "Angemeldet als: {{email}} ({{role}})",
+    "infoTitle": "4-Augen-Prinzip",
+    "infoText": "Ergebnisse müssen von einem anderen Schiedsrichter genehmigt werden, bevor sie veröffentlicht werden können. Sie können Ihre eigenen Einreichungen nicht genehmigen.",
+    "newResultTitle": "Neues Ergebnis einreichen",
+    "addResult": "Ergebnis hinzufügen",
+    "labels": {
+      "sport": "Sportart",
+      "event": "Event",
+      "athlete": "Athlet",
+      "country": "Land",
+      "result": "Ergebnis",
+      "notes": "Notizen (optional)",
+      "notesPlaceholder": "Zusätzliche Bemerkungen..."
+    },
+    "placeholders": {
+      "sportExample": "z.B. Ski Alpin",
+      "eventExample": "z.B. Downhill Men",
+      "athleteExample": "Name des Athleten",
+      "countryExample": "z.B. Austria",
+      "resultExample": "z.B. 1:42.56"
+    },
+    "buttons": {
+      "submit": "Einreichen",
+      "cancel": "Abbrechen",
+      "approve": "Genehmigen",
+      "publish": "Veröffentlichen"
+    },
+    "table": {
+      "title": "Eingereichte Ergebnisse",
+      "noResults": "Keine Ergebnisse vorhanden",
+      "waiting": "Wartet auf Genehmigung",
+      "publishedCheck": "✓ Veröffentlicht",
+      "approvedBy": "Genehmigt von: {{person}}",
+      "columns": {
+        "sportEvent": "Sportart / Event",
+        "athlete": "Athlet",
+        "country": "Land",
+        "result": "Ergebnis",
+        "submittedBy": "Eingereicht von",
+        "status": "Status",
+        "actions": "Aktionen"
+      }
+    }
+  },
+
+  "admin": {
+    "title": "Admin Dashboard",
+    "demoNote": "Demo Version - Verwaltung der Olympischen Winterspiele 2026",
+    "accessDeniedTitle": "Zugriff verweigert",
+    "accessDeniedText": "Sie haben keine Berechtigung, diese Seite zu betreten.",
+    "refereesManage": "Schiedsrichter verwalten",
+    "newReferee": "Neuer Schiedsrichter",
+    "placeholders": {
+      "name": "Name",
+      "email": "E-Mail",
+      "country": "Land",
+      "sports": "Sportarten (kommagetrennt)"
+    },
+    "buttons": {
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "deleteAll": "Alle Ergebnisse löschen"
+    },
+    "noReferees": "Keine Schiedsrichter vorhanden",
+    "resultsTitle": "Ergebnisse verwalten",
+    "table": {
+      "columns": {
+        "name": "Name",
+        "email": "E-Mail",
+        "country": "Land",
+        "sports": "Sportarten",
+        "createdAt": "Erstellt am",
+        "actions": "Aktionen",
+        "status": "Status"
+      }
+    }
   }
-}
+} 

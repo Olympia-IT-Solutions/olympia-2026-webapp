@@ -26,7 +26,7 @@ const NavContainer = styled.nav`
 `;
 
 export const NavBar = () => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
   const [isOpen, setIsOpen] = useState(false);
@@ -100,7 +100,7 @@ export const NavBar = () => {
             _hover={{ bg: '#006666' }}
             onClick={() => navigate(`/${currentLang}/countries`)}
           >
-            Länderübersicht
+            {t('nav.countries')}
           </Button>
 
           <Box position="relative">
@@ -117,7 +117,7 @@ export const NavBar = () => {
               onClick={() => setIsSportsOpen(!isSportsOpen)}
             >
               <Text fontWeight="bold" fontSize="sm">
-                Sportarten
+                {t('nav.sports')}
               </Text>
               <FaChevronDown size={10} />
             </HStack>
@@ -168,7 +168,7 @@ export const NavBar = () => {
               _hover={{ bg: '#006666' }}
               onClick={() => navigate(`/${currentLang}/dashboard`)}
             >
-              Dashboard
+              {t('nav.dashboard')}
             </Button>
           )}
 
@@ -183,7 +183,7 @@ export const NavBar = () => {
               _hover={{ bg: '#006666' }}
               onClick={() => navigate(`/${currentLang}/admin`)}
             >
-              Admin
+              {t('nav.admin')}
             </Button>
           )}
         </HStack>
@@ -202,7 +202,7 @@ export const NavBar = () => {
             _hover={{ bg: '#006666' }}
             onClick={currentUser ? handleLogout : () => navigate(`/${currentLang}/login`)}
           >
-            {currentUser ? 'Logout' : 'Login'}
+            {currentUser ? t('nav.logout') : t('nav.login')}
           </Button>
 
           <Button

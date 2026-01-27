@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Box, Heading, Text, Button, Input, Stack, Table, Badge, Card } from '@chakra-ui/react'
 import { isAdmin } from '../logic/rights'
 import { FaUserPlus, FaTrash, FaUser } from 'react-icons/fa'
@@ -42,12 +43,13 @@ export function Admin() {
   const [results, setResults] = useState<Result[]>(initialResults)
   const [newReferee, setNewReferee] = useState({ name: '', email: '', country: '', sports: '' })
   const [showAddForm, setShowAddForm] = useState(false)
+  const { t } = useTranslation()
 
   if (!isAdmin()) {
     return (
       <Box p={10} textAlign="center">
-        <Heading>Zugriff verweigert</Heading>
-        <Text>Sie haben keine Berechtigung, diese Seite zu betreten.</Text>
+        <Heading>{t('admin.accessDeniedTitle')}</Heading>
+        <Text>{t('admin.accessDeniedText')}</Text>
       </Box>
     )
   }
@@ -91,22 +93,22 @@ export function Admin() {
 
   return (
     <Box p={10} maxW="1400px" mx="auto">
-      <Heading mb={2}>Admin Dashboard</Heading>
-      <Text color="gray.500" mb={8}>Demo Version - Verwaltung der Olympischen Winterspiele 2026</Text>
+      <Heading mb={2}>{t('admin.title')}</Heading>
+      <Text color="gray.500" mb={8}>{t('admin.demoNote')}</Text>
 
       {/* Referee Management Section */}
       <Card.Root mb={8} p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
         <Stack direction="row" justify="space-between" align="center" mb={4}>
           <Heading size="lg">
             <FaUser style={{ display: 'inline', marginRight: '10px' }} />
-            Schiedsrichter verwalten
+            {t('admin.refereesManage')}
           </Heading>
           <Button
             colorScheme="teal"
             onClick={() => setShowAddForm(!showAddForm)}
           >
             <FaUserPlus style={{ marginRight: '8px' }} />
-            Neuer Schiedsrichter
+            {t('admin.newReferee')}
           </Button>
         </Stack>
 
@@ -114,28 +116,28 @@ export function Admin() {
           <Box bg="var(--muted-bg)" p={4} borderRadius="md" mb={4}>
             <Stack gap={3}>
               <Input
-                placeholder="Name"
+                placeholder={t('admin.placeholders.name')}
                 value={newReferee.name}
                 onChange={(e) => setNewReferee({ ...newReferee, name: e.target.value })}
               />
               <Input
-                placeholder="E-Mail"
+                placeholder={t('admin.placeholders.email')}
                 value={newReferee.email}
                 onChange={(e) => setNewReferee({ ...newReferee, email: e.target.value })}
               />
               <Input
-                placeholder="Land"
+                placeholder={t('admin.placeholders.country')}
                 value={newReferee.country}
                 onChange={(e) => setNewReferee({ ...newReferee, country: e.target.value })}
               />
               <Input
-                placeholder="Sportarten (kommagetrennt)"
+                placeholder={t('admin.placeholders.sports')}
                 value={newReferee.sports}
                 onChange={(e) => setNewReferee({ ...newReferee, sports: e.target.value })}
               />
               <Stack direction="row" gap={2}>
-                <Button colorScheme="green" onClick={handleAddReferee}>Speichern</Button>
-                <Button variant="outline" onClick={() => setShowAddForm(false)}>Abbrechen</Button>
+                <Button colorScheme="green" onClick={handleAddReferee}>{t('admin.buttons.save')}</Button>
+                <Button variant="outline" onClick={() => setShowAddForm(false)}>{t('admin.buttons.cancel')}</Button>
               </Stack>
             </Stack>
           </Box>
@@ -144,12 +146,12 @@ export function Admin() {
         <Table.Root variant="line">
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader>Name</Table.ColumnHeader>
-              <Table.ColumnHeader>E-Mail</Table.ColumnHeader>
-              <Table.ColumnHeader>Land</Table.ColumnHeader>
-              <Table.ColumnHeader>Sportarten</Table.ColumnHeader>
-              <Table.ColumnHeader>Erstellt am</Table.ColumnHeader>
-              <Table.ColumnHeader>Aktionen</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('admin.table.columns.name')}</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('admin.table.columns.email')}</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('admin.table.columns.country')}</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('admin.table.columns.sports')}</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('admin.table.columns.createdAt')}</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('admin.table.columns.actions')}</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -175,7 +177,7 @@ export function Admin() {
           </Table.Body>
         </Table.Root>
         {referees.length === 0 && (
-          <Text textAlign="center" color="gray.500" py={4}>Keine Schiedsrichter vorhanden</Text>
+          <Text textAlign="center" color="gray.500" py={4}>{t('admin.noReferees')}</Text>
         )}
       </Card.Root>
 
@@ -183,7 +185,7 @@ export function Admin() {
       <Card.Root p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
         <Stack direction="row" justify="space-between" align="center" mb={4}>
           <Heading size="lg">
-            Ergebnisse verwalten
+            {t('admin.resultsTitle')}
           </Heading> 
           <Button
             colorScheme="red"
@@ -192,21 +194,20 @@ export function Admin() {
             disabled={results.length === 0}
           >
             <FaTrash style={{ marginRight: '8px' }} />
-            Alle Ergebnisse löschen
+            {t('admin.buttons.deleteAll')}
           </Button>
         </Stack>
 
         <Table.Root variant="line">
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader>Sportart</Table.ColumnHeader>
-              <Table.ColumnHeader>Event</Table.ColumnHeader>
-              <Table.ColumnHeader>Athlet</Table.ColumnHeader>
-              <Table.ColumnHeader>Land</Table.ColumnHeader>
-              <Table.ColumnHeader>Ergebnis</Table.ColumnHeader>
-              <Table.ColumnHeader>Eingereicht von</Table.ColumnHeader>
-              <Table.ColumnHeader>Status</Table.ColumnHeader>
-              <Table.ColumnHeader>Aktionen</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('dashboard.table.columns.sportEvent')}</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('dashboard.table.columns.athlete')}</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('dashboard.table.columns.country')}</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('dashboard.table.columns.result')}</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('dashboard.table.columns.submittedBy')}</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('dashboard.table.columns.status')}</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('dashboard.table.columns.actions')}</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -220,7 +221,7 @@ export function Admin() {
                 <Table.Cell>{result.submittedBy}</Table.Cell>
                 <Table.Cell>
                   <Badge colorPalette={getStatusColor(result.status)}>
-                    {result.status === 'pending' ? 'Ausstehend' : result.status === 'approved' ? 'Genehmigt' : 'Veröffentlicht'}
+                    {result.status === 'pending' ? t('status.pending') : result.status === 'approved' ? t('status.approved') : t('status.published')}
                   </Badge>
                 </Table.Cell>
                 <Table.Cell>
@@ -238,7 +239,7 @@ export function Admin() {
           </Table.Body>
         </Table.Root>
         {results.length === 0 && (
-          <Text textAlign="center" color="gray.500" py={4}>Keine Ergebnisse vorhanden</Text>
+          <Text textAlign="center" color="gray.500" py={4}>{t('dashboard.table.noResults')}</Text>
         )}
       </Card.Root>
     </Box>

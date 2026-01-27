@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import { login } from '../logic/rights';
 
 const PageContainer = styled.div`
@@ -114,6 +115,7 @@ const Button = styled.button`
 export function Login() {
   const { lang } = useParams<{ lang: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -124,17 +126,17 @@ export function Login() {
     if (user) {
       navigate(`/${lang}/dashboard`);
     } else {
-      setError('Ungültige Anmeldedaten');
+      setError(t('login.invalidCredentials'));
     }
   };
 
   return (
     <PageContainer>
-      <BackButton onClick={() => navigate(-1)} aria-label="Zurück">
+      <BackButton onClick={() => navigate(-1)} aria-label={t('login.back')}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
           <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-        Zurück
+        {t('login.back')}
       </BackButton>
 
       <ImageSection>
@@ -147,11 +149,11 @@ export function Login() {
 
       <FormSection>
         <FormContainer>
-          <Title>Willkommen</Title>
+          <Title>{t('login.title')}</Title>
           
           <form onSubmit={handleLogin}>
             <InputGroup>
-              <Label>Email *</Label>
+              <Label>{t('login.email')}</Label>
               <Input 
                 type="email" 
                 value={email} 
@@ -161,7 +163,7 @@ export function Login() {
             </InputGroup>
             
             <InputGroup>
-              <Label>Password *</Label>
+              <Label>{t('login.password')}</Label>
               <Input 
                 type="password" 
                 value={password} 
@@ -170,7 +172,7 @@ export function Login() {
               />
             </InputGroup>
 
-            <Button type="submit">Weiter</Button>
+            <Button type="submit">{t('login.submit')}</Button>
           </form>
           {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
         </FormContainer>

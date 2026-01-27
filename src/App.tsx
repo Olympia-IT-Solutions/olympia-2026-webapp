@@ -62,7 +62,7 @@ function Home() {
             _hover={{ bg: '#006666' }}
           >
             <FaChevronDown style={{ marginRight: '8px' }} />
-            Die Disziplinen
+            {t('hero.disciplines')}
           </Button>
 
           <Button
@@ -74,21 +74,21 @@ function Home() {
             _hover={{ bg: '#006666' }}
           >
             <FaChevronDown style={{ marginRight: '8px' }} />
-            Die Länder
+            {t('hero.countries')}
           </Button>
         </ButtonGroup>
       </Box>
 
-      <Box height={50} />
-      <Slider />      
-      <Box height={50} />
+      <HeroVideo title={t('welcome')} />
 
       <Box id="disciplines">
         <DisciplinesSection />
       </Box>
       <Box height={50} />
 
-      <HeroVideo />
+      <Box height={50} />
+      <Slider />      
+      <Box height={50} />
 
       <Box height={50} />
       <Box id="countries-feature">

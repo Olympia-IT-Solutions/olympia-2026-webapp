@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { Heading } from '@chakra-ui/react'
 import { useNavigate, useParams } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import featureImg from '../assets/milano-cortina-2026.avif'
 
 const FeatureWrapper = styled.div`
@@ -12,7 +13,7 @@ const FeatureWrapper = styled.div`
 const Card = styled.div`
   position: relative;
   width: 100%;
-  height: 360px;
+  height: 800px;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
@@ -53,11 +54,12 @@ const Overlay = styled.div`
 export const CountriesFeature = ({ id }: { id?: string }) => {
   const navigate = useNavigate()
   const { lang } = useParams<{ lang: string }>()
+  const { t } = useTranslation()
   const currentLang = lang || 'de'
 
   return (
     <FeatureWrapper>
-      <Card id={id} onClick={() => navigate(`/${currentLang}/countries`)} role="link" aria-label="Zur Länderübersicht">
+      <Card id={id} onClick={() => navigate(`/${currentLang}/countries`)} role="link" aria-label={t('countries.featureAria')}>
         <Bg />
         <Overlay>
           <Heading
@@ -66,7 +68,7 @@ export const CountriesFeature = ({ id }: { id?: string }) => {
             color="white"
             style={{ fontFamily: "'MilanoCortina2026-Bold'", textShadow: '0 6px 18px rgba(0,0,0,0.6)' }}
           >
-            Die Länder bei Milano Cortina in der Übersicht
+            {t('countries.featureHeading')}
           </Heading>
         </Overlay>
       </Card>

@@ -76,7 +76,7 @@ const sportsData: Record<string, { title: string; imageUrl: string; results: Spo
 
 export function SportPage() {
   const { sportId } = useParams<{ sportId: string }>();
-  const { } = useTranslation();
+  const { t } = useTranslation();
 
   // Normalize sportId to lowercase to match keys
   const sportKey = sportId?.toLowerCase();
@@ -85,8 +85,8 @@ export function SportPage() {
   if (!sportData) {
     return (
       <Box p={10} textAlign="center">
-        <Heading>Sportart nicht gefunden</Heading>
-        <Text mt={4}>Die gesuchte Sportart "{sportId}" existiert nicht oder es liegen keine Daten vor.</Text>
+        <Heading>{t('sport.notFoundTitle')}</Heading>
+        <Text mt={4}>{t('sport.notFoundText', { sport: sportId })}</Text>
       </Box>
     );
   }

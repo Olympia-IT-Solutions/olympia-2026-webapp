@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Box, Heading, Text, Button, Input, Stack, Table, Badge, Card, Textarea } from '@chakra-ui/react'
 import { getCurrentUser } from '../logic/rights'
 import { FaPlus, FaCheck, FaGlobe, FaClipboardList, FaEye } from 'react-icons/fa'
@@ -75,6 +76,7 @@ const sportOptions = [
 
 export function Dashboard() {
   const currentUser = getCurrentUser()
+  const { t } = useTranslation()
   const [results, setResults] = useState<Result[]>(initialResults)
   const [showAddForm, setShowAddForm] = useState(false)
   const [newResult, setNewResult] = useState({
@@ -140,9 +142,9 @@ export function Dashboard() {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'pending': return 'Ausstehend'
-      case 'approved': return 'Genehmigt'
-      case 'published': return 'Veröffentlicht'
+      case 'pending': return t('status.pending')
+      case 'approved': return t('status.approved')
+      case 'published': return t('status.published')
       default: return status
     }
   }
@@ -159,13 +161,13 @@ export function Dashboard() {
 
   return (
     <Box p={10} maxW="1400px" mx="auto">
-      <Heading mb={2}>Schiedsrichter Dashboard</Heading>
+      <Heading mb={2}>{t('dashboard.title')}</Heading>
       <Text color="gray.500" mb={2}>
-        Demo Version - Ergebnisverwaltung mit 4-Augen-Prinzip
+        {t('dashboard.demoNote')}
       </Text>
       {currentUser && (
         <Text fontSize="sm" color="teal.600" mb={8}>
-          Angemeldet als: {currentUser.email} ({currentUser.role})
+          {t('dashboard.loggedInAs', { email: currentUser.email, role: currentUser.role })}
         </Text>
       )}
 
@@ -174,10 +176,9 @@ export function Dashboard() {
         <Stack direction="row" align="center" gap={3}>
           <FaEye color="#3182CE" size={24} />
           <Box>
-            <Text fontWeight="bold" color="blue.800">4-Augen-Prinzip</Text>
+            <Text fontWeight="bold" color="blue.800">{t('dashboard.infoTitle')}</Text>
             <Text fontSize="sm" color="blue.700">
-              Ergebnisse müssen von einem anderen Schiedsrichter genehmigt werden, bevor sie veröffentlicht werden können. 
-              Sie können Ihre eigenen Einreichungen nicht genehmigen.
+              {t('dashboard.infoText')}
             </Text>
           </Box>
         </Stack>
@@ -188,14 +189,14 @@ export function Dashboard() {
         <Stack direction="row" justify="space-between" align="center" mb={4}>
           <Heading size="lg">
             <FaClipboardList style={{ display: 'inline', marginRight: '10px' }} />
-            Neues Ergebnis einreichen
+            {t('dashboard.newResultTitle')}
           </Heading>
           <Button
             colorScheme="teal"
             onClick={() => setShowAddForm(!showAddForm)}
           >
             <FaPlus style={{ marginRight: '8px' }} />
-            Ergebnis hinzufügen
+            {t('dashboard.addResult')}
           </Button>
         </Stack>
 
@@ -204,9 +205,9 @@ export function Dashboard() {
             <Stack gap={3}>
               <Stack direction={{ base: 'column', md: 'row' }} gap={3}>
                 <Box flex={1}>
-                  <Text fontSize="sm" mb={1} fontWeight="medium">Sportart</Text>
+                  <Text fontSize="sm" mb={1} fontWeight="medium">{t('dashboard.labels.sport')}</Text>
                   <Input
-                    placeholder="z.B. Ski Alpin"
+                    placeholder={t('dashboard.placeholders.sportExample')}
                     value={newResult.sport}
                     onChange={(e) => setNewResult({ ...newResult, sport: e.target.value })}
                     list="sports"
@@ -216,9 +217,9 @@ export function Dashboard() {
                   </datalist>
                 </Box>
                 <Box flex={1}>
-                  <Text fontSize="sm" mb={1} fontWeight="medium">Event</Text>
+                  <Text fontSize="sm" mb={1} fontWeight="medium">{t('dashboard.labels.event')}</Text>
                   <Input
-                    placeholder="z.B. Downhill Men"
+                    placeholder={t('dashboard.placeholders.eventExample')}
                     value={newResult.event}
                     onChange={(e) => setNewResult({ ...newResult, event: e.target.value })}
                   />
@@ -226,41 +227,41 @@ export function Dashboard() {
               </Stack>
               <Stack direction={{ base: 'column', md: 'row' }} gap={3}>
                 <Box flex={1}>
-                  <Text fontSize="sm" mb={1} fontWeight="medium">Athlet</Text>
+                  <Text fontSize="sm" mb={1} fontWeight="medium">{t('dashboard.labels.athlete')}</Text>
                   <Input
-                    placeholder="Name des Athleten"
+                    placeholder={t('dashboard.placeholders.athleteExample')}
                     value={newResult.athlete}
                     onChange={(e) => setNewResult({ ...newResult, athlete: e.target.value })}
                   />
                 </Box>
                 <Box flex={1}>
-                  <Text fontSize="sm" mb={1} fontWeight="medium">Land</Text>
+                  <Text fontSize="sm" mb={1} fontWeight="medium">{t('dashboard.labels.country')}</Text>
                   <Input
-                    placeholder="z.B. Austria"
+                    placeholder={t('dashboard.placeholders.countryExample')}
                     value={newResult.country}
                     onChange={(e) => setNewResult({ ...newResult, country: e.target.value })}
                   />
                 </Box>
                 <Box flex={1}>
-                  <Text fontSize="sm" mb={1} fontWeight="medium">Ergebnis</Text>
+                  <Text fontSize="sm" mb={1} fontWeight="medium">{t('dashboard.labels.result')}</Text>
                   <Input
-                    placeholder="z.B. 1:42.56"
+                    placeholder={t('dashboard.placeholders.resultExample')}
                     value={newResult.result}
                     onChange={(e) => setNewResult({ ...newResult, result: e.target.value })}
                   />
                 </Box>
               </Stack>
               <Box>
-                <Text fontSize="sm" mb={1} fontWeight="medium">Notizen (optional)</Text>
+                <Text fontSize="sm" mb={1} fontWeight="medium">{t('dashboard.labels.notes')}</Text>
                 <Textarea
-                  placeholder="Zusätzliche Bemerkungen..."
+                  placeholder={t('dashboard.labels.notesPlaceholder')}
                   value={newResult.notes}
                   onChange={(e) => setNewResult({ ...newResult, notes: e.target.value })}
                 />
               </Box>
               <Stack direction="row" gap={2}>
-                <Button colorScheme="green" onClick={handleAddResult}>Einreichen</Button>
-                <Button variant="outline" onClick={() => setShowAddForm(false)}>Abbrechen</Button>
+                <Button colorScheme="green" onClick={handleAddResult}>{t('dashboard.buttons.submit')}</Button>
+                <Button variant="outline" onClick={() => setShowAddForm(false)}>{t('dashboard.buttons.cancel')}</Button>
               </Stack>
             </Stack>
           </Box>
@@ -270,20 +271,20 @@ export function Dashboard() {
       {/* Results Table */}
       <Card.Root p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
         <Heading size="lg" mb={4}>
-          Eingereichte Ergebnisse
+          {t('dashboard.table.title')}
         </Heading> 
 
         <Box overflowX="auto">
           <Table.Root variant="line">
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeader>Sportart / Event</Table.ColumnHeader>
-                <Table.ColumnHeader>Athlet</Table.ColumnHeader>
-                <Table.ColumnHeader>Land</Table.ColumnHeader>
-                <Table.ColumnHeader>Ergebnis</Table.ColumnHeader>
-                <Table.ColumnHeader>Eingereicht von</Table.ColumnHeader>
-                <Table.ColumnHeader>Status</Table.ColumnHeader>
-                <Table.ColumnHeader>Aktionen</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('dashboard.table.columns.sportEvent')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('dashboard.table.columns.athlete')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('dashboard.table.columns.country')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('dashboard.table.columns.result')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('dashboard.table.columns.submittedBy')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('dashboard.table.columns.status')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('dashboard.table.columns.actions')}</Table.ColumnHeader>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -306,7 +307,7 @@ export function Dashboard() {
                     </Badge>
                     {result.approvedBy && (
                       <Text fontSize="xs" color="gray.500" mt={1}>
-                        Genehmigt von: {result.approvedBy}
+                        {t('dashboard.table.approvedBy', { person: result.approvedBy })}
                       </Text>
                     )}
                   </Table.Cell>
@@ -317,10 +318,10 @@ export function Dashboard() {
                           size="sm"
                           colorScheme="blue"
                           onClick={() => handleApprove(result.id)}
-                          title="Genehmigen (4-Augen-Prinzip)"
+                          title={t('dashboard.buttons.approve') + ' (4-Augen-Prinzip)'}
                         >
                           <FaCheck style={{ marginRight: '4px' }} />
-                          Genehmigen
+                          {t('dashboard.buttons.approve')}
                         </Button>
                       )}
                       {canPublish(result) && (
@@ -328,20 +329,20 @@ export function Dashboard() {
                           size="sm"
                           colorScheme="green"
                           onClick={() => handlePublish(result.id)}
-                          title="Veröffentlichen"
+                          title={t('dashboard.buttons.publish')}
                         >
                           <FaGlobe style={{ marginRight: '4px' }} />
-                          Veröffentlichen
+                          {t('dashboard.buttons.publish')}
                         </Button>
                       )}
                       {result.status === 'pending' && result.submittedBy === currentUser?.email && (
                         <Text fontSize="xs" color="gray.500" alignSelf="center">
-                          Wartet auf Genehmigung
+                          {t('dashboard.table.waiting')}
                         </Text>
                       )}
                       {result.status === 'published' && (
                         <Text fontSize="xs" color="green.500" alignSelf="center">
-                          ✓ Veröffentlicht
+                          {t('dashboard.table.publishedCheck')}
                         </Text>
                       )}
                     </Stack>
@@ -352,7 +353,7 @@ export function Dashboard() {
           </Table.Root>
         </Box>
         {results.length === 0 && (
-          <Text textAlign="center" color="gray.500" py={4}>Keine Ergebnisse vorhanden</Text>
+          <Text textAlign="center" color="gray.500" py={4}>{t('dashboard.table.noResults')}</Text>
         )}
       </Card.Root>
     </Box>

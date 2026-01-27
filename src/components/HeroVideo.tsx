@@ -2,10 +2,12 @@ import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { Heading, Button, ButtonGroup } from '@chakra-ui/react'
 import { FaChevronDown } from 'react-icons/fa'
+import { useTranslation } from 'react-i18next'
 
 const VIDEO_SRC = 'https://img.olympics.com/s1/video/t_o_vod_mc_16-9_dev-auto/emvod/DrLv0dCxtXCMJ9MFoKOW6uOaDV5XegtG'
 
 export const HeroVideo = ({ title }: { title?: string }) => {
+  const { t } = useTranslation()
   const videoRef = useRef<HTMLVideoElement | null>(null)
 
   useEffect(() => {
@@ -70,7 +72,7 @@ export const HeroVideo = ({ title }: { title?: string }) => {
             _hover={{ bg: '#006666' }}
           >
             <FaChevronDown style={{ marginRight: 8 }} />
-            Die Disziplinen
+            {t('hero.disciplines')}
           </Button>
 
           <Button
@@ -82,7 +84,7 @@ export const HeroVideo = ({ title }: { title?: string }) => {
             _hover={{ bg: '#006666' }}
           >
             <FaChevronDown style={{ marginRight: 8 }} />
-            Die Länder
+            {t('hero.countries')}
           </Button>
         </ButtonGroup>
       </Overlay>
@@ -97,7 +99,7 @@ const Wrapper = styled.div`
   border-radius: 20px;
   overflow: hidden;
   position: relative;
-  height: 520px;
+  height: 800px;
 
   @media (max-width: 768px) {
     height: 360px;

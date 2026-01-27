@@ -1,5 +1,6 @@
 import { Box, SimpleGrid, Text, Image, Flex, Heading } from '@chakra-ui/react';
 import { Link, useParams } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 const disciplines = [
   { id: 'biathlon', name: 'Biathlon', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/BTH.svg' },
@@ -13,12 +14,13 @@ const disciplines = [
 
 export const DisciplinesSection = () => {
   const { lang } = useParams<{ lang: string }>();
+  const { t } = useTranslation()
   const currentLang = lang || 'de';
 
   return (
     <Box width="90%" maxW="1200px" mx="auto" my={12}>
       <Heading as="h2" size="xl" mb={6} textAlign="left" color="#007f80">
-        Die Disziplinen
+        {t('hero.disciplines')}
       </Heading>
       
       <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} gap={6}>

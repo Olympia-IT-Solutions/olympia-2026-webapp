@@ -5,6 +5,7 @@ import {
   Box,
   Text
 } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import { DebugManager } from '../debug';
 
 export interface CountryMedalData {
@@ -19,6 +20,7 @@ interface CountryTableProps {
 }
 
 export const CountryTable: React.FC<CountryTableProps> = ({ data = [] }) => {
+  const { t } = useTranslation();
   const [showAll, setShowAll] = useState(false);
 
   const displayData = useMemo(() => {
@@ -43,7 +45,7 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [] }) => {
   if (displayData.length === 0) {
       return (
           <Box p={4} textAlign="center">
-              <Text>Keine Daten verfügbar.</Text>
+              <Text>{t('countryTable.noData')}</Text>
           </Box>
       );
   }
@@ -54,10 +56,10 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [] }) => {
         <Table.Root variant='outline'>
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader>Land</Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="right">Bronze</Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="right">Silber</Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="right">Gold</Table.ColumnHeader>
+              <Table.ColumnHeader>{t('countryTable.columns.country')}</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="right">{t('countryTable.columns.bronze')}</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="right">{t('countryTable.columns.silver')}</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="right">{t('countryTable.columns.gold')}</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -75,7 +77,7 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [] }) => {
       {!showAll && hasMore && (
         <Box display="flex" justifyContent="center" mt={4}>
             <Button onClick={() => setShowAll(true)} colorPalette="teal">
-            Weitere Einträge laden
+            {t('countryTable.loadMore')}
             </Button>
         </Box>
       )}
