@@ -103,6 +103,12 @@
       }
     }
   },
+  "footer": {
+    "cookiePolicy": "Cookie Policy",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms Of Service",
+    "accessibility": "Accessibility"
+  },
   "admin": {
     "title": "Admin Dashboard",
     "demoNote": "Demo version - management of the Milano Cortina 2026 Winter Games",

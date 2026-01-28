@@ -43,11 +43,13 @@ const Overlay = styled.div`
   position: absolute;
   inset: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   padding-left: 6rem;
+  padding-bottom: 3rem;
 
   @media (max-width: 768px) {
     padding-left: 1.25rem;
+    padding-bottom: 1rem;
   }
 `;
 
@@ -64,8 +66,10 @@ export const CountriesFeature = ({ id }: { id?: string }) => {
         <Overlay>
           <Heading
             as="h2"
-            size="2xl"
+            size="3xl"
             color="white"
+            fontSize={{ base: '0.75rem', md: '1.75rem', lg: '2.5rem' }}
+            mb="0.25rem"
             style={{ fontFamily: "'MilanoCortina2026-Bold'", textShadow: '0 6px 18px rgba(0,0,0,0.6)' }}
           >
             {t('countries.featureHeading')}

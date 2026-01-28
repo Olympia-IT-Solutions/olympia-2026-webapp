@@ -103,6 +103,12 @@
       }
     }
   },
+  "footer": {
+    "cookiePolicy": "Politique de cookies",
+    "privacyPolicy": "Politique de confidentialité",
+    "termsOfService": "Conditions d'utilisation",
+    "accessibility": "Accessibilité"
+  },
   "admin": {
     "title": "Tableau de bord Admin",
     "demoNote": "Version démo - gestion des Jeux d'hiver Milano Cortina 2026",

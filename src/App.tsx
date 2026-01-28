@@ -8,14 +8,17 @@ import { DisciplinesSection } from './components/DisciplinesSection'
 import { Footer } from './components/Footer'
 import { FooterBanner } from './components/FooterBanner'
 import { CookieMenu } from './components/CookieMenu'
-import { Box, Heading, Button, ButtonGroup } from '@chakra-ui/react'
-import { FaChevronDown } from 'react-icons/fa';
+import { Box } from '@chakra-ui/react'
 import { Login } from './pages/Login'
 import { Admin } from './pages/Admin'
 import { Dashboard } from './pages/Dashboard'
 import { Countries } from './pages/Countries'
 import { SportPage } from './pages/SportPage'
 import { NotFound } from './pages/NotFound'
+import { CookiePolicy } from './pages/CookiePolicy'
+import { PrivacyPolicy } from './pages/PrivacyPolicy'
+import { TermsOfService } from './pages/TermsOfService'
+import { Accessibility } from './pages/Accessibility'
 import { HeroVideo } from './components/HeroVideo'
 
 function Layout() {
@@ -49,7 +52,7 @@ function Home() {
 
   return (
     <Box>
-      <Heading fontFamily="'MilanoCortina2026-Bold'" size="4xl" textAlign="center" mb={4} marginTop={50}>{t('welcome')}</Heading>
+      {/*<Heading fontFamily="'MilanoCortina2026-Bold'" size="4xl" textAlign="center" mb={4} marginTop={50}>{t('welcome')}</Heading>
 
       <Box my={4} display="flex" justifyContent="center">
         <ButtonGroup gap={4}>
@@ -77,10 +80,11 @@ function Home() {
             {t('hero.countries')}
           </Button>
         </ButtonGroup>
-      </Box>
+      </Box>*/}
 
       <HeroVideo title={t('welcome')} />
 
+      <Box height={50} />
       <Box id="disciplines">
         <DisciplinesSection />
       </Box>
@@ -107,6 +111,10 @@ function App() {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="countries" element={<Countries />} />
         <Route path="sports/:sportId" element={<SportPage />} />
+        <Route path="cookie-policy" element={<CookiePolicy />} />
+        <Route path="privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="terms-of-service" element={<TermsOfService />} />
+        <Route path="accessibility" element={<Accessibility />} />
         <Route path="*" element={<NotFound />} />
       </Route>
       <Route path="/:lang/login" element={<Login />} />
