@@ -37,6 +37,10 @@ export const Banner = () => {
               color="white" 
               borderColor="white"
               _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
+              as="a"
+              href="https://tickets.milanocortina2026.org"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Tickets
             </Button>
@@ -46,6 +50,10 @@ export const Banner = () => {
               color="white" 
               borderColor="white"
               _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
+              as="a"
+              href="https://shop.olympics.com/milano-cortina-2026"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Shop
             </Button>

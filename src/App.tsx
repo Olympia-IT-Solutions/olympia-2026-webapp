@@ -20,6 +20,8 @@ import { PrivacyPolicy } from './pages/PrivacyPolicy'
 import { TermsOfService } from './pages/TermsOfService'
 import { Accessibility } from './pages/Accessibility'
 import { HeroVideo } from './components/HeroVideo'
+import { getCurrentUser } from './logic/rights'
+import type { RoleType } from './logic/rights'
 
 function Layout() {
   const { i18n } = useTranslation()
@@ -31,6 +33,11 @@ function Layout() {
       i18n.changeLanguage(lang)
     }
   }, [lang, i18n])
+
+  // Scrolle zur Oberseite bei Route-Änderung
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [location.pathname])
 
   const isInternalPage = location.pathname.includes('/admin') || location.pathname.includes('/dashboard')
 
@@ -45,6 +52,31 @@ function Layout() {
       <CookieMenu />
     </Box>
   )
+}
+
+/**
+ * Geschützte Route für authentifizierte Benutzer mit bestimmten Rollen
+ */
+interface ProtectedRouteProps {
+  element: React.ReactElement
+  requiredRoles?: RoleType[]
+}
+
+function ProtectedRoute({ element, requiredRoles = [] }: ProtectedRouteProps) {
+  const { lang } = useParams<{ lang: string }>()
+  const currentUser = getCurrentUser()
+
+  // Benutzer nicht eingeloggt
+  if (!currentUser) {
+    return <Navigate to={`/${lang}/login`} replace />
+  }
+
+  // Wenn Rollen definiert sind, überprüfen ob Benutzer eine davon hat
+  if (requiredRoles.length > 0 && !requiredRoles.includes(currentUser.role)) {
+    return <NotFound />
+  }
+
+  return element
 }
 
 function Home() {
@@ -107,8 +139,8 @@ function App() {
     <Routes>
       <Route path="/:lang" element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="admin" element={<Admin />} />
-        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="admin" element={<ProtectedRoute element={<Admin />} requiredRoles={['admin']} />} />
+        <Route path="dashboard" element={<ProtectedRoute element={<Dashboard />} requiredRoles={['admin', 'referee']} />} />
         <Route path="countries" element={<Countries />} />
         <Route path="sports/:sportId" element={<SportPage />} />
         <Route path="cookie-policy" element={<CookiePolicy />} />
