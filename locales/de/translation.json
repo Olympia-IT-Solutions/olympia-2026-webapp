@@ -103,7 +103,12 @@
       }
     }
   },
-
+  "footer": {
+    "cookiePolicy": "Cookie-Richtlinie",
+    "privacyPolicy": "Datenschutzbestimmungen",
+    "termsOfService": "Nutzungsbedingungen",
+    "accessibility": "Barrierefreiheit"
+  },
   "admin": {
     "title": "Admin Dashboard",
     "demoNote": "Demo Version - Verwaltung der Olympischen Winterspiele 2026",

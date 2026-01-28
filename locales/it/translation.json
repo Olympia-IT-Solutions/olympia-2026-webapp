@@ -103,6 +103,12 @@
       }
     }
   },
+  "footer": {
+    "cookiePolicy": "Cookie Policy",
+    "privacyPolicy": "Informativa sulla privacy",
+    "termsOfService": "Termini di servizio",
+    "accessibility": "Accessibilità"
+  },
   "admin": {
     "title": "Admin Dashboard",
     "demoNote": "Versione demo - gestione dei Giochi Invernali Milano Cortina 2026",
