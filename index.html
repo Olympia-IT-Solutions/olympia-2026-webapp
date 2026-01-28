@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
     <title>Milano Cortina 2026 Olympics</title>
+    <script type="text/javascript">
+      (function() {
+        if (window.location.search.startsWith('?p=')) {
+          var pathAndQuery = window.location.search.slice(3).replace(/~and~/g, '&');
+          window.history.replaceState(null, null, '/olympia-2026-webapp' + pathAndQuery);
+        }
+      })();
+    </script>
     <script type="module" crossorigin src="/olympia-2026-webapp/assets/index-CPg4BadQ.js"></script>
     <link rel="stylesheet" crossorigin href="/olympia-2026-webapp/assets/index-DbAxlGMF.css">
   </head>
