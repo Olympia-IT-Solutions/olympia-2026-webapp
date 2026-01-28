@@ -10,7 +10,8 @@
       (function() {
         if (window.location.search.startsWith('?p=')) {
           var pathAndQuery = window.location.search.slice(3).replace(/~and~/g, '&');
-          var basePath = '/olympia-2026-webapp/';
+          var basePath = '/olympia-2026-webapp';
+          // pathAndQuery already starts with /, so don't add it again
           window.history.replaceState(null, null, basePath + pathAndQuery);
         }
       })();
