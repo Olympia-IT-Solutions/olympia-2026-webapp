@@ -1,3 +1,4 @@
+import { loginApi } from '../services/auth';
 import { DebugManager } from '../debug';
 
 /**
@@ -16,6 +17,7 @@ export type RoleType = typeof Role[keyof typeof Role];
 export interface User {
   email: string;
   role: RoleType;
+  token?: string;
 }
 
 /**
@@ -43,32 +45,47 @@ export function getCurrentUser(): User | null {
 
 /**
  * Loggt den Benutzer ein
- * @param email - E-Mail-Adresse
+ * @param email - E-Mail-Adresse oder Benutzername
  * @param password - Passwort
  * @returns User-Objekt bei Erfolg, null bei Fehler
  */
-export function login(email: string, password: string): User | null {
-  let user: User | null = null;
+export async function login(email: string, password: string): Promise<User | null> {
+  try {
+    // Versuche zuerst die API
+    const response = await loginApi(email, password);
+    
+    const user: User = {
+      email,
+      role: Role.Referee, // Standard-Rolle von der API
+      token: response.token,
+    };
 
-  if (DebugManager.isDebugMode) {
-    // Im Debug-Modus Test-Accounts verwenden
-    const account = testAccounts[email];
-    if (account && account.password === password) {
-      user = { email, role: account.role };
-    }
-  } else {
-    // Hier könnte echte Auth-Logik implementiert werden, z.B. API-Call
-    // Für jetzt: Simuliere erfolgreichen Login für jede Eingabe (nicht empfohlen für Produktion)
-    user = { email, role: Role.Referee }; // Standard-Rolle
-  }
-
-  if (user) {
     localStorage.setItem('currentUser', JSON.stringify(user));
+    localStorage.setItem('authToken', response.token);
     window.dispatchEvent(new Event('storage'));
-    DebugManager.log(`Benutzer ${email} eingeloggt mit Rolle ${user.role}`);
+    DebugManager.log(`Benutzer ${email} über API eingeloggt`);
+    
+    return user;
+  } catch (apiError) {
+    DebugManager.log('API Login fehlgeschlagen, versuche Debug-Modus...');
+    
+    // Fallback auf Debug-Modus wenn API fehlschlägt und Debug-Modus aktiv ist
+    if (DebugManager.isDebugMode) {
+      const account = testAccounts[email];
+      if (account && account.password === password) {
+        const user: User = {
+          email,
+          role: account.role,
+        };
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        window.dispatchEvent(new Event('storage'));
+        DebugManager.log(`Benutzer ${email} im Debug-Modus eingeloggt`);
+        return user;
+      }
+    }
+    
+    return null;
   }
-
-  return user;
 }
 
 /**
@@ -102,6 +119,7 @@ export function isReferee(): boolean {
  */
 export function logout(): void {
   localStorage.removeItem('currentUser');
+  localStorage.removeItem('authToken');
   window.dispatchEvent(new Event('storage'));
   DebugManager.log('Benutzer ausgeloggt');
 }

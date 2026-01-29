@@ -3,35 +3,40 @@ import {
   Table,
   Box,
   Text,
-  Icon
+  Icon,
+  Spinner
 } from '@chakra-ui/react';
 import { FaMedal } from 'react-icons/fa';
-
-export interface SportResult {
-  id: string | number;
-  name: string;
-  country: string;
-  result: string;
-  medal?: 'gold' | 'silver' | 'bronze';
-}
+import type { Result } from '../services/results';
 
 interface SportsTableProps {
-  data: SportResult[];
+  data: Result[];
+  loading?: boolean;
 }
 
-const MedalIcon = ({ medal }: { medal: 'gold' | 'silver' | 'bronze' }) => {
-  const colors = {
-    gold: '#FFD700',
-    silver: '#C0C0C0',
-    bronze: '#CD7F32',
+const MedalIcon = ({ medalType }: { medalType: string | null }) => {
+  const colors: Record<string, string> = {
+    GOLD: '#FFD700',
+    SILVER: '#C0C0C0',
+    BRONZE: '#CD7F32',
   };
 
+  if (!medalType || !colors[medalType]) return null;
+
   return (
-    <Icon as={FaMedal} color={colors[medal]} boxSize={6} />
+    <Icon as={FaMedal} color={colors[medalType]} boxSize={5} />
   );
 };
 
-export const SportsTable: React.FC<SportsTableProps> = ({ data }) => {
+export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false }) => {
+  if (loading) {
+    return (
+      <Box p={4} display="flex" justifyContent="center" alignItems="center" minH="200px">
+        <Spinner size="lg" colorPalette="teal" />
+      </Box>
+    );
+  }
+
   if (!data || data.length === 0) {
     return (
       <Box p={4} textAlign="center">
@@ -47,7 +52,7 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data }) => {
           <Table.Header>
             <Table.Row>
               <Table.ColumnHeader>Platz</Table.ColumnHeader>
-              <Table.ColumnHeader>Name</Table.ColumnHeader>
+              <Table.ColumnHeader>Athlet</Table.ColumnHeader>
               <Table.ColumnHeader>Land</Table.ColumnHeader>
               <Table.ColumnHeader textAlign="right">Ergebnis</Table.ColumnHeader>
               <Table.ColumnHeader textAlign="center">Medaille</Table.ColumnHeader>
@@ -56,12 +61,12 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data }) => {
           <Table.Body>
             {data.map((row, index) => (
               <Table.Row key={row.id}>
-                <Table.Cell>{index + 1}</Table.Cell>
-                <Table.Cell fontWeight="bold">{row.name}</Table.Cell>
+                <Table.Cell fontWeight="bold">{index + 1}</Table.Cell>
+                <Table.Cell>{row.athleteName}</Table.Cell>
                 <Table.Cell>{row.country}</Table.Cell>
-                <Table.Cell textAlign="right">{row.result}</Table.Cell>
+                <Table.Cell textAlign="right" fontFamily="monospace">{row.value}</Table.Cell>
                 <Table.Cell textAlign="center">
-                  {row.medal && <MedalIcon medal={row.medal} />}
+                  {row.hasMedal && <MedalIcon medalType={row.medalType} />}
                 </Table.Cell>
               </Table.Row>
             ))}

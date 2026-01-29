@@ -107,8 +107,13 @@ const Button = styled.button`
   transition: background-color 0.2s;
   margin-top: 1rem;
   
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: var(--hover-bg);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 `; 
 
@@ -116,17 +121,31 @@ export function Login() {
   const { lang } = useParams<{ lang: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const isFormValid = username.trim().length > 0 && password.length > 0;
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const user = login(email, password);
-    if (user) {
-      navigate(`/${lang}/dashboard`);
-    } else {
+    if (!isFormValid) return;
+    
+    setError('');
+    setLoading(true);
+    
+    try {
+      const user = await login(username, password);
+      if (user) {
+        navigate(`/${lang}/dashboard`);
+      } else {
+        setError(t('login.invalidCredentials'));
+      }
+    } catch (err) {
       setError(t('login.invalidCredentials'));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -153,12 +172,13 @@ export function Login() {
           
           <form onSubmit={handleLogin}>
             <InputGroup>
-              <Label>{t('login.email')}</Label>
+              <Label>{t('login.username', { defaultValue: 'Benutzername' })}</Label>
               <Input 
-                type="email" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                required 
+                type="text" 
+                value={username} 
+                onChange={(e) => setUsername(e.target.value)} 
+                required
+                disabled={loading}
               />
             </InputGroup>
             
@@ -168,11 +188,14 @@ export function Login() {
                 type="password" 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
-                required 
+                required
+                disabled={loading}
               />
             </InputGroup>
 
-            <Button type="submit">{t('login.submit')}</Button>
+            <Button type="submit" disabled={loading || !isFormValid}>
+              {loading ? t('login.loading', { defaultValue: 'Wird geladen...' }) : t('login.submit')}
+            </Button>
           </form>
           {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
         </FormContainer>

@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Routes, Route, useParams, Navigate, Outlet, useLocation } from 'react-router'
+import { useSportsStore } from './store/sports'
 import { Banner } from './components/Banner'
 import { Slider } from './components/Slider'
 import { CountriesFeature } from './components/CountriesFeature'
@@ -13,6 +14,7 @@ import { Login } from './pages/Login'
 import { Admin } from './pages/Admin'
 import { Dashboard } from './pages/Dashboard'
 import { Countries } from './pages/Countries'
+import { CountryDetail } from './pages/CountryDetail'
 import { SportPage } from './pages/SportPage'
 import { NotFound } from './pages/NotFound'
 import { CookiePolicy } from './pages/CookiePolicy'
@@ -135,6 +137,13 @@ function Home() {
 } 
 
 function App() {
+  const initializeSports = useSportsStore((state) => state.initializeSports);
+
+  // Initialize sports data on app load
+  useEffect(() => {
+    initializeSports();
+  }, [initializeSports]);
+
   return (
     <Routes>
       <Route path="/:lang" element={<Layout />}>
@@ -142,6 +151,7 @@ function App() {
         <Route path="admin" element={<ProtectedRoute element={<Admin />} requiredRoles={['admin']} />} />
         <Route path="dashboard" element={<ProtectedRoute element={<Dashboard />} requiredRoles={['admin', 'referee']} />} />
         <Route path="countries" element={<Countries />} />
+        <Route path="country/:country" element={<CountryDetail />} />
         <Route path="sports/:sportId" element={<SportPage />} />
         <Route path="cookie-policy" element={<CookiePolicy />} />
         <Route path="privacy-policy" element={<PrivacyPolicy />} />

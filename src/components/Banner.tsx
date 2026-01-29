@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Text, Button, HStack } from '@chakra-ui/react';
+import { Text, Button, HStack, Link } from '@chakra-ui/react';
 import headerImg from '../assets/mc2026_header.png';
 import { NavBar } from './NavBar';
 
@@ -31,32 +31,38 @@ export const Banner = () => {
         <ContentWrapper>
           <Text fontSize="sm">Olympische Winterspiele™ · 6. bis 22. Februar 2026 | Paralympische Winterspiele™ · 6. bis 15. März 2026</Text>
           <HStack gap={4}>
-            <Button 
-              size="xs" 
-              variant="outline" 
-              color="white" 
-              borderColor="white"
-              _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
-              as="a"
+            <Link 
               href="https://tickets.milanocortina2026.org"
               target="_blank"
               rel="noopener noreferrer"
+              _hover={{ textDecoration: 'none' }}
             >
-              Tickets
-            </Button>
-            <Button 
-              size="xs" 
-              variant="outline" 
-              color="white" 
-              borderColor="white"
-              _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
-              as="a"
+              <Button 
+                size="xs" 
+                variant="outline" 
+                color="white" 
+                borderColor="white"
+                _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
+              >
+                Tickets
+              </Button>
+            </Link>
+            <Link 
               href="https://shop.olympics.com/milano-cortina-2026"
               target="_blank"
               rel="noopener noreferrer"
+              _hover={{ textDecoration: 'none' }}
             >
-              Shop
-            </Button>
+              <Button 
+                size="xs" 
+                variant="outline" 
+                color="white" 
+                borderColor="white"
+                _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
+              >
+                Shop
+              </Button>
+            </Link>
           </HStack>
         </ContentWrapper>
       </BannerContainer>

@@ -6,6 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
     <title>Milano Cortina 2026 Olympics</title>
+    <script type="text/javascript">
+      (function() {
+        if (window.location.search.startsWith('?p=')) {
+          var pathAndQuery = window.location.search.slice(3).replace(/~and~/g, '&');
+          var basePath = '/olympia-2026-webapp';
+          // pathAndQuery already starts with /, so don't add it again
+          window.history.replaceState(null, null, basePath + pathAndQuery);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
