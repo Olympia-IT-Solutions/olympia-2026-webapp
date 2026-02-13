@@ -10,6 +10,12 @@
   --btn-bg: white;
   --btn-text: #003049;
   --hover-bg: #f0f0f0;
+
+  /* Scrollbar: small & unobtrusive */
+  --scrollbar-size: 8px;
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: rgba(0, 0, 0, 0.22);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.36);
 }
 
 /* Dark theme */
@@ -26,6 +32,12 @@
   --btn-bg: rgba(255,255,255,0.08);
   --btn-text: white;
   --hover-bg: rgba(255,255,255,0.04);
+
+  /* Scrollbar: small & unobtrusive for dark theme */
+  --scrollbar-size: 8px;
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: rgba(255, 255, 255, 0.12);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.22);
 }
 
 /* Table header should match nav/card background for better contrast */
@@ -69,4 +81,41 @@ body {
 @font-face {
   font-family: 'MilanoCortina2026-Bold';
   src: url('/MilanoCortina2026-Bold.otf') format('opentype');
+}
+
+/* ---------- Global thin/clean scrollbar (WebKit + Firefox) ---------- */
+/* Applies a small, rounded, low-contrast scrollbar while preserving
+   accessibility (enough contrast on hover). */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* WebKit-based browsers (Chrome, Edge, Safari) */
+*::-webkit-scrollbar {
+  width: var(--scrollbar-size);
+  height: var(--scrollbar-size);
+}
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 999px;
+  border: 2px solid transparent; /* keeps thumb smaller than track */
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
+}
+
+/* Keep scrollbars usable with keyboard/mouse-drag interactions */
+*::-webkit-scrollbar-thumb:active,
+*::-webkit-scrollbar-thumb:focus {
+  outline: 2px solid rgba(0,0,0,0.06);
 }
