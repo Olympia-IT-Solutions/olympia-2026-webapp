@@ -24,7 +24,7 @@ import {
 } from 'react-icons/fa';
 import logo from '../assets/milano-cortina-2026.gif';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useLocation } from 'react-router';
 import { getCurrentUser, logout, Role } from '../logic/rights';
 import { useTheme } from '../logic/theme';
 
@@ -77,6 +77,7 @@ export const NavBar = () => {
   };
 
   const currentLang = lang || i18n.language || 'de';
+  const location = useLocation();
   
   const languages: Record<string, string> = {
     de: 'Deutsch',
@@ -97,7 +98,13 @@ export const NavBar = () => {
 
   const handleLanguageChange = (newLang: string) => {
     i18n.changeLanguage(newLang);
-    navigate(`/${newLang}`);
+    // keep the rest of the path intact – only replace the language segment
+    const segments = location.pathname.split('/');
+    if (segments.length > 1) {
+      segments[1] = newLang;
+    }
+    const newPath = segments.join('/') || `/${newLang}`;
+    navigate(newPath);
     setIsOpen(false);
     onMobileClose();
   };
