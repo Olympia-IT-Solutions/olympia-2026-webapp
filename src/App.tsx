@@ -41,16 +41,15 @@ function Layout() {
     window.scrollTo(0, 0)
   }, [location.pathname])
 
-  const isInternalPage = location.pathname.includes('/admin') || location.pathname.includes('/dashboard')
-
   return (
     <Box minH="100vh" display="flex" flexDirection="column">
       <Banner />
       <Box flex="1">
         <Outlet />
       </Box>
-      {!isInternalPage && <FooterBanner />}
-      {!isInternalPage && <Footer />}
+      {/* always include footer components so admin/dashboard match rest of site */}
+      <FooterBanner />
+      <Footer />
       <CookieMenu />
     </Box>
   )

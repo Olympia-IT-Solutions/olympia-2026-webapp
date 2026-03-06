@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box, Heading, Text, Button, Input, Stack, Table, Badge, Card, Textarea } from '@chakra-ui/react'
+import { Box, Heading, Text, Button, Input, Stack, Table, Badge, Card, Textarea, Container } from '@chakra-ui/react'
 import { getCurrentUser } from '../logic/rights'
 import { FaPlus, FaCheck, FaGlobe, FaClipboardList, FaEye } from 'react-icons/fa'
 
@@ -160,11 +160,12 @@ export function Dashboard() {
   }
 
   return (
-    <Box p={10} maxW="1400px" mx="auto">
-      <Heading mb={2}>{t('dashboard.title')}</Heading>
-      <Text color="gray.500" mb={2}>
-        {t('dashboard.demoNote')}
-      </Text>
+    <Box p={10}>
+      <Container maxW="container.xl">
+        <Heading mb={2}>{t('dashboard.title')}</Heading>
+        <Text color="gray.500" mb={2}>
+          {t('dashboard.demoNote')}
+        </Text>
       {currentUser && (
         <Text fontSize="sm" color="teal.600" mb={8}>
           {t('dashboard.loggedInAs', { email: currentUser.email, role: currentUser.role })}
@@ -356,6 +357,7 @@ export function Dashboard() {
           <Text textAlign="center" color="gray.500" py={4}>{t('dashboard.table.noResults')}</Text>
         )}
       </Card.Root>
+      </Container>
     </Box>
   )
 }

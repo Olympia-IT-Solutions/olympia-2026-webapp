@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box, Heading, Text, Button, Input, Stack, Table, Badge, Card } from '@chakra-ui/react'
+import { Box, Heading, Text, Button, Input, Stack, Table, Badge, Card, Container } from '@chakra-ui/react'
 import { isAdmin } from '../logic/rights'
 import { FaUserPlus, FaTrash, FaUser } from 'react-icons/fa'
 
@@ -92,12 +92,13 @@ export function Admin() {
   }
 
   return (
-    <Box p={10} maxW="1400px" mx="auto">
-      <Heading mb={2}>{t('admin.title')}</Heading>
-      <Text color="gray.500" mb={8}>{t('admin.demoNote')}</Text>
+    <Box p={10}>
+      <Container maxW="container.xl">
+        <Heading mb={2}>{t('admin.title')}</Heading>
+        <Text color="gray.500" mb={8}>{t('admin.demoNote')}</Text>
 
-      {/* Referee Management Section */}
-      <Card.Root mb={8} p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
+        {/* Referee Management Section */}
+        <Card.Root mb={8} p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
         <Stack direction="row" justify="space-between" align="center" mb={4}>
           <Heading size="lg">
             <FaUser style={{ display: 'inline', marginRight: '10px' }} />
@@ -242,6 +243,7 @@ export function Admin() {
           <Text textAlign="center" color="gray.500" py={4}>{t('dashboard.table.noResults')}</Text>
         )}
       </Card.Root>
+      </Container>
     </Box>
   )
 }
