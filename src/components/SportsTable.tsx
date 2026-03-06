@@ -6,6 +6,7 @@ import {
   Icon,
   Spinner
 } from '@chakra-ui/react';
+import { useNavigate, useParams } from 'react-router';
 import { FaMedal } from 'react-icons/fa';
 import type { Result } from '../services/results';
 
@@ -45,6 +46,13 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false 
     );
   }
 
+  const navigate = useNavigate();
+  const { lang } = useParams<{ lang: string }>();
+
+  const goToCountry = (country: string) => {
+    navigate(`/${lang || 'de'}/country/${country}`);
+  };
+
   return (
     <Box width="100%" overflowX="auto">
       <Table.ScrollArea>
@@ -62,8 +70,26 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false 
             {data.map((row, index) => (
               <Table.Row key={row.id}>
                 <Table.Cell fontWeight="bold">{index + 1}</Table.Cell>
-                <Table.Cell>{row.athleteName}</Table.Cell>
-                <Table.Cell>{row.country}</Table.Cell>
+                <Table.Cell>
+                  <Text
+                    onClick={() => goToCountry(row.country)}
+                    cursor="pointer"
+                    _hover={{ textDecoration: 'underline' }}
+                    color="var(--card-text)"
+                  >
+                    {row.athleteName}
+                  </Text>
+                </Table.Cell>
+                <Table.Cell>
+                  <Text
+                    onClick={() => goToCountry(row.country)}
+                    cursor="pointer"
+                    _hover={{ textDecoration: 'underline' }}
+                    color="var(--card-text)"
+                  >
+                    {row.country}
+                  </Text>
+                </Table.Cell>
                 <Table.Cell textAlign="right" fontFamily="monospace">{row.value}</Table.Cell>
                 <Table.Cell textAlign="center">
                   {row.hasMedal && <MedalIcon medalType={row.medalType} />}

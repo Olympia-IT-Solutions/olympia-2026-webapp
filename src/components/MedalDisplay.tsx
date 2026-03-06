@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Text, VStack, HStack, Icon, Spinner, SimpleGrid } from '@chakra-ui/react';
+import { useParams, useNavigate } from 'react-router';
 import { FaMedal } from 'react-icons/fa';
 import type { Medal } from '../services/medals';
 
@@ -20,6 +21,17 @@ const getMedalColor = (medalType: 'GOLD' | 'SILVER' | 'BRONZE') => {
 
 const MedalCard: React.FC<{ medal: Medal }> = ({ medal }) => {
   const medalColor = getMedalColor(medal.medalType);
+  const { lang } = useParams<{ lang: string }>();
+  const navigate = useNavigate();
+
+  // helper to generate path to sport page using either name or id-like slug
+  const sportPath = `/${lang || 'de'}/sports/${medal.sportName
+    .toLowerCase()
+    .replace(/\s+/g, '')}`;
+
+  const handleClick = () => {
+    navigate(sportPath);
+  };
 
   return (
     <Box
@@ -29,11 +41,6 @@ const MedalCard: React.FC<{ medal: Medal }> = ({ medal }) => {
       borderRadius="lg"
       p={6}
       transition="all 0.3s ease"
-      _hover={{
-        transform: 'translateY(-8px)',
-        boxShadow: `0 12px 24px ${medalColor.color}40`,
-      }}
-      cursor="pointer"
     >
       <VStack gap={4} align="start" h="100%">
         {/* Medal Icon */}
@@ -48,7 +55,14 @@ const MedalCard: React.FC<{ medal: Medal }> = ({ medal }) => {
 
         {/* Athlete Name */}
         <Box flex="1">
-          <Text fontSize="lg" fontWeight="bold" color="var(--card-text)">
+          <Text
+            onClick={handleClick}
+            _hover={{ textDecoration: 'underline' }}
+            cursor="pointer"
+            color="var(--card-text)"
+            fontWeight="bold"
+            fontSize="lg"
+          >
             {medal.athleteName}
           </Text>
         </Box>
@@ -58,7 +72,14 @@ const MedalCard: React.FC<{ medal: Medal }> = ({ medal }) => {
           <Text fontSize="sm" color="var(--card-text)" opacity={0.7}>
             Sport
           </Text>
-          <Text fontSize="md" fontWeight="600" color="var(--card-text)">
+          <Text
+            onClick={handleClick}
+            _hover={{ textDecoration: 'underline' }}
+            cursor="pointer"
+            color="var(--card-text)"
+            fontWeight="600"
+            fontSize="md"
+          >
             {medal.sportName}
           </Text>
         </Box>
