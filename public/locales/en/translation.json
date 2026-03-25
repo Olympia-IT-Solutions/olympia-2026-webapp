@@ -6,7 +6,7 @@
     "countries": "Countries"
   },
   "cookieBanner": {
-    "message": "We use cookies to improve your experience on our website. This is a dummy version as we currently don't use any real cookies.",
+    "message": "We use cookies to improve your experience on our website.",
     "accept": "Accept Everything",
     "decline": "Decline Optional"
   },
