@@ -117,33 +117,44 @@
   },
   "admin": {
     "title": "Admin Dashboard",
-    "demoNote": "Demo Version - Verwaltung der Olympischen Winterspiele 2026",
     "accessDeniedTitle": "Zugriff verweigert",
     "accessDeniedText": "Sie haben keine Berechtigung, diese Seite zu betreten.",
-    "refereesManage": "Schiedsrichter verwalten",
-    "newReferee": "Neuer Schiedsrichter",
-    "placeholders": {
-      "name": "Name",
-      "email": "E-Mail",
-      "country": "Land",
-      "sports": "Sportarten (kommagetrennt)"
+    "usersManage": "Benutzer verwalten",
+    "addUser": "Benutzer hinzufügen",
+    "addUserTitle": "Neuen Benutzer hinzufügen",
+    "addUserValidationError": "Bitte füllen Sie alle erforderlichen Felder aus",
+    "deactivateUser": "Benutzer deaktivieren",
+    "confirmDeactivateTitle": "Benutzerdeaktivierung bestätigen",
+    "confirmDeactivateUser": "Sind Sie sicher, dass Sie diesen Benutzer deaktivieren möchten?",
+    "loading": "Wird geladen...",
+    "usersLoadError": "Fehler beim Laden der Benutzer",
+    "noUsers": "Keine Benutzer gefunden",
+    "roleAdmin": "Admin",
+    "roleReferee": "Schiedsrichter",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "resultsTitle": "Ergebnisse verwalten",
+    "form": {
+      "name": "Vollständiger Name",
+      "namePlaceholder": "z.B. Max Mustermann",
+      "username": "Benutzername",
+      "usernamePlaceholder": "z.B. max.mustermann",
+      "password": "Passwort",
+      "passwordPlaceholder": "Passwort eingeben",
+      "role": "Rolle"
     },
     "buttons": {
       "save": "Speichern",
       "cancel": "Abbrechen",
       "deleteAll": "Alle Ergebnisse löschen"
     },
-    "noReferees": "Keine Schiedsrichter vorhanden",
-    "resultsTitle": "Ergebnisse verwalten",
     "table": {
       "columns": {
+        "username": "Benutzername",
         "name": "Name",
-        "email": "E-Mail",
-        "country": "Land",
-        "sports": "Sportarten",
-        "createdAt": "Erstellt am",
-        "actions": "Aktionen",
-        "status": "Status"
+        "role": "Rolle",
+        "status": "Status",
+        "actions": "Aktionen"
       }
     }
   }

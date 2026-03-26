@@ -116,34 +116,45 @@
     "accessibility": "Accessibilità"
   },
   "admin": {
-    "title": "Admin Dashboard",
-    "demoNote": "Versione demo - gestione dei Giochi Invernali Milano Cortina 2026",
+    "title": "Pannello di amministrazione",
     "accessDeniedTitle": "Accesso negato",
     "accessDeniedText": "Non hai il permesso di accedere a questa pagina.",
-    "refereesManage": "Gestisci arbitri",
-    "newReferee": "Nuovo arbitro",
-    "placeholders": {
-      "name": "Nome",
-      "email": "Email",
-      "country": "Paese",
-      "sports": "Sport (separati da virgola)"
+    "usersManage": "Gestisci utenti",
+    "addUser": "Aggiungi utente",
+    "addUserTitle": "Aggiungi nuovo utente",
+    "addUserValidationError": "Si prega di compilare tutti i campi obbligatori",
+    "deactivateUser": "Disattiva utente",
+    "confirmDeactivateTitle": "Conferma disattivazione utente",
+    "confirmDeactivateUser": "Sei sicuro di voler disattivare questo utente?",
+    "loading": "Caricamento...",
+    "usersLoadError": "Errore nel caricamento degli utenti",
+    "noUsers": "Nessun utente trovato",
+    "roleAdmin": "Amministratore",
+    "roleReferee": "Arbitro",
+    "active": "Attivo",
+    "inactive": "Inattivo",
+    "resultsTitle": "Gestione risultati",
+    "form": {
+      "name": "Nome completo",
+      "namePlaceholder": "ad es. Mario Rossi",
+      "username": "Nome utente",
+      "usernamePlaceholder": "ad es. mario.rossi",
+      "password": "Password",
+      "passwordPlaceholder": "Inserisci password",
+      "role": "Ruolo"
     },
     "buttons": {
       "save": "Salva",
       "cancel": "Annulla",
       "deleteAll": "Elimina tutti i risultati"
     },
-    "noReferees": "Nessun arbitro disponibile",
-    "resultsTitle": "Gestione risultati",
     "table": {
       "columns": {
+        "username": "Nome utente",
         "name": "Nome",
-        "email": "Email",
-        "country": "Paese",
-        "sports": "Sport",
-        "createdAt": "Creato il",
-        "actions": "Azioni",
-        "status": "Stato"
+        "role": "Ruolo",
+        "status": "Stato",
+        "actions": "Azioni"
       }
     }
   }

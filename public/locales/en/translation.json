@@ -117,33 +117,44 @@
   },
   "admin": {
     "title": "Admin Dashboard",
-    "demoNote": "Demo version - management of the Milano Cortina 2026 Winter Games",
     "accessDeniedTitle": "Access denied",
     "accessDeniedText": "You do not have permission to access this page.",
-    "refereesManage": "Manage referees",
-    "newReferee": "New Referee",
-    "placeholders": {
-      "name": "Name",
-      "email": "E-Mail",
-      "country": "Country",
-      "sports": "Sports (comma separated)"
+    "usersManage": "Manage Users",
+    "addUser": "Add User",
+    "addUserTitle": "Add New User",
+    "addUserValidationError": "Please fill in all required fields",
+    "deactivateUser": "Deactivate user",
+    "confirmDeactivateTitle": "Confirm user deactivation",
+    "confirmDeactivateUser": "Are you sure you want to deactivate this user?",
+    "loading": "Loading...",
+    "usersLoadError": "Error loading users",
+    "noUsers": "No users found",
+    "roleAdmin": "Admin",
+    "roleReferee": "Referee",
+    "active": "Active",
+    "inactive": "Inactive",
+    "resultsTitle": "Results management",
+    "form": {
+      "name": "Full Name",
+      "namePlaceholder": "e.g. John Doe",
+      "username": "Username",
+      "usernamePlaceholder": "e.g. john.doe",
+      "password": "Password",
+      "passwordPlaceholder": "Enter password",
+      "role": "Role"
     },
     "buttons": {
       "save": "Save",
       "cancel": "Cancel",
       "deleteAll": "Delete all results"
     },
-    "noReferees": "No referees available",
-    "resultsTitle": "Results management",
     "table": {
       "columns": {
+        "username": "Username",
         "name": "Name",
-        "email": "E-Mail",
-        "country": "Country",
-        "sports": "Sports",
-        "createdAt": "Created at",
-        "actions": "Actions",
-        "status": "Status"
+        "role": "Role",
+        "status": "Status",
+        "actions": "Actions"
       }
     }
   }

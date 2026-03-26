@@ -1,17 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect, type ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box, Heading, Text, Button, Input, Stack, Table, Badge, Card, Container } from '@chakra-ui/react'
+import { Box, Heading, Text, Button, Stack, Table, Badge, Container, Spinner, VStack, Input, DialogRoot, DialogPositioner, DialogBackdrop, DialogContent, DialogHeader, DialogBody, DialogFooter, DialogTitle, DialogCloseTrigger } from '@chakra-ui/react'
 import { isAdmin } from '../logic/rights'
-import { FaUserPlus, FaTrash, FaUser } from 'react-icons/fa'
-
-interface Referee {
-  id: string
-  name: string
-  email: string
-  country: string
-  sports: string[]
-  createdAt: string
-}
+import { fetchAllUsers, createUser, deactivateUser, type ApiUser, type CreateUserRequest } from '../services/auth'
+import { FaUserPlus, FaTrash, FaUsers, FaBan } from 'react-icons/fa'
 
 interface Result {
   id: string
@@ -25,13 +17,6 @@ interface Result {
   createdAt: string
 }
 
-// Demo data
-const initialReferees: Referee[] = [
-  { id: '1', name: 'Hans Müller', email: 'hans.mueller@olympic.org', country: 'Germany', sports: ['Ski Alpin', 'Biathlon'], createdAt: '2025-12-01' },
-  { id: '2', name: 'Maria Rossi', email: 'maria.rossi@olympic.org', country: 'Italy', sports: ['Figure Skating'], createdAt: '2025-12-05' },
-  { id: '3', name: 'Jean Dupont', email: 'jean.dupont@olympic.org', country: 'France', sports: ['Ice Hockey'], createdAt: '2025-12-10' },
-]
-
 const initialResults: Result[] = [
   { id: '1', sport: 'Ski Alpin', event: 'Downhill Men', athlete: 'Marco Schwarz', country: 'Austria', result: '1:42.56', submittedBy: 'Hans Müller', status: 'published', createdAt: '2026-01-20' },
   { id: '2', sport: 'Biathlon', event: '10km Sprint Women', athlete: 'Lisa Vittozzi', country: 'Italy', result: '26:34.2', submittedBy: 'Maria Rossi', status: 'approved', createdAt: '2026-01-22' },
@@ -39,11 +24,39 @@ const initialResults: Result[] = [
 ]
 
 export function Admin() {
-  const [referees, setReferees] = useState<Referee[]>(initialReferees)
+  const [users, setUsers] = useState<ApiUser[]>([])
+  const [usersLoading, setUsersLoading] = useState(false)
+  const [usersError, setUsersError] = useState<string | null>(null)
   const [results, setResults] = useState<Result[]>(initialResults)
-  const [newReferee, setNewReferee] = useState({ name: '', email: '', country: '', sports: '' })
-  const [showAddForm, setShowAddForm] = useState(false)
+  const [showAddUserModal, setShowAddUserModal] = useState(false)
+  const [confirmDeactivateUserId, setConfirmDeactivateUserId] = useState<number | null>(null)
+  const [addUserLoading, setAddUserLoading] = useState(false)
+  const [addUserError, setAddUserError] = useState<string | null>(null)
+  const [newUser, setNewUser] = useState<CreateUserRequest>({
+    name: '',
+    username: '',
+    password: '',
+    role: 'REFEREE',
+  })
   const { t } = useTranslation()
+
+  // Load users from API
+  useEffect(() => {
+    const loadUsers = async () => {
+      setUsersLoading(true)
+      setUsersError(null)
+      try {
+        const data = await fetchAllUsers()
+        setUsers(data)
+      } catch (error) {
+        setUsersError(error instanceof Error ? error.message : 'Failed to load users')
+      } finally {
+        setUsersLoading(false)
+      }
+    }
+
+    loadUsers()
+  }, [])
 
   if (!isAdmin()) {
     return (
@@ -54,25 +67,58 @@ export function Admin() {
     )
   }
 
-  const handleAddReferee = () => {
-    if (newReferee.name && newReferee.email) {
-      const referee: Referee = {
-        id: Date.now().toString(),
-        name: newReferee.name,
-        email: newReferee.email,
-        country: newReferee.country,
-        sports: newReferee.sports.split(',').map(s => s.trim()),
-        createdAt: new Date().toISOString().split('T')[0]
-      }
-      setReferees([...referees, referee])
-      setNewReferee({ name: '', email: '', country: '', sports: '' })
-      setShowAddForm(false)
+  const handleAddUser = async () => {
+    if (!newUser.name || !newUser.username || !newUser.password) {
+      setAddUserError(t('admin.addUserValidationError'))
+      return
+    }
+
+    setAddUserLoading(true)
+    setAddUserError(null)
+    try {
+      const createdUser = await createUser(newUser)
+      setUsers([...users, createdUser])
+      setNewUser({ name: '', username: '', password: '', role: 'REFEREE' })
+      setShowAddUserModal(false)
+    } catch (error) {
+      setAddUserError(error instanceof Error ? error.message : 'Failed to create user')
+    } finally {
+      setAddUserLoading(false)
     }
   }
 
-  const handleDeleteReferee = (id: string) => {
-    setReferees(referees.filter(r => r.id !== id))
+  const handleDeactivateUser = async (userId: number) => {
+    setUsersLoading(true)
+    setUsersError(null)
+
+    try {
+      await deactivateUser(userId)
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === userId ? { ...user, active: false } : user
+        )
+      )
+    } catch (error) {
+      setUsersError(error instanceof Error ? error.message : 'Failed to deactivate user')
+    } finally {
+      setUsersLoading(false)
+    }
   }
+
+  const openDeactivateDialog = (userId: number) => {
+    setConfirmDeactivateUserId(userId)
+  }
+
+  const closeDeactivateDialog = () => {
+    setConfirmDeactivateUserId(null)
+  }
+
+  const confirmDeactivate = async () => {
+    if (confirmDeactivateUserId === null) return
+    await handleDeactivateUser(confirmDeactivateUserId)
+    closeDeactivateDialog()
+  }
+
 
   const handleDeleteResult = (id: string) => {
     setResults(results.filter(r => r.id !== id))
@@ -95,154 +141,268 @@ export function Admin() {
     <Box p={10}>
       <Container maxW="container.xl">
         <Heading mb={2}>{t('admin.title')}</Heading>
-        <Text color="gray.500" mb={8}>{t('admin.demoNote')}</Text>
 
-        {/* Referee Management Section */}
-        <Card.Root mb={8} p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
-        <Stack direction="row" justify="space-between" align="center" mb={4}>
-          <Heading size="lg">
-            <FaUser style={{ display: 'inline', marginRight: '10px' }} />
-            {t('admin.refereesManage')}
-          </Heading>
-          <Button
-            colorScheme="teal"
-            onClick={() => setShowAddForm(!showAddForm)}
+        {/* Users Management Section */}
+        <Box mb={8} p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
+          <Stack direction="row" justify="space-between" align="center" mb={4}>
+            <Heading size="lg">
+              <FaUsers style={{ display: 'inline', marginRight: '10px' }} />
+              {t('admin.usersManage')}
+            </Heading>
+            <Button
+              colorScheme="teal"
+              onClick={() => setShowAddUserModal(true)}
+            >
+              <FaUserPlus style={{ marginRight: '8px' }} />
+              {t('admin.addUser')}
+            </Button>
+          </Stack>
+
+          {usersLoading ? (
+            <VStack justify="center" py={8}>
+              <Spinner size="lg" />
+              <Text>{t('admin.loading')}</Text>
+            </VStack>
+          ) : usersError ? (
+            <Box bg="red.50" p={4} borderRadius="md" borderLeft="4px solid red">
+              <Text color="red.700">{t('admin.usersLoadError')}: {usersError}</Text>
+            </Box>
+          ) : (
+            <>
+              <Table.Root variant="line">
+                <Table.Header>
+                  <Table.Row>
+                    <Table.ColumnHeader>{t('admin.table.columns.username')}</Table.ColumnHeader>
+                    <Table.ColumnHeader>{t('admin.table.columns.name')}</Table.ColumnHeader>
+                    <Table.ColumnHeader>{t('admin.table.columns.role')}</Table.ColumnHeader>
+                    <Table.ColumnHeader>{t('admin.table.columns.status')}</Table.ColumnHeader>
+                    <Table.ColumnHeader>{t('admin.table.columns.actions')}</Table.ColumnHeader>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {users.map((user) => (
+                    <Table.Row key={user.id}>
+                      <Table.Cell fontWeight="500">{user.username}</Table.Cell>
+                      <Table.Cell>{user.name}</Table.Cell>
+                      <Table.Cell>
+                        <Badge colorPalette={user.role === 'ADMIN' ? 'red' : 'blue'}>
+                          {user.role === 'ADMIN' ? t('admin.roleAdmin') : t('admin.roleReferee')}
+                        </Badge>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Badge colorPalette={user.active ? 'green' : 'red'}>
+                          {user.active ? t('admin.active') : t('admin.inactive')}
+                        </Badge>
+                      </Table.Cell>
+                      <Table.Cell>
+                        {user.active && (
+                          <Button
+                            size="sm"
+                            colorScheme="red"
+                            variant="ghost"
+                            onClick={() => openDeactivateDialog(user.id)}
+                            title={t('admin.deactivateUser')}
+                          >
+                            <FaBan />
+                          </Button>
+                        )}
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table.Root>
+              {users.length === 0 && (
+                <Text textAlign="center" color="gray.500" py={4}>{t('admin.noUsers')}</Text>
+              )}
+            </>
+          )}
+        </Box>
+
+        {/* Add User Modal */}
+        {showAddUserModal && (
+          <Box
+            position="fixed"
+            top="0"
+            left="0"
+            width="100%"
+            height="100%"
+            bg="rgba(0,0,0,0.5)"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            zIndex="1000"
+            onClick={() => setShowAddUserModal(false)}
           >
-            <FaUserPlus style={{ marginRight: '8px' }} />
-            {t('admin.newReferee')}
-          </Button>
-        </Stack>
+            <Box
+              p={6}
+              bg="var(--card-bg)"
+              boxShadow="lg"
+              borderRadius="lg"
+              maxW="500px"
+              width="90%"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Heading mb={4}>{t('admin.addUserTitle')}</Heading>
 
-        {showAddForm && (
-          <Box bg="var(--muted-bg)" p={4} borderRadius="md" mb={4}>
-            <Stack gap={3}>
-              <Input
-                placeholder={t('admin.placeholders.name')}
-                value={newReferee.name}
-                onChange={(e) => setNewReferee({ ...newReferee, name: e.target.value })}
-              />
-              <Input
-                placeholder={t('admin.placeholders.email')}
-                value={newReferee.email}
-                onChange={(e) => setNewReferee({ ...newReferee, email: e.target.value })}
-              />
-              <Input
-                placeholder={t('admin.placeholders.country')}
-                value={newReferee.country}
-                onChange={(e) => setNewReferee({ ...newReferee, country: e.target.value })}
-              />
-              <Input
-                placeholder={t('admin.placeholders.sports')}
-                value={newReferee.sports}
-                onChange={(e) => setNewReferee({ ...newReferee, sports: e.target.value })}
-              />
-              <Stack direction="row" gap={2}>
-                <Button colorScheme="green" onClick={handleAddReferee}>{t('admin.buttons.save')}</Button>
-                <Button variant="outline" onClick={() => setShowAddForm(false)}>{t('admin.buttons.cancel')}</Button>
+              {addUserError && (
+                <Box bg="red.50" p={4} borderRadius="md" borderLeft="4px solid red" mb={4}>
+                  <Text color="red.700">{addUserError}</Text>
+                </Box>
+              )}
+
+              <Stack gap={4} mb={6}>
+                <div>
+                  <Text mb={2} fontWeight="500">{t('admin.form.name')} *</Text>
+                  <Input
+                    placeholder={t('admin.form.namePlaceholder')}
+                    value={newUser.name}
+                    onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                  />
+                </div>
+
+                <div>
+                  <Text mb={2} fontWeight="500">{t('admin.form.username')} *</Text>
+                  <Input
+                    placeholder={t('admin.form.usernamePlaceholder')}
+                    value={newUser.username}
+                    onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
+                  />
+                </div>
+
+                <div>
+                  <Text mb={2} fontWeight="500">{t('admin.form.password')} *</Text>
+                  <Input
+                    type="password"
+                    placeholder={t('admin.form.passwordPlaceholder')}
+                    value={newUser.password}
+                    onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                  />
+                </div>
+
+                <div>
+                  <Text mb={2} fontWeight="500">{t('admin.form.role')} *</Text>
+                  <select
+                    style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--input-bg)' }}
+                    value={newUser.role}
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => setNewUser({ ...newUser, role: e.target.value as 'ADMIN' | 'REFEREE' })}
+                  >
+                    <option value="REFEREE">{t('admin.roleReferee')}</option>
+                    <option value="ADMIN">{t('admin.roleAdmin')}</option>
+                  </select>
+                </div>
               </Stack>
-            </Stack>
+
+              <Stack direction="row" gap={3}>
+                <Button
+                  colorScheme="teal"
+                  onClick={handleAddUser}
+                  loading={addUserLoading}
+                  flex="1"
+                >
+                  {t('admin.buttons.save')}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowAddUserModal(false)}
+                  disabled={addUserLoading}
+                  flex="1"
+                >
+                  {t('admin.buttons.cancel')}
+                </Button>
+              </Stack>
+            </Box>
           </Box>
         )}
 
-        <Table.Root variant="line">
-          <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeader>{t('admin.table.columns.name')}</Table.ColumnHeader>
-              <Table.ColumnHeader>{t('admin.table.columns.email')}</Table.ColumnHeader>
-              <Table.ColumnHeader>{t('admin.table.columns.country')}</Table.ColumnHeader>
-              <Table.ColumnHeader>{t('admin.table.columns.sports')}</Table.ColumnHeader>
-              <Table.ColumnHeader>{t('admin.table.columns.createdAt')}</Table.ColumnHeader>
-              <Table.ColumnHeader>{t('admin.table.columns.actions')}</Table.ColumnHeader>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {referees.map((referee) => (
-              <Table.Row key={referee.id}>
-                <Table.Cell>{referee.name}</Table.Cell>
-                <Table.Cell>{referee.email}</Table.Cell>
-                <Table.Cell>{referee.country}</Table.Cell>
-                <Table.Cell>{referee.sports.join(', ')}</Table.Cell>
-                <Table.Cell>{referee.createdAt}</Table.Cell>
-                <Table.Cell>
-                  <Button
-                    size="sm"
-                    colorScheme="red"
-                    variant="ghost"
-                    onClick={() => handleDeleteReferee(referee.id)}
-                  >
-                    <FaTrash />
-                  </Button>
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table.Root>
-        {referees.length === 0 && (
-          <Text textAlign="center" color="gray.500" py={4}>{t('admin.noReferees')}</Text>
-        )}
-      </Card.Root>
+        {/* Deactivate confirmation modal */}
+        <DialogRoot open={confirmDeactivateUserId !== null} onOpenChange={(open) => { if (!open) closeDeactivateDialog() }}>
+          <DialogPositioner>
+            <DialogBackdrop />
+            <DialogContent bg="var(--card-bg)" p={6} borderRadius="lg" boxShadow="xl" maxW="md">
+              <DialogHeader display="flex" alignItems="start" justifyContent="space-between" p={0} pb={3}>
+                <DialogTitle>{t('admin.confirmDeactivateTitle')}</DialogTitle>
+                <DialogCloseTrigger asChild>
+                  <Button size="sm" variant="ghost" onClick={closeDeactivateDialog}>×</Button>
+                </DialogCloseTrigger>
+              </DialogHeader>
 
-      {/* Results Management Section */}
-      <Card.Root p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
-        <Stack direction="row" justify="space-between" align="center" mb={4}>
-          <Heading size="lg">
-            {t('admin.resultsTitle')}
-          </Heading> 
-          <Button
-            colorScheme="red"
-            variant="outline"
-            onClick={handleDeleteAllResults}
-            disabled={results.length === 0}
-          >
-            <FaTrash style={{ marginRight: '8px' }} />
-            {t('admin.buttons.deleteAll')}
-          </Button>
-        </Stack>
+              <DialogBody p={0} pb={6}>
+                <Text>{t('admin.confirmDeactivateUser')}</Text>
+              </DialogBody>
 
-        <Table.Root variant="line">
-          <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeader>{t('dashboard.table.columns.sportEvent')}</Table.ColumnHeader>
-              <Table.ColumnHeader>{t('dashboard.table.columns.athlete')}</Table.ColumnHeader>
-              <Table.ColumnHeader>{t('dashboard.table.columns.country')}</Table.ColumnHeader>
-              <Table.ColumnHeader>{t('dashboard.table.columns.result')}</Table.ColumnHeader>
-              <Table.ColumnHeader>{t('dashboard.table.columns.submittedBy')}</Table.ColumnHeader>
-              <Table.ColumnHeader>{t('dashboard.table.columns.status')}</Table.ColumnHeader>
-              <Table.ColumnHeader>{t('dashboard.table.columns.actions')}</Table.ColumnHeader>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {results.map((result) => (
-              <Table.Row key={result.id}>
-                <Table.Cell>{result.sport}</Table.Cell>
-                <Table.Cell>{result.event}</Table.Cell>
-                <Table.Cell>{result.athlete}</Table.Cell>
-                <Table.Cell>{result.country}</Table.Cell>
-                <Table.Cell fontWeight="bold">{result.result}</Table.Cell>
-                <Table.Cell>{result.submittedBy}</Table.Cell>
-                <Table.Cell>
-                  <Badge colorPalette={getStatusColor(result.status)}>
-                    {result.status === 'pending' ? t('status.pending') : result.status === 'approved' ? t('status.approved') : t('status.published')}
-                  </Badge>
-                </Table.Cell>
-                <Table.Cell>
-                  <Button
-                    size="sm"
-                    colorScheme="red"
-                    variant="ghost"
-                    onClick={() => handleDeleteResult(result.id)}
-                  >
-                    <FaTrash />
-                  </Button>
-                </Table.Cell>
+              <DialogFooter p={0} gap={3} justifyContent="flex-end">
+                <Button variant="outline" onClick={closeDeactivateDialog}>
+                  {t('admin.buttons.cancel')}
+                </Button>
+                <Button colorScheme="red" onClick={confirmDeactivate}>
+                  {t('admin.deactivateUser')}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </DialogPositioner>
+        </DialogRoot>
+
+        {/* Results Management Section */}
+        <Box p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
+          <Stack direction="row" justify="space-between" align="center" mb={4}>
+            <Heading size="lg">
+              {t('admin.resultsTitle')}
+            </Heading> 
+            <Button
+              colorScheme="red"
+              variant="outline"
+              onClick={handleDeleteAllResults}
+              disabled={results.length === 0}
+            >
+              <FaTrash style={{ marginRight: '8px' }} />
+              {t('admin.buttons.deleteAll')}
+            </Button>
+          </Stack>
+
+          <Table.Root variant="line">
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeader>{t('dashboard.table.columns.sportEvent')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('dashboard.table.columns.athlete')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('dashboard.table.columns.country')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('dashboard.table.columns.result')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('dashboard.table.columns.submittedBy')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('dashboard.table.columns.status')}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t('dashboard.table.columns.actions')}</Table.ColumnHeader>
               </Table.Row>
-            ))}
-          </Table.Body>
-        </Table.Root>
-        {results.length === 0 && (
-          <Text textAlign="center" color="gray.500" py={4}>{t('dashboard.table.noResults')}</Text>
-        )}
-      </Card.Root>
+            </Table.Header>
+            <Table.Body>
+              {results.map((result) => (
+                <Table.Row key={result.id}>
+                  <Table.Cell>{result.sport}</Table.Cell>
+                  <Table.Cell>{result.event}</Table.Cell>
+                  <Table.Cell>{result.athlete}</Table.Cell>
+                  <Table.Cell>{result.country}</Table.Cell>
+                  <Table.Cell fontWeight="bold">{result.result}</Table.Cell>
+                  <Table.Cell>{result.submittedBy}</Table.Cell>
+                  <Table.Cell>
+                    <Badge colorScheme={getStatusColor(result.status)}>
+                      {result.status === 'pending' ? t('status.pending') : result.status === 'approved' ? t('status.approved') : t('status.published')}
+                    </Badge>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Button
+                      size="sm"
+                      colorScheme="red"
+                      variant="ghost"
+                      onClick={() => handleDeleteResult(result.id)}
+                    >
+                      <FaTrash />
+                    </Button>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Root>
+          {results.length === 0 && (
+            <Text textAlign="center" color="gray.500" py={4}>{t('dashboard.table.noResults')}</Text>
+          )}
+        </Box>
       </Container>
     </Box>
   )

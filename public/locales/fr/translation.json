@@ -116,34 +116,45 @@
     "accessibility": "Accessibilité"
   },
   "admin": {
-    "title": "Tableau de bord Admin",
-    "demoNote": "Version démo - gestion des Jeux d'hiver Milano Cortina 2026",
+    "title": "Tableau de bord administrateur",
     "accessDeniedTitle": "Accès refusé",
     "accessDeniedText": "Vous n'avez pas la permission d'accéder à cette page.",
-    "refereesManage": "Gérer les arbitres",
-    "newReferee": "Nouvel arbitre",
-    "placeholders": {
-      "name": "Nom",
-      "email": "E-mail",
-      "country": "Pays",
-      "sports": "Sports (séparés par des virgules)"
+    "usersManage": "Gérer les utilisateurs",
+    "addUser": "Ajouter un utilisateur",
+    "addUserTitle": "Ajouter un nouvel utilisateur",
+    "addUserValidationError": "Veuillez remplir tous les champs obligatoires",
+    "deactivateUser": "Désactiver l'utilisateur",
+    "confirmDeactivateTitle": "Confirmer la désactivation du compte",
+    "confirmDeactivateUser": "Êtes-vous sûr de vouloir désactiver cet utilisateur ?",
+    "loading": "Chargement...",
+    "usersLoadError": "Erreur lors du chargement des utilisateurs",
+    "noUsers": "Aucun utilisateur trouvé",
+    "roleAdmin": "Administrateur",
+    "roleReferee": "Arbitre",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "resultsTitle": "Gérer les résultats",
+    "form": {
+      "name": "Nom complet",
+      "namePlaceholder": "par ex. Jean Dupont",
+      "username": "Nom d'utilisateur",
+      "usernamePlaceholder": "par ex. jean.dupont",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "Entrer le mot de passe",
+      "role": "Rôle"
     },
     "buttons": {
       "save": "Enregistrer",
       "cancel": "Annuler",
       "deleteAll": "Supprimer tous les résultats"
     },
-    "noReferees": "Aucun arbitre disponible",
-    "resultsTitle": "Gérer les résultats",
     "table": {
       "columns": {
+        "username": "Nom d'utilisateur",
         "name": "Nom",
-        "email": "E-mail",
-        "country": "Pays",
-        "sports": "Sports",
-        "createdAt": "Créé le",
-        "actions": "Actions",
-        "status": "Statut"
+        "role": "Rôle",
+        "status": "Statut",
+        "actions": "Actions"
       }
     }
   }
