@@ -77,6 +77,7 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
 
   return (
     <Box
+      className="responsive-data-table"
       width="100%"
       overflowX="auto"
       bg="var(--card-bg)"
@@ -88,13 +89,13 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
       style={{ animation: 'fadeUpIn var(--motion-base) var(--motion-ease)' }}
     >
       <Table.ScrollArea>
-        <Table.Root variant='outline'>
+        <Table.Root variant='outline' className="responsive-country-table">
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader>{t('countryTable.columns.country')}</Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="right">{t('countryTable.columns.bronze')}</Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="right">{t('countryTable.columns.silver')}</Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="right">{t('countryTable.columns.gold')}</Table.ColumnHeader>
+              <Table.ColumnHeader whiteSpace="nowrap" minW="220px">{t('countryTable.columns.country')}</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="110px">{t('countryTable.columns.bronze')}</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="110px">{t('countryTable.columns.silver')}</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="110px">{t('countryTable.columns.gold')}</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -102,13 +103,13 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
               <Table.Row 
                 key={row.country || index}
                 onClick={() => onCountryClick?.(row.country)}
-                transition="background-color var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease)"
-                _hover={onCountryClick ? { bg: 'var(--hover-bg)', cursor: 'pointer', transform: 'translateX(2px)' } : undefined}
+                transition="background-color var(--motion-fast) var(--motion-ease)"
+                _hover={onCountryClick ? { bg: 'var(--hover-bg)', cursor: 'pointer' } : undefined}
               >
-                <Table.Cell>{row.country}</Table.Cell>
-                <Table.Cell textAlign="right">{row.bronze}</Table.Cell>
-                <Table.Cell textAlign="right">{row.silver}</Table.Cell>
-                <Table.Cell textAlign="right">{row.gold}</Table.Cell>
+                <Table.Cell whiteSpace="nowrap" minW="220px">{row.country}</Table.Cell>
+                <Table.Cell textAlign="right" whiteSpace="nowrap">{row.bronze}</Table.Cell>
+                <Table.Cell textAlign="right" whiteSpace="nowrap">{row.silver}</Table.Cell>
+                <Table.Cell textAlign="right" whiteSpace="nowrap">{row.gold}</Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>

@@ -14,10 +14,10 @@ export function Countries() {
   }
 
   return (
-    <Box p={10}>
+    <Box p={{ base: 3, md: 10 }} className="responsive-page-shell">
       <Container maxW="container.xl">
         <HeaderWithImage imageUrl="https://img.olympics.com/images/image/private/t_16-9_760/f_auto/primary/scfaxcnropsqb78f6fki" title={t('countries.title')} />
-        <Box bg="var(--card-bg)" borderRadius="xl" p={6} color="var(--card-text)" boxShadow="xl">
+        <Box bg="var(--card-bg)" borderRadius="xl" p={{ base: 3, md: 6 }} color="var(--card-text)" boxShadow="xl" className="responsive-card-shell">
           <CountryTable onCountryClick={handleCountryClick} />
         </Box> 
       </Container>

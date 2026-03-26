@@ -92,9 +92,9 @@ export function SportPage() {
   }
 
   return (
-    <Container maxW="container.xl" py={10}>
+    <Container maxW="container.xl" py={{ base: 4, md: 10 }} className="responsive-page-shell">
       <HeaderWithImage imageUrl={sportData.imageUrl} title={sportData.title} />
-      <Box bg="whiteAlpha.200" p={6} borderRadius="lg" boxShadow="lg">
+      <Box bg="whiteAlpha.200" p={{ base: 3, md: 6 }} borderRadius="lg" boxShadow="lg" className="responsive-card-shell">
         <SportsTable data={sportResults} loading={loading} />
       </Box>
     </Container>

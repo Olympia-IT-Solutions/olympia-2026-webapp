@@ -55,6 +55,7 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false 
 
   return (
     <Box
+      className="responsive-data-table"
       width="100%"
       overflowX="auto"
       bg="var(--card-bg)"
@@ -66,25 +67,25 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false 
       style={{ animation: 'fadeUpIn var(--motion-base) var(--motion-ease)' }}
     >
       <Table.ScrollArea>
-        <Table.Root variant='outline'>
+        <Table.Root variant='outline' className="responsive-sports-table">
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader>Platz</Table.ColumnHeader>
-              <Table.ColumnHeader>Athlet</Table.ColumnHeader>
-              <Table.ColumnHeader>Land</Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="right">Ergebnis</Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="center">Medaille</Table.ColumnHeader>
+              <Table.ColumnHeader whiteSpace="nowrap" w="88px">Platz</Table.ColumnHeader>
+              <Table.ColumnHeader minW="240px">Athlet</Table.ColumnHeader>
+              <Table.ColumnHeader whiteSpace="nowrap" w="140px">Land</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="140px">Ergebnis</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="center" whiteSpace="nowrap" w="110px">Medaille</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
             {data.map((row, index) => (
               <Table.Row
                 key={row.id}
-                transition="background-color var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease)"
-                _hover={{ bg: 'var(--hover-bg)', transform: 'translateX(2px)' }}
+                transition="background-color var(--motion-fast) var(--motion-ease)"
+                _hover={{ bg: 'var(--hover-bg)' }}
               >
-                <Table.Cell fontWeight="bold">{index + 1}</Table.Cell>
-                <Table.Cell>
+                <Table.Cell fontWeight="bold" whiteSpace="nowrap">{index + 1}</Table.Cell>
+                <Table.Cell minW="240px">
                   <Text
                     onClick={() => goToCountry(row.country)}
                     cursor="pointer"
@@ -95,7 +96,7 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false 
                     {row.athleteName}
                   </Text>
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell whiteSpace="nowrap">
                   <Text
                     onClick={() => goToCountry(row.country)}
                     cursor="pointer"
@@ -106,8 +107,8 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false 
                     {row.country}
                   </Text>
                 </Table.Cell>
-                <Table.Cell textAlign="right" fontFamily="monospace">{row.value}</Table.Cell>
-                <Table.Cell textAlign="center">
+                <Table.Cell textAlign="right" fontFamily="monospace" whiteSpace="nowrap">{row.value}</Table.Cell>
+                <Table.Cell textAlign="center" whiteSpace="nowrap">
                   {row.hasMedal && <MedalIcon medalType={row.medalType} />}
                 </Table.Cell>
               </Table.Row>

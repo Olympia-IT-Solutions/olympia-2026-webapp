@@ -54,16 +54,18 @@ export async function login(email: string, password: string): Promise<User | nul
     // Versuche zuerst die API
     const response = await loginApi(email, password);
     
+    // Normalisiere die Rolle von der API (z.B. "ADMIN" -> "admin")
+    const apiRole = response.role.toLowerCase() as RoleType;
     const user: User = {
       email,
-      role: Role.Referee, // Standard-Rolle von der API
+      role: apiRole,
       token: response.token,
     };
 
     localStorage.setItem('currentUser', JSON.stringify(user));
     localStorage.setItem('authToken', response.token);
     window.dispatchEvent(new Event('storage'));
-    DebugManager.log(`Benutzer ${email} über API eingeloggt`);
+    DebugManager.log(`Benutzer ${email} über API eingeloggt mit Rolle: ${apiRole}`);
     
     return user;
   } catch (apiError) {

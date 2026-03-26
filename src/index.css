@@ -167,6 +167,19 @@ html {
   }
 }
 
+.responsive-data-table {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.responsive-sports-table {
+  min-width: 760px;
+}
+
+.responsive-country-table {
+  min-width: 560px;
+}
+
 @media (max-width: 768px) {
   body::before {
     width: 360px;
@@ -176,6 +189,25 @@ html {
   body::after {
     width: 280px;
     height: 280px;
+  }
+
+  .responsive-page-shell {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .responsive-card-shell {
+    padding: 0.75rem;
+  }
+
+  .responsive-data-table {
+    padding: 0.375rem;
+  }
+
+  .responsive-data-table th,
+  .responsive-data-table td {
+    padding-left: 0.625rem;
+    padding-right: 0.625rem;
   }
 }
 

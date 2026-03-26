@@ -5,8 +5,8 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string;
-  tokenType: string;
-  expiresInSeconds: number;
+  username: string;
+  role: 'ADMIN' | 'REFEREE';
 }
 
 const AUTH_API_URL = 'https://olympia-2026-api.onrender.com/api/auth/login';
