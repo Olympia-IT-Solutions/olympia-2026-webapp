@@ -16,11 +16,11 @@ import {
   FaBars,
   FaTimes,
   FaGlobe,
-  FaFutbol,
   FaUser,
   FaSignInAlt,
   FaSignOutAlt,
   FaTrophy,
+  FaSnowflake,
 } from 'react-icons/fa';
 import logo from '../assets/milano-cortina-2026.gif';
 import { useTranslation } from 'react-i18next';
@@ -80,6 +80,21 @@ export const NavBar = () => {
   const [currentUser, setCurrentUser] = useState(getCurrentUser());
   const { theme, toggleTheme } = useTheme();
   const { open: isMobileOpen, onOpen: onMobileOpen, onClose: onMobileClose } = useDisclosure();
+  const location = useLocation();
+
+  const languages: Record<string, string> = {
+    de: 'Deutsch',
+    en: 'English',
+    fr: 'Français',
+    it: 'Italiano',
+  };
+
+  const supportedLanguageCodes = Object.keys(languages);
+  const detectedLang = lang || i18n.resolvedLanguage || i18n.language || 'de';
+  const normalizedDetectedLang = detectedLang.split('-')[0];
+  const safeLang = supportedLanguageCodes.includes(normalizedDetectedLang)
+    ? normalizedDetectedLang
+    : 'de';
 
   useEffect(() => {
     // Aktualisiere den User-Status bei Änderungen (z.B. nach Login/Logout)
@@ -88,22 +103,29 @@ export const NavBar = () => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
+  useEffect(() => {
+    if (!isMobileOpen) {
+      return;
+    }
+
+    const handleEscapeClose = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onMobileClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleEscapeClose);
+    return () => window.removeEventListener('keydown', handleEscapeClose);
+  }, [isMobileOpen, onMobileClose]);
+
   const handleLogout = () => {
     logout();
     setCurrentUser(null);
     onMobileClose();
-    navigate(`/${lang}/login`);
+    navigate(`/${safeLang}/login`);
   };
 
-  const currentLang = lang || i18n.language || 'de';
-  const location = useLocation();
-  
-  const languages: Record<string, string> = {
-    de: 'Deutsch',
-    en: 'English',
-    fr: 'Français',
-    it: 'Italiano',
-  };
+  const currentLang = safeLang;
 
   const sports: Record<string, string> = {
     biathlon: 'Biathlon',
@@ -146,12 +168,15 @@ export const NavBar = () => {
 
         {/* Mobile burger button (visible on small screens) */}
         <Button
-          aria-label="Open menu"
+          aria-label={t('nav.openMenu')}
           display={{ base: 'inline-flex', md: 'none' }}
           onClick={onMobileOpen}
-          size="sm"
+          size="md"
           ml={2}
           variant="ghost"
+          minW="44px"
+          minH="44px"
+          borderRadius="full"
         >
           <FaBars />
         </Button>
@@ -357,9 +382,10 @@ export const NavBar = () => {
           position="fixed"
           inset="0"
           bg="rgba(0, 15, 20, 0.42)"
-          backdropFilter="blur(1px)"
-          zIndex={250}
+          backdropFilter="blur(3px)"
+          zIndex={12000}
           onClick={onMobileClose}
+          aria-hidden="true"
         />
       )}
 
@@ -369,28 +395,70 @@ export const NavBar = () => {
           top="0"
           left="0"
           h="100vh"
-          w={{ base: '80%', sm: '65%' }}
-          maxW="320px"
+          w={{ base: '100vw', md: '72%' }}
+          maxW={{ base: 'none', md: '360px' }}
           bg="var(--card-bg)"
-          zIndex={300}
-          boxShadow="lg"
-          p={4}
+          zIndex={12001}
+          boxShadow="0 18px 48px rgba(0, 22, 32, 0.35)"
+          px={5}
+          pt="calc(1.25rem + env(safe-area-inset-top, 0px))"
+          pb="calc(1.25rem + env(safe-area-inset-bottom, 0px))"
           overflowY="auto"
-          borderTopRightRadius="2xl"
-          borderBottomRightRadius="2xl"
+          borderTopRightRadius={{ base: '0', md: '3xl' }}
+          borderBottomRightRadius={{ base: '0', md: '3xl' }}
           borderRight="1px solid var(--border-color)"
-          style={{ animation: 'fadeUpIn var(--motion-base) var(--motion-ease)' }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="mobile-nav-title"
+          style={{
+            height: '100dvh',
+            animation: 'fadeUpIn var(--motion-base) var(--motion-ease)',
+          }}
+          onClick={(event) => event.stopPropagation()}
         >
-          <Flex justify="space-between" align="center" mb={4}>
+          <Flex
+            justify="space-between"
+            align="center"
+            mb={5}
+            position="sticky"
+            top="0"
+            bg="var(--card-bg)"
+            zIndex={1}
+            py={2}
+          >
             <HStack>
               <Image src={logo} alt="logo" height="40px" objectFit="contain" />
-              <Text fontWeight="bold">Milano Cortina 2026</Text>
+              <Text id="mobile-nav-title" fontWeight="bold" fontSize="lg" color="var(--card-text)">
+                {t('nav.menuTitle')}
+              </Text>
             </HStack>
-            <Button variant="ghost" onClick={onMobileClose} aria-label="Close menu"><FaTimes /></Button>
+            <Button
+              variant="ghost"
+              onClick={onMobileClose}
+              aria-label={t('nav.closeMenu')}
+              borderRadius="full"
+              minW="44px"
+              minH="44px"
+            >
+              <FaTimes />
+            </Button>
           </Flex>
 
-          <Box mb={3}>
-            <Button variant="ghost" w="100%" onClick={() => { navigate(`/${currentLang}/countries`); onMobileClose(); }}>
+          <Box mb={4}>
+            <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" color="var(--card-text)" opacity={0.7} mb={2}>
+              {t('nav.countries')}
+            </Text>
+            <Button
+              variant="ghost"
+              justifyContent="flex-start"
+              w="100%"
+              minH="48px"
+              borderRadius="xl"
+              onClick={() => {
+                navigate(`/${currentLang}/countries`);
+                onMobileClose();
+              }}
+            >
               <HStack gap={3}>
                 <FaGlobe />
                 <Text>{t('nav.countries')}</Text>
@@ -398,13 +466,26 @@ export const NavBar = () => {
             </Button>
           </Box>
 
-          <Box mb={3}>
-            <Text fontWeight="bold" mb={2}>{t('nav.sports')}</Text>
+          <Box mb={4}>
+            <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" color="var(--card-text)" opacity={0.7} mb={2}>
+              {t('nav.sports')}
+            </Text>
             <Box>
               {Object.entries(sports).map(([key, label]) => (
-                <Button key={key} variant="ghost" w="100%" onClick={() => { navigate(`/${currentLang}/sports/${key}`); onMobileClose(); }}>
+                <Button
+                  key={key}
+                  variant="ghost"
+                  justifyContent="flex-start"
+                  w="100%"
+                  minH="48px"
+                  borderRadius="xl"
+                  onClick={() => {
+                    navigate(`/${currentLang}/sports/${key}`);
+                    onMobileClose();
+                  }}
+                >
                   <HStack gap={3}>
-                    <FaFutbol />
+                    <FaSnowflake />
                     <Text>{label}</Text>
                   </HStack>
                 </Button>
@@ -412,40 +493,94 @@ export const NavBar = () => {
             </Box>
           </Box>
 
-          <Box borderTop="1px solid var(--border-color)" pt={3} mb={3}>
+          <Box borderTop="1px solid var(--border-color)" pt={4} mb={4}>
             {currentUser ? (
-              <Button variant="ghost" w="100%" onClick={handleLogout}>
+              <Button variant="ghost" justifyContent="flex-start" w="100%" minH="48px" borderRadius="xl" onClick={handleLogout}>
                 <HStack gap={3}><FaSignOutAlt /><Text>{t('nav.logout')}</Text></HStack>
               </Button>
             ) : (
-              <Button variant="ghost" w="100%" onClick={() => { navigate(`/${currentLang}/login`); onMobileClose(); }}>
+              <Button
+                variant="ghost"
+                justifyContent="flex-start"
+                w="100%"
+                minH="48px"
+                borderRadius="xl"
+                onClick={() => {
+                  navigate(`/${currentLang}/login`);
+                  onMobileClose();
+                }}
+              >
                 <HStack gap={3}><FaSignInAlt /><Text>{t('nav.login')}</Text></HStack>
               </Button>
             )}
 
             {currentUser && (
-              <Button variant="ghost" w="100%" onClick={() => { navigate(`/${currentLang}/dashboard`); onMobileClose(); }}>
+              <Button
+                variant="ghost"
+                justifyContent="flex-start"
+                w="100%"
+                minH="48px"
+                borderRadius="xl"
+                onClick={() => {
+                  navigate(`/${currentLang}/dashboard`);
+                  onMobileClose();
+                }}
+              >
                 <HStack gap={3}><FaUser /><Text>{t('nav.dashboard')}</Text></HStack>
               </Button>
             )}
 
             {currentUser?.role === Role.Admin && (
-              <Button variant="ghost" w="100%" onClick={() => { navigate(`/${currentLang}/admin`); onMobileClose(); }}>
+              <Button
+                variant="ghost"
+                justifyContent="flex-start"
+                w="100%"
+                minH="48px"
+                borderRadius="xl"
+                onClick={() => {
+                  navigate(`/${currentLang}/admin`);
+                  onMobileClose();
+                }}
+              >
                 <HStack gap={3}><FaTrophy /><Text>{t('nav.admin')}</Text></HStack>
               </Button>
             )}
           </Box>
 
-          <Box borderTop="1px solid var(--border-color)" pt={3}>
-            <Button variant="ghost" w="100%" onClick={() => { toggleTheme(); }}>
-              <HStack gap={3}><Box>{theme === 'light' ? <FaMoon /> : <FaSun />}</Box><Text>{theme === 'light' ? t('nav.darkMode') ?? 'Dark' : t('nav.lightMode') ?? 'Light'}</Text></HStack>
+          <Box borderTop="1px solid var(--border-color)" pt={4}>
+            <Button
+              variant="ghost"
+              justifyContent="flex-start"
+              w="100%"
+              minH="48px"
+              borderRadius="xl"
+              onClick={() => {
+                toggleTheme();
+              }}
+            >
+              <HStack gap={3}>
+                <Box>{theme === 'light' ? <FaMoon /> : <FaSun />}</Box>
+                <Text>{theme === 'light' ? t('nav.darkMode') : t('nav.lightMode')}</Text>
+              </HStack>
             </Button>
 
             <Box mt={3}>
-              <Text fontWeight="bold" mb={2}>Language</Text>
+              <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" color="var(--card-text)" opacity={0.7} mb={2}>
+                {t('nav.language')}
+              </Text>
               {Object.entries(languages).map(([code, label]) => (
-                <Button key={code} variant={currentLang === code ? 'solid' : 'ghost'} w="100%" mb={1} onClick={() => handleLanguageChange(code)}>
-                  {label}
+                <Button
+                  key={code}
+                  variant={currentLang === code ? 'solid' : 'ghost'}
+                  w="100%"
+                  mb={1}
+                  minH="46px"
+                  borderRadius="xl"
+                  justifyContent="space-between"
+                  onClick={() => handleLanguageChange(code)}
+                >
+                  <Text>{label}</Text>
+                  {currentLang === code ? <FaChevronDown size={12} /> : null}
                 </Button>
               ))}
             </Box>

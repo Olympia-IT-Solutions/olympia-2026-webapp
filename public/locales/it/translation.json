@@ -16,7 +16,13 @@
     "dashboard": "Dashboard",
     "admin": "Admin",
     "login": "Login",
-    "logout": "Logout"
+    "logout": "Logout",
+    "openMenu": "Apri menu",
+    "closeMenu": "Chiudi menu",
+    "menuTitle": "Menu",
+    "language": "Lingua",
+    "darkMode": "Modalità scura",
+    "lightMode": "Modalità chiara"
   },
   "login": {
     "title": "Benvenuto",

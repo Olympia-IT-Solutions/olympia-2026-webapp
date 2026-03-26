@@ -16,7 +16,13 @@
     "dashboard": "Tableau de bord",
     "admin": "Admin",
     "login": "Connexion",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "menuTitle": "Menu",
+    "language": "Langue",
+    "darkMode": "Mode sombre",
+    "lightMode": "Mode clair"
   },
   "login": {
     "title": "Bienvenue",
