@@ -1,8 +1,17 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { Heading } from '@chakra-ui/react'
 import { useNavigate, useParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import featureImg from '../assets/milano-cortina-2026.avif'
+
+const drift = keyframes`
+  from {
+    transform: translate3d(-2%, 0, 0) scale(1.02);
+  }
+  to {
+    transform: translate3d(2%, -1%, 0) scale(1.06);
+  }
+`;
 
 const FeatureWrapper = styled.div`
   width: 90%;
@@ -16,13 +25,15 @@ const Card = styled.div`
   height: 800px;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  box-shadow: var(--ring-soft), 0 18px 40px rgba(0, 28, 41, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.44);
   cursor: pointer;
-  transition: transform 200ms ease, box-shadow 200ms ease;
+  transition: transform var(--motion-fast) var(--motion-ease), box-shadow var(--motion-fast) var(--motion-ease);
+  animation: fadeUpIn var(--motion-slow) var(--motion-ease) both;
 
   &:hover {
     transform: translateY(-6px);
-    box-shadow: 0 18px 40px rgba(0,0,0,0.3);
+    box-shadow: var(--ring-soft), 0 26px 50px rgba(0, 28, 41, 0.28);
   }
 
   @media (max-width: 768px) {
@@ -36,7 +47,9 @@ const Bg = styled.div`
   background-image: url(${featureImg});
   background-size: cover;
   background-position: center;
-  filter: brightness(0.6);
+  filter: brightness(0.62) saturate(1.04);
+  transform-origin: center;
+  animation: ${drift} 9s ease-in-out infinite alternate;
 `;
 
 const Overlay = styled.div`
@@ -46,6 +59,9 @@ const Overlay = styled.div`
   align-items: flex-end;
   padding-left: 6rem;
   padding-bottom: 3rem;
+  background:
+    linear-gradient(to top, rgba(0, 20, 30, 0.46), rgba(0, 20, 30, 0.06)),
+    radial-gradient(circle at 20% 90%, rgba(0, 127, 128, 0.22), transparent 46%);
 
   @media (max-width: 768px) {
     padding-left: 1.25rem;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import {
   HStack,
   Button,
@@ -28,21 +28,40 @@ import { useNavigate, useParams, useLocation } from 'react-router';
 import { getCurrentUser, logout, Role } from '../logic/rights';
 import { useTheme } from '../logic/theme';
 
+const navIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translate3d(0, -12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+`;
+
 // Styled-component for the main container
 const NavContainer = styled.nav`
   background-color: var(--nav-bg);
   border-radius: 50px;
   padding: 10px 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--ring-soft), 0 10px 30px rgba(0, 28, 41, 0.14);
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 95%;
   max-width: 1400px;
   margin: 0 auto;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   position: relative;
   z-index: 100;
+  animation: ${navIn} var(--motion-base) var(--motion-ease) both;
+  transition: transform var(--motion-fast) var(--motion-ease), box-shadow var(--motion-fast) var(--motion-ease);
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--ring-soft), 0 14px 36px rgba(0, 28, 41, 0.18);
+  }
 
   /* Mobile tweaks */
   @media (max-width: 768px) {
@@ -120,6 +139,8 @@ export const NavBar = () => {
           objectFit="contain" 
           mr={4}
           cursor="pointer"
+          transition="transform var(--motion-fast) var(--motion-ease)"
+          _hover={{ transform: 'scale(1.03)' }}
           onClick={() => navigate(`/${currentLang}`)}
         />
 
@@ -146,7 +167,8 @@ export const NavBar = () => {
             px={6}
             py={5}
             fontWeight="bold"
-            _hover={{ bg: '#006666' }}
+            transition="all var(--motion-fast) var(--motion-ease)"
+            _hover={{ bg: '#006666', transform: 'translateY(-2px)', boxShadow: '0 10px 22px rgba(0, 102, 102, 0.3)' }}
             onClick={() => navigate(`/${currentLang}/countries`)}
           >
             {t('nav.countries')}
@@ -162,7 +184,8 @@ export const NavBar = () => {
               cursor="pointer"
               border="1px solid #007f80"
               boxShadow="sm"
-              _hover={{ bg: '#006666' }}
+              transition="all var(--motion-fast) var(--motion-ease)"
+              _hover={{ bg: '#006666', transform: 'translateY(-2px)', boxShadow: '0 10px 22px rgba(0, 102, 102, 0.3)' }}
               onClick={() => setIsSportsOpen(!isSportsOpen)}
             >
               <Text fontWeight="bold" fontSize="sm">
@@ -184,6 +207,8 @@ export const NavBar = () => {
                 minW="150px"
                 zIndex={200}
                 overflow="hidden"
+                border="1px solid var(--border-color)"
+                style={{ animation: 'fadeUpIn var(--motion-base) var(--motion-ease)' }}
               >
                 {Object.entries(sports).map(([key, label]) => (
                   <Box
@@ -214,7 +239,8 @@ export const NavBar = () => {
               px={6}
               py={5}
               fontWeight="bold"
-              _hover={{ bg: '#006666' }}
+              transition="all var(--motion-fast) var(--motion-ease)"
+              _hover={{ bg: '#006666', transform: 'translateY(-2px)', boxShadow: '0 10px 22px rgba(0, 102, 102, 0.3)' }}
               onClick={() => navigate(`/${currentLang}/dashboard`)}
             >
               {t('nav.dashboard')}
@@ -229,7 +255,8 @@ export const NavBar = () => {
               px={6}
               py={5}
               fontWeight="bold"
-              _hover={{ bg: '#006666' }}
+              transition="all var(--motion-fast) var(--motion-ease)"
+              _hover={{ bg: '#006666', transform: 'translateY(-2px)', boxShadow: '0 10px 22px rgba(0, 102, 102, 0.3)' }}
               onClick={() => navigate(`/${currentLang}/admin`)}
             >
               {t('nav.admin')}
@@ -248,7 +275,8 @@ export const NavBar = () => {
             px={6}
             py={5}
             fontWeight="bold"
-            _hover={{ bg: '#006666' }}
+            transition="all var(--motion-fast) var(--motion-ease)"
+            _hover={{ bg: '#006666', transform: 'translateY(-2px)', boxShadow: '0 10px 22px rgba(0, 102, 102, 0.3)' }}
             onClick={currentUser ? handleLogout : () => navigate(`/${currentLang}/login`)}
           >
             {currentUser ? t('nav.logout') : t('nav.login')}
@@ -262,7 +290,8 @@ export const NavBar = () => {
             py={2}
             border="1px solid #eee"
             boxShadow="sm"
-            _hover={{ borderColor: '#ccc' }}
+            transition="all var(--motion-fast) var(--motion-ease)"
+            _hover={{ borderColor: '#ccc', transform: 'translateY(-2px)' }}
             onClick={toggleTheme}
           >
             {theme === 'light' ? <FaMoon size={16} /> : <FaSun size={16} />}
@@ -299,6 +328,8 @@ export const NavBar = () => {
                       minW="150px"
                       zIndex={200}
                       overflow="hidden"
+                      border="1px solid var(--border-color)"
+                      style={{ animation: 'fadeUpIn var(--motion-base) var(--motion-ease)' }}
                   >
                       {Object.entries(languages).map(([code, label]) => (
                           <Box
@@ -324,6 +355,17 @@ export const NavBar = () => {
       {isMobileOpen && (
         <Box
           position="fixed"
+          inset="0"
+          bg="rgba(0, 15, 20, 0.42)"
+          backdropFilter="blur(1px)"
+          zIndex={250}
+          onClick={onMobileClose}
+        />
+      )}
+
+      {isMobileOpen && (
+        <Box
+          position="fixed"
           top="0"
           left="0"
           h="100vh"
@@ -334,6 +376,10 @@ export const NavBar = () => {
           boxShadow="lg"
           p={4}
           overflowY="auto"
+          borderTopRightRadius="2xl"
+          borderBottomRightRadius="2xl"
+          borderRight="1px solid var(--border-color)"
+          style={{ animation: 'fadeUpIn var(--motion-base) var(--motion-ease)' }}
         >
           <Flex justify="space-between" align="center" mb={4}>
             <HStack>

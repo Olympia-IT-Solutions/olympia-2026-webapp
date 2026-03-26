@@ -1,10 +1,19 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Text, Button, HStack, Link } from '@chakra-ui/react';
 import headerImg from '../assets/mc2026_header.png';
 import { NavBar } from './NavBar';
 
+const shimmer = keyframes`
+  from {
+    transform: translateX(-22%);
+  }
+  to {
+    transform: translateX(22%);
+  }
+`;
+
 const BannerContainer = styled.div`
-  background-color: #00313d;
+  background: linear-gradient(90deg, #00313d 0%, #004a59 52%, #00313d 100%);
   color: white;
   display: flex;
   justify-content: center;
@@ -13,6 +22,17 @@ const BannerContainer = styled.div`
   font-weight: bold;
   width: 100%;
   z-index: 1000;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0) 80%);
+    animation: ${shimmer} 10s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
 `;
 
 const ContentWrapper = styled.div`
@@ -21,7 +41,16 @@ const ContentWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
   padding: 0 20px;
+
+  @media (max-width: 768px) {
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 8px 14px;
+    gap: 8px;
+  }
 `;
 
 export const Banner = () => {
@@ -29,8 +58,10 @@ export const Banner = () => {
     <>
       <BannerContainer>
         <ContentWrapper>
-          <Text fontSize="sm">Olympische Winterspiele™ · 6. bis 22. Februar 2026 | Paralympische Winterspiele™ · 6. bis 15. März 2026</Text>
-          <HStack gap={4}>
+          <Text fontSize="sm" lineHeight="1.35" flex="1 1 520px" minW={0}>
+            Olympische Winterspiele™ · 6. bis 22. Februar 2026 | Paralympische Winterspiele™ · 6. bis 15. März 2026
+          </Text>
+          <HStack gap={3} flex="0 1 auto" flexWrap="wrap" justify="flex-start">
             <Link 
               href="https://tickets.milanocortina2026.org"
               target="_blank"
@@ -82,6 +113,7 @@ const HeaderWrapper = styled.div`
   width: 100%;
   height: 160px;
   overflow: visible;
+  margin-bottom: 10px;
 `;
 
 const NavOverlay = styled.div`
@@ -100,6 +132,7 @@ const NavOverlay = styled.div`
 `;
 
 const HeaderImage = styled.div`
+  position: relative;
   width: 100%;
   height: 160px;
   background-image: url(${headerImg});
@@ -108,4 +141,12 @@ const HeaderImage = styled.div`
   background-repeat: no-repeat;
   margin-bottom: 20px;
   z-index: 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0));
+    pointer-events: none;
+  }
 `;

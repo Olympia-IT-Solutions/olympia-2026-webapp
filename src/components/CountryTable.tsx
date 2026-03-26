@@ -76,7 +76,17 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
   }
 
   return (
-    <Box width="100%" overflowX="auto">
+    <Box
+      width="100%"
+      overflowX="auto"
+      bg="var(--card-bg)"
+      border="1px solid"
+      borderColor="var(--border-color)"
+      borderRadius="2xl"
+      boxShadow="var(--ring-soft)"
+      p={2}
+      style={{ animation: 'fadeUpIn var(--motion-base) var(--motion-ease)' }}
+    >
       <Table.ScrollArea>
         <Table.Root variant='outline'>
           <Table.Header>
@@ -92,7 +102,8 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
               <Table.Row 
                 key={row.country || index}
                 onClick={() => onCountryClick?.(row.country)}
-                _hover={onCountryClick ? { bg: 'var(--hover-bg)', cursor: 'pointer' } : undefined}
+                transition="background-color var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease)"
+                _hover={onCountryClick ? { bg: 'var(--hover-bg)', cursor: 'pointer', transform: 'translateX(2px)' } : undefined}
               >
                 <Table.Cell>{row.country}</Table.Cell>
                 <Table.Cell textAlign="right">{row.bronze}</Table.Cell>
@@ -105,7 +116,7 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
       </Table.ScrollArea>
       {!showAll && hasMore && (
         <Box display="flex" justifyContent="center" mt={4}>
-            <Button onClick={() => setShowAll(true)} colorPalette="teal">
+            <Button onClick={() => setShowAll(true)} colorPalette="teal" borderRadius="full" transition="all var(--motion-fast) var(--motion-ease)" _hover={{ transform: 'translateY(-2px)' }}>
             {t('countryTable.loadMore')}
             </Button>
         </Box>

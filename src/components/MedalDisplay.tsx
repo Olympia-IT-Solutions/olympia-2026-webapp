@@ -19,7 +19,7 @@ const getMedalColor = (medalType: 'GOLD' | 'SILVER' | 'BRONZE') => {
   return colors[medalType];
 };
 
-const MedalCard: React.FC<{ medal: Medal }> = ({ medal }) => {
+const MedalCard: React.FC<{ medal: Medal; index: number }> = ({ medal, index }) => {
   const medalColor = getMedalColor(medal.medalType);
   const { lang } = useParams<{ lang: string }>();
   const navigate = useNavigate();
@@ -40,7 +40,10 @@ const MedalCard: React.FC<{ medal: Medal }> = ({ medal }) => {
       borderColor={medalColor.borderColor}
       borderRadius="lg"
       p={6}
-      transition="all 0.3s ease"
+      boxShadow="sm"
+      transition="transform var(--motion-fast) var(--motion-ease), box-shadow var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease)"
+      _hover={{ transform: 'translateY(-4px)', boxShadow: 'lg' }}
+      style={{ animation: 'fadeUpIn var(--motion-base) var(--motion-ease) both', animationDelay: `${index * 45}ms` }}
     >
       <VStack gap={4} align="start" h="100%">
         {/* Medal Icon */}
@@ -124,7 +127,16 @@ export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, loading = fa
       {/* Medal Summary */}
       <HStack gap={6} justify="center" wrap="wrap">
         {goldMedals.length > 0 && (
-          <Box textAlign="center" p={4} bg="rgba(255, 215, 0, 0.1)" borderRadius="lg">
+          <Box
+            textAlign="center"
+            p={4}
+            bg="rgba(255, 215, 0, 0.1)"
+            borderRadius="lg"
+            border="1px solid rgba(255, 183, 0, 0.32)"
+            boxShadow="sm"
+            transition="transform var(--motion-fast) var(--motion-ease)"
+            _hover={{ transform: 'translateY(-3px)' }}
+          >
             <Icon as={FaMedal} color="#FFD700" boxSize={8} mb={2} />
             <Text fontWeight="bold" fontSize="2xl" color="#FFD700">
               {goldMedals.length}
@@ -135,7 +147,16 @@ export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, loading = fa
           </Box>
         )}
         {silverMedals.length > 0 && (
-          <Box textAlign="center" p={4} bg="rgba(192, 192, 192, 0.1)" borderRadius="lg">
+          <Box
+            textAlign="center"
+            p={4}
+            bg="rgba(192, 192, 192, 0.1)"
+            borderRadius="lg"
+            border="1px solid rgba(169, 169, 169, 0.34)"
+            boxShadow="sm"
+            transition="transform var(--motion-fast) var(--motion-ease)"
+            _hover={{ transform: 'translateY(-3px)' }}
+          >
             <Icon as={FaMedal} color="#C0C0C0" boxSize={8} mb={2} />
             <Text fontWeight="bold" fontSize="2xl" color="#C0C0C0">
               {silverMedals.length}
@@ -146,7 +167,16 @@ export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, loading = fa
           </Box>
         )}
         {bronzeMedals.length > 0 && (
-          <Box textAlign="center" p={4} bg="rgba(205, 127, 50, 0.1)" borderRadius="lg">
+          <Box
+            textAlign="center"
+            p={4}
+            bg="rgba(205, 127, 50, 0.1)"
+            borderRadius="lg"
+            border="1px solid rgba(184, 115, 51, 0.34)"
+            boxShadow="sm"
+            transition="transform var(--motion-fast) var(--motion-ease)"
+            _hover={{ transform: 'translateY(-3px)' }}
+          >
             <Icon as={FaMedal} color="#CD7F32" boxSize={8} mb={2} />
             <Text fontWeight="bold" fontSize="2xl" color="#CD7F32">
               {bronzeMedals.length}
@@ -160,8 +190,8 @@ export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, loading = fa
 
       {/* Medal Cards Grid */}
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
-        {medals.map((medal) => (
-          <MedalCard key={`${medal.athleteId}-${medal.sportName}`} medal={medal} />
+        {medals.map((medal, index) => (
+          <MedalCard key={`${medal.athleteId}-${medal.sportName}`} medal={medal} index={index} />
         ))}
       </SimpleGrid>
     </VStack>

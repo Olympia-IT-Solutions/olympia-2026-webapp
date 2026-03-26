@@ -54,7 +54,17 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false 
   };
 
   return (
-    <Box width="100%" overflowX="auto">
+    <Box
+      width="100%"
+      overflowX="auto"
+      bg="var(--card-bg)"
+      border="1px solid"
+      borderColor="var(--border-color)"
+      borderRadius="2xl"
+      boxShadow="var(--ring-soft)"
+      p={2}
+      style={{ animation: 'fadeUpIn var(--motion-base) var(--motion-ease)' }}
+    >
       <Table.ScrollArea>
         <Table.Root variant='outline'>
           <Table.Header>
@@ -68,13 +78,18 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false 
           </Table.Header>
           <Table.Body>
             {data.map((row, index) => (
-              <Table.Row key={row.id}>
+              <Table.Row
+                key={row.id}
+                transition="background-color var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease)"
+                _hover={{ bg: 'var(--hover-bg)', transform: 'translateX(2px)' }}
+              >
                 <Table.Cell fontWeight="bold">{index + 1}</Table.Cell>
                 <Table.Cell>
                   <Text
                     onClick={() => goToCountry(row.country)}
                     cursor="pointer"
-                    _hover={{ textDecoration: 'underline' }}
+                    transition="color var(--motion-fast) var(--motion-ease)"
+                    _hover={{ textDecoration: 'underline', color: '#007f80' }}
                     color="var(--card-text)"
                   >
                     {row.athleteName}
@@ -84,7 +99,8 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false 
                   <Text
                     onClick={() => goToCountry(row.country)}
                     cursor="pointer"
-                    _hover={{ textDecoration: 'underline' }}
+                    transition="color var(--motion-fast) var(--motion-ease)"
+                    _hover={{ textDecoration: 'underline', color: '#007f80' }}
                     color="var(--card-text)"
                   >
                     {row.country}
