@@ -111,6 +111,8 @@
       "title": "Résultats soumis",
       "noResults": "Aucun résultat disponible",
       "noActions": "Aucune action disponible",
+      "ownSubmission": "Votre soumission",
+      "ownSubmissionBlocked": "Approbation à 4 yeux requise",
       "waiting": "En attente d'approbation",
       "publishedCheck": "✓ Publié",
       "approvedBy": "Approuvé par: {{person}}",

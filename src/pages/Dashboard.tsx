@@ -338,6 +338,7 @@ export function Dashboard() {
                 <ResultsBySportTable
                   data={sportResults}
                   currentRole={currentRole}
+                  currentUserEmail={currentUser?.email ?? null}
                   onApprove={(resultId) => {
                     const result = sportResults.find((entry) => entry.id === resultId)
                     if (result) {

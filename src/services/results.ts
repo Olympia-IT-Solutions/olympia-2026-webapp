@@ -1,10 +1,18 @@
 export interface Result {
   athleteId: number;
   athleteName: string;
-  country: string;
+  approvedById?: number | null;
+  approvedByUsername?: string | null;
+  country?: string;
+  countryCode?: string;
+  countryId?: number;
+  countryName?: string;
+  createdById?: number | null;
+  createdByUsername?: string | null;
   hasMedal: boolean;
   id: number;
   medalType: 'GOLD' | 'SILVER' | 'BRONZE' | null;
+  rank?: number;
   sportId: number;
   sportName: string;
   status: 'APPROVED' | 'PENDING' | 'PUBLISHED' | string;

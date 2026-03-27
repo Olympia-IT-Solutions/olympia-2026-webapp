@@ -111,6 +111,8 @@
       "title": "Risultati inviati",
       "noResults": "Nessun risultato disponibile",
       "noActions": "Nessuna azione disponibile",
+      "ownSubmission": "La tua segnalazione",
+      "ownSubmissionBlocked": "È richiesta l'approvazione a 4 occhi",
       "waiting": "In attesa di approvazione",
       "publishedCheck": "✓ Pubblicato",
       "approvedBy": "Approvato da: {{person}}",

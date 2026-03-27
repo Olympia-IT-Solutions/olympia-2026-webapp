@@ -9,6 +9,7 @@ interface ResultsBySportTableProps {
   data: Result[]
   loading?: boolean
   currentRole?: RoleType | null
+  currentUserEmail?: string | null
   onApprove?: (resultId: number) => void
   onReject?: (resultId: number) => void
   onInvalidate?: (resultId: number) => void
@@ -48,6 +49,7 @@ export const ResultsBySportTable: React.FC<ResultsBySportTableProps> = ({
   data,
   loading = false,
   currentRole,
+  currentUserEmail,
   onApprove,
   onReject,
   onInvalidate,
@@ -78,6 +80,7 @@ export const ResultsBySportTable: React.FC<ResultsBySportTableProps> = ({
         <Table.Header>
           <Table.Row>
             <Table.ColumnHeader>{t('dashboard.table.columns.athlete')}</Table.ColumnHeader>
+            <Table.ColumnHeader>{t('dashboard.table.columns.submittedBy')}</Table.ColumnHeader>
             <Table.ColumnHeader>{t('dashboard.table.columns.country')}</Table.ColumnHeader>
             <Table.ColumnHeader>{t('dashboard.table.columns.result')}</Table.ColumnHeader>
             <Table.ColumnHeader>{t('dashboard.table.columns.medal')}</Table.ColumnHeader>
@@ -89,6 +92,8 @@ export const ResultsBySportTable: React.FC<ResultsBySportTableProps> = ({
           {data.map((result) => {
             const normalizedStatus = result.status.toUpperCase()
             const isPending = normalizedStatus === 'PENDING'
+            const isOwnSubmission = Boolean(currentUserEmail && result.createdByUsername && currentUserEmail === result.createdByUsername)
+            const canReviewPending = canReview && isPending && !isOwnSubmission
             const canInvalidate = currentRole === 'admin' && (normalizedStatus === 'APPROVED' || normalizedStatus === 'PUBLISHED')
 
             return (
@@ -97,7 +102,15 @@ export const ResultsBySportTable: React.FC<ResultsBySportTableProps> = ({
                   <Text fontWeight="600">{result.athleteName}</Text>
                   <Text fontSize="xs" color="gray.500">{result.sportName}</Text>
                 </Table.Cell>
-                <Table.Cell>{result.country}</Table.Cell>
+                <Table.Cell>
+                  <Text>{result.createdByUsername ?? '-'}</Text>
+                  {isOwnSubmission && (
+                    <Text fontSize="xs" color="teal.600">
+                      {t('dashboard.table.ownSubmission')}
+                    </Text>
+                  )}
+                </Table.Cell>
+                <Table.Cell>{result.countryName ?? result.country ?? '-'}</Table.Cell>
                 <Table.Cell fontWeight="bold" fontFamily="mono">{result.value}</Table.Cell>
                 <Table.Cell>
                   {result.hasMedal && result.medalType ? (
@@ -115,17 +128,22 @@ export const ResultsBySportTable: React.FC<ResultsBySportTableProps> = ({
                 </Table.Cell>
                 <Table.Cell>
                   <Stack direction="row" gap={2} wrap="wrap">
-                    {canReview && isPending && onApprove && (
+                    {canReviewPending && onApprove && (
                       <Button size="sm" colorScheme="green" onClick={() => onApprove(result.id)}>
                         <FaCheck style={{ marginRight: '4px' }} />
                         {t('dashboard.buttons.approve')}
                       </Button>
                     )}
-                    {canReview && isPending && onReject && (
+                    {canReviewPending && onReject && (
                       <Button size="sm" colorScheme="red" variant="outline" onClick={() => onReject(result.id)}>
                         <FaTimes style={{ marginRight: '4px' }} />
                         {t('dashboard.buttons.reject')}
                       </Button>
+                    )}
+                    {isPending && isOwnSubmission && (
+                      <Text fontSize="xs" color="gray.500" alignSelf="center">
+                        {t('dashboard.table.ownSubmissionBlocked')}
+                      </Text>
                     )}
                     {canInvalidate && onInvalidate && (
                       <Button size="sm" colorScheme="orange" variant="outline" onClick={() => onInvalidate(result.id)}>

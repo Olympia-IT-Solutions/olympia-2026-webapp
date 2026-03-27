@@ -111,6 +111,8 @@
       "title": "Eingereichte Ergebnisse",
       "noResults": "Keine Ergebnisse vorhanden",
       "noActions": "Keine Aktionen verfügbar",
+      "ownSubmission": "Eigene Einreichung",
+      "ownSubmissionBlocked": "4-Augen-Freigabe erforderlich",
       "waiting": "Wartet auf Genehmigung",
       "publishedCheck": "✓ Veröffentlicht",
       "approvedBy": "Genehmigt von: {{person}}",
