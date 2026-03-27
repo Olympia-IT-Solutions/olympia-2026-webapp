@@ -5,7 +5,7 @@ import { getCurrentUser } from '../logic/rights'
 import { ResultsBySportTable } from '../components/ResultsBySportTable'
 import { type Sport } from '../services/sports'
 import { approveResult, createResult, fetchResultsBySport, invalidateResult, rejectResult, type Result as ApiResult } from '../services/results'
-import { fetchAthletesBySport, type Athlete } from '../services/athletes'
+import { fetchAllAthletes, type Athlete } from '../services/athletes'
 import { useSportsStore } from '../store/sports'
 
 const getResultsErrorMessage = (error: unknown) =>
@@ -48,6 +48,7 @@ export function Dashboard() {
     rank: '',
   })
   const [athletesBySport, setAthletesBySport] = useState<Record<number, Athlete[]>>({})
+  const [allAthletes, setAllAthletes] = useState<Athlete[]>([])
   const [athletesLoading, setAthletesLoading] = useState(false)
   const [athletesError, setAthletesError] = useState<string | null>(null)
 
@@ -184,10 +185,15 @@ export function Dashboard() {
     setAthletesError(null)
 
     try {
-      const athletes = await fetchAthletesBySport(sportId)
+      const athletes = allAthletes.length > 0 ? allAthletes : await fetchAllAthletes()
+      if (allAthletes.length === 0) {
+        setAllAthletes(athletes)
+      }
+
+      const athletesForSport = athletes.filter((athlete) => athlete.sportId === sportId)
       setAthletesBySport((previousAthletes) => ({
         ...previousAthletes,
-        [sportId]: athletes,
+        [sportId]: athletesForSport,
       }))
     } catch (error) {
       setAthletesError(getResultsErrorMessage(error))

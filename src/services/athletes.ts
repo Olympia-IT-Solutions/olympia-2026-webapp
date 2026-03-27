@@ -10,7 +10,6 @@ export interface Athlete {
 }
 
 const ATHLETES_API_URL = 'https://olympia-2026-api.onrender.com/api/athletes'
-const ATHLETES_BY_SPORT_API_URL = 'https://olympia-2026-api.onrender.com/api/athletes/by-sport'
 const AUTH_TOKEN_KEY = 'authToken'
 
 const buildAuthHeaders = () => {
@@ -27,29 +26,6 @@ export const fetchAllAthletes = async (): Promise<Athlete[]> => {
     const token = localStorage.getItem(AUTH_TOKEN_KEY)
 
     const response = await fetch(ATHLETES_API_URL, {
-      method: 'GET',
-      headers: {
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        'Content-Type': 'application/json',
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`)
-    }
-
-    const data = await response.json()
-    return Array.isArray(data) ? data : data.content || []
-  } catch (err) {
-    throw err instanceof Error ? err : new Error('Failed to fetch athletes')
-  }
-}
-
-export const fetchAthletesBySport = async (sportId: number): Promise<Athlete[]> => {
-  try {
-    const token = localStorage.getItem(AUTH_TOKEN_KEY)
-
-    const response = await fetch(`${ATHLETES_BY_SPORT_API_URL}/${sportId}`, {
       method: 'GET',
       headers: {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),

@@ -155,6 +155,14 @@
     "noAthletes": "No athletes found",
     "noSports": "No sports found",
     "noCountries": "No countries found",
+    "searchUsersPlaceholder": "Search users...",
+    "searchAthletesPlaceholder": "Search athletes...",
+    "filters": {
+      "all": "All"
+    },
+    "resetFilters": "Reset filters",
+    "noFilteredUsers": "No users match the current filters",
+    "noFilteredAthletes": "No athletes match the current filters",
     "addAthlete": "Add athlete",
     "addAthleteTitle": "Add new athlete",
     "addAthleteValidationError": "Please fill in all required fields",

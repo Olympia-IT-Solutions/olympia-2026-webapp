@@ -6,11 +6,20 @@ import { useSportsStore } from '../store/sports'
 import { fetchAllCountries, type CountryOption } from '../services/countries'
 import { activateAthlete, createAthlete, deactivateAthlete, fetchAllAthletes, updateAthlete, type Athlete, type CreateAthleteRequest, type UpdateAthleteRequest } from '../services/athletes'
 
+type AthleteSortField = 'id' | 'name' | 'countryCode' | 'countryName' | 'sportId' | 'sportName' | 'active'
+type SortDirection = 'asc' | 'desc'
+
 export function AthletesTable() {
   const { t } = useTranslation()
   const [athletes, setAthletes] = useState<Athlete[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [athleteSearchTerm, setAthleteSearchTerm] = useState('')
+  const [athleteStatusFilter, setAthleteStatusFilter] = useState<'all' | 'active' | 'inactive'>('all')
+  const [athleteSportFilter, setAthleteSportFilter] = useState('all')
+  const [athleteCountryFilter, setAthleteCountryFilter] = useState('all')
+  const [athleteSortField, setAthleteSortField] = useState<AthleteSortField>('id')
+  const [athleteSortDirection, setAthleteSortDirection] = useState<SortDirection>('asc')
   const [showAddAthleteModal, setShowAddAthleteModal] = useState(false)
   const [addAthleteLoading, setAddAthleteLoading] = useState(false)
   const [addAthleteError, setAddAthleteError] = useState<string | null>(null)
@@ -42,7 +51,18 @@ export function AthletesTable() {
   const sportsLoading = useSportsStore((state) => state.loading)
   const sportsError = useSportsStore((state) => state.error)
   const initializeSports = useSportsStore((state) => state.initializeSports)
-  const activeSports = useMemo(() => sports.filter((sport) => sport.active), [sports])
+  const activeSports = useMemo(
+    () => [...sports.filter((sport) => sport.active)].sort((leftSport, rightSport) => leftSport.name.localeCompare(rightSport.name, undefined, { sensitivity: 'base' })),
+    [sports],
+  )
+  const allSports = useMemo(
+    () => [...sports].sort((leftSport, rightSport) => leftSport.name.localeCompare(rightSport.name, undefined, { sensitivity: 'base' })),
+    [sports],
+  )
+  const sortedCountries = useMemo(
+    () => [...countries].sort((leftCountry, rightCountry) => leftCountry.name.localeCompare(rightCountry.name, undefined, { sensitivity: 'base' })),
+    [countries],
+  )
 
   const loadAthletes = useCallback(async () => {
     setLoading(true)
@@ -85,6 +105,104 @@ export function AthletesTable() {
 
     void loadCountries()
   }, [])
+
+  const resetAthleteFilters = () => {
+    setAthleteSearchTerm('')
+    setAthleteStatusFilter('all')
+    setAthleteSportFilter('all')
+    setAthleteCountryFilter('all')
+    setAthleteSortField('id')
+    setAthleteSortDirection('asc')
+  }
+
+  const toggleAthleteSort = (field: AthleteSortField) => {
+    if (athleteSortField === field) {
+      setAthleteSortDirection((currentDirection) => (currentDirection === 'asc' ? 'desc' : 'asc'))
+      return
+    }
+
+    setAthleteSortField(field)
+    setAthleteSortDirection('asc')
+  }
+
+  const filteredAthletes = useMemo(() => {
+    const normalizedSearchTerm = athleteSearchTerm.trim().toLowerCase()
+
+    const matchesSearch = (athlete: Athlete) => {
+      if (!normalizedSearchTerm) {
+        return true
+      }
+
+      return [
+        athlete.id.toString(),
+        athlete.name,
+        athlete.countryCode ?? '',
+        athlete.countryName ?? '',
+        athlete.sportId?.toString() ?? '',
+        athlete.sportName ?? '',
+        athlete.active ? 'active' : 'inactive',
+      ].some((value) => value.toLowerCase().includes(normalizedSearchTerm))
+    }
+
+    const filtered = athletes.filter((athlete) => {
+      const matchesStatus =
+        athleteStatusFilter === 'all'
+          || (athleteStatusFilter === 'active' ? athlete.active : !athlete.active)
+      const matchesSport = athleteSportFilter === 'all' || String(athlete.sportId ?? '') === athleteSportFilter
+      const matchesCountry = athleteCountryFilter === 'all' || String(athlete.countryId ?? '') === athleteCountryFilter
+
+      return matchesStatus && matchesSport && matchesCountry && matchesSearch(athlete)
+    })
+
+    return [...filtered].sort((leftAthlete, rightAthlete) => {
+      let comparison = 0
+
+      switch (athleteSortField) {
+        case 'id':
+          comparison = leftAthlete.id - rightAthlete.id
+          break
+        case 'name':
+          comparison = leftAthlete.name.localeCompare(rightAthlete.name, undefined, { sensitivity: 'base' })
+          break
+        case 'countryCode':
+          comparison = (leftAthlete.countryCode ?? '').localeCompare(rightAthlete.countryCode ?? '', undefined, { sensitivity: 'base' })
+          break
+        case 'countryName':
+          comparison = (leftAthlete.countryName ?? '').localeCompare(rightAthlete.countryName ?? '', undefined, { sensitivity: 'base' })
+          break
+        case 'sportId':
+          comparison = (leftAthlete.sportId ?? 0) - (rightAthlete.sportId ?? 0)
+          break
+        case 'sportName':
+          comparison = (leftAthlete.sportName ?? '').localeCompare(rightAthlete.sportName ?? '', undefined, { sensitivity: 'base' })
+          break
+        case 'active':
+          comparison = Number(leftAthlete.active) - Number(rightAthlete.active)
+          break
+      }
+
+      return athleteSortDirection === 'asc' ? comparison : -comparison
+    })
+  }, [athleteCountryFilter, athleteSearchTerm, athleteSortDirection, athleteSortField, athleteSportFilter, athleteStatusFilter, athletes])
+
+  const renderAthleteSortHeader = (field: AthleteSortField, label: string) => {
+    const isActiveSort = athleteSortField === field
+
+    return (
+      <Button
+        variant="ghost"
+        size="sm"
+        px={0}
+        justifyContent="flex-start"
+        onClick={() => toggleAthleteSort(field)}
+      >
+        {label}
+        <Text as="span" ml={2} fontSize="xs" color="gray.500">
+          {isActiveSort ? (athleteSortDirection === 'asc' ? '↑' : '↓') : '↕'}
+        </Text>
+      </Button>
+    )
+  }
 
   const handleCreateAthlete = async () => {
     if (!newAthlete.name || !newAthlete.sportId || !newAthlete.countryId) {
@@ -235,76 +353,163 @@ export function AthletesTable() {
           <Text>{t('admin.noAthletes')}</Text>
         </Box>
       ) : (
-        <Table.ScrollArea>
-          <Table.Root variant="line">
-            <Table.Header>
-              <Table.Row>
-                <Table.ColumnHeader whiteSpace="nowrap" w="90px">{t('admin.athletesTable.columns.id')}</Table.ColumnHeader>
-                <Table.ColumnHeader minW="220px">{t('admin.athletesTable.columns.name')}</Table.ColumnHeader>
-                <Table.ColumnHeader whiteSpace="nowrap" w="140px">{t('admin.athletesTable.columns.countryCode')}</Table.ColumnHeader>
-                <Table.ColumnHeader minW="180px">{t('admin.athletesTable.columns.countryName')}</Table.ColumnHeader>
-                <Table.ColumnHeader whiteSpace="nowrap" w="100px">{t('admin.athletesTable.columns.sportId')}</Table.ColumnHeader>
-                <Table.ColumnHeader minW="180px">{t('admin.athletesTable.columns.sportName')}</Table.ColumnHeader>
-                <Table.ColumnHeader whiteSpace="nowrap" w="110px">{t('admin.athletesTable.columns.active')}</Table.ColumnHeader>
-                <Table.ColumnHeader whiteSpace="nowrap" w="120px">{t('admin.athletesTable.columns.edit')}</Table.ColumnHeader>
-                <Table.ColumnHeader whiteSpace="nowrap" w="130px">{t('admin.athletesTable.columns.actions')}</Table.ColumnHeader>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {athletes.map((athlete) => (
-                <Table.Row key={athlete.id}>
-                  <Table.Cell fontWeight="500">{athlete.id}</Table.Cell>
-                  <Table.Cell>{athlete.name}</Table.Cell>
-                  <Table.Cell>{athlete.countryCode ?? '-'}</Table.Cell>
-                  <Table.Cell>{athlete.countryName ?? '-'}</Table.Cell>
-                  <Table.Cell>{athlete.sportId ?? '-'}</Table.Cell>
-                  <Table.Cell>{athlete.sportName ?? '-'}</Table.Cell>
-                  <Table.Cell>
-                    <Badge colorPalette={athlete.active ? 'green' : 'red'}>
-                      {athlete.active ? t('admin.active') : t('admin.inactive')}
-                    </Badge>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Button
-                      size="sm"
-                      colorScheme="blue"
-                      variant="outline"
-                      onClick={() => openEditAthleteModal(athlete)}
-                    >
-                      <FaEdit style={{ marginRight: '6px' }} />
-                      {t('admin.athleteEdit')}
-                    </Button>
-                  </Table.Cell>
-                  <Table.Cell>
-                    {athlete.active ? (
-                      <Button
-                        size="sm"
-                        colorScheme="red"
-                        variant="outline"
-                        onClick={() => openStatusActionPrompt(athlete.id, athlete.name, 'deactivate')}
-                        loading={statusActionLoadingId === athlete.id}
-                      >
-                        <FaBan style={{ marginRight: '6px' }} />
-                        {t('admin.athleteDeactivate')}
-                      </Button>
-                    ) : (
-                      <Button
-                        size="sm"
-                        colorScheme="green"
-                        variant="outline"
-                        onClick={() => openStatusActionPrompt(athlete.id, athlete.name, 'activate')}
-                        loading={statusActionLoadingId === athlete.id}
-                      >
-                        <FaCheck style={{ marginRight: '6px' }} />
-                        {t('admin.athleteActivate')}
-                      </Button>
-                    )}
-                  </Table.Cell>
+        <>
+          <Stack gap={3} mb={4}>
+            <Input
+              placeholder={t('admin.searchAthletesPlaceholder')}
+              value={athleteSearchTerm}
+              onChange={(event) => setAthleteSearchTerm(event.target.value)}
+            />
+            <Stack direction={{ base: 'column', lg: 'row' }} gap={3}>
+              <Box flex="1">
+                <Text mb={2} fontWeight="500">{t('admin.table.columns.status')}</Text>
+                <select
+                  style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--input-bg)' }}
+                  value={athleteStatusFilter}
+                  onChange={(event) => setAthleteStatusFilter(event.target.value as 'all' | 'active' | 'inactive')}
+                >
+                  <option value="all">{t('admin.filters.all')}</option>
+                  <option value="active">{t('admin.active')}</option>
+                  <option value="inactive">{t('admin.inactive')}</option>
+                </select>
+              </Box>
+              <Box flex="1">
+                <Text mb={2} fontWeight="500">{t('admin.athletesTable.columns.sportName')}</Text>
+                <select
+                  style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--input-bg)' }}
+                  value={athleteSportFilter}
+                  onChange={(event) => setAthleteSportFilter(event.target.value)}
+                  disabled={sportsLoading || allSports.length === 0}
+                >
+                  <option value="all">
+                    {sportsLoading
+                      ? t('admin.loading')
+                      : t('admin.filters.all')}
+                  </option>
+                  {allSports.map((sport) => (
+                    <option key={sport.id} value={sport.id}>
+                      {sport.name}
+                    </option>
+                  ))}
+                </select>
+                {!sportsLoading && allSports.length === 0 && (
+                  <Text fontSize="sm" color="gray.500" mt={2}>
+                    {t('admin.noSports')}
+                  </Text>
+                )}
+              </Box>
+              <Box flex="1">
+                <Text mb={2} fontWeight="500">{t('admin.athletesTable.columns.countryName')}</Text>
+                <select
+                  style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--input-bg)' }}
+                  value={athleteCountryFilter}
+                  onChange={(event) => setAthleteCountryFilter(event.target.value)}
+                  disabled={countriesLoading || sortedCountries.length === 0}
+                >
+                  <option value="all">
+                    {countriesLoading
+                      ? t('admin.loading')
+                      : t('admin.filters.all')}
+                  </option>
+                  {sortedCountries.map((country) => (
+                    <option key={country.id} value={country.id}>
+                      {country.name}
+                    </option>
+                  ))}
+                </select>
+                {countriesError && (
+                  <Text fontSize="sm" color="red.500" mt={2}>
+                    {t('admin.countriesLoadError')}: {countriesError}
+                  </Text>
+                )}
+                {!countriesLoading && !countriesError && sortedCountries.length === 0 && (
+                  <Text fontSize="sm" color="gray.500" mt={2}>
+                    {t('admin.noCountries')}
+                  </Text>
+                )}
+              </Box>
+              <Box display="flex" alignItems="end">
+                <Button variant="outline" onClick={resetAthleteFilters} width={{ base: '100%', lg: 'auto' }}>
+                  {t('admin.resetFilters')}
+                </Button>
+              </Box>
+            </Stack>
+          </Stack>
+
+          <Table.ScrollArea>
+            <Table.Root variant="line">
+              <Table.Header>
+                <Table.Row>
+                  <Table.ColumnHeader whiteSpace="nowrap" w="90px">{renderAthleteSortHeader('id', t('admin.athletesTable.columns.id'))}</Table.ColumnHeader>
+                  <Table.ColumnHeader minW="220px">{renderAthleteSortHeader('name', t('admin.athletesTable.columns.name'))}</Table.ColumnHeader>
+                  <Table.ColumnHeader whiteSpace="nowrap" w="140px">{renderAthleteSortHeader('countryCode', t('admin.athletesTable.columns.countryCode'))}</Table.ColumnHeader>
+                  <Table.ColumnHeader minW="180px">{renderAthleteSortHeader('countryName', t('admin.athletesTable.columns.countryName'))}</Table.ColumnHeader>
+                  <Table.ColumnHeader whiteSpace="nowrap" w="100px">{renderAthleteSortHeader('sportId', t('admin.athletesTable.columns.sportId'))}</Table.ColumnHeader>
+                  <Table.ColumnHeader minW="180px">{renderAthleteSortHeader('sportName', t('admin.athletesTable.columns.sportName'))}</Table.ColumnHeader>
+                  <Table.ColumnHeader whiteSpace="nowrap" w="110px">{renderAthleteSortHeader('active', t('admin.athletesTable.columns.active'))}</Table.ColumnHeader>
+                  <Table.ColumnHeader whiteSpace="nowrap" w="120px">{t('admin.athletesTable.columns.edit')}</Table.ColumnHeader>
+                  <Table.ColumnHeader whiteSpace="nowrap" w="130px">{t('admin.athletesTable.columns.actions')}</Table.ColumnHeader>
                 </Table.Row>
-              ))}
-            </Table.Body>
-          </Table.Root>
-        </Table.ScrollArea>
+              </Table.Header>
+              <Table.Body>
+                {filteredAthletes.map((athlete) => (
+                  <Table.Row key={athlete.id}>
+                    <Table.Cell fontWeight="500">{athlete.id}</Table.Cell>
+                    <Table.Cell>{athlete.name}</Table.Cell>
+                    <Table.Cell>{athlete.countryCode ?? '-'}</Table.Cell>
+                    <Table.Cell>{athlete.countryName ?? '-'}</Table.Cell>
+                    <Table.Cell>{athlete.sportId ?? '-'}</Table.Cell>
+                    <Table.Cell>{athlete.sportName ?? '-'}</Table.Cell>
+                    <Table.Cell>
+                      <Badge colorPalette={athlete.active ? 'green' : 'red'}>
+                        {athlete.active ? t('admin.active') : t('admin.inactive')}
+                      </Badge>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Button
+                        size="sm"
+                        colorScheme="blue"
+                        variant="outline"
+                        onClick={() => openEditAthleteModal(athlete)}
+                      >
+                        <FaEdit style={{ marginRight: '6px' }} />
+                        {t('admin.athleteEdit')}
+                      </Button>
+                    </Table.Cell>
+                    <Table.Cell>
+                      {athlete.active ? (
+                        <Button
+                          size="sm"
+                          colorScheme="red"
+                          variant="outline"
+                          onClick={() => openStatusActionPrompt(athlete.id, athlete.name, 'deactivate')}
+                          loading={statusActionLoadingId === athlete.id}
+                        >
+                          <FaBan style={{ marginRight: '6px' }} />
+                          {t('admin.athleteDeactivate')}
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          colorScheme="green"
+                          variant="outline"
+                          onClick={() => openStatusActionPrompt(athlete.id, athlete.name, 'activate')}
+                          loading={statusActionLoadingId === athlete.id}
+                        >
+                          <FaCheck style={{ marginRight: '6px' }} />
+                          {t('admin.athleteActivate')}
+                        </Button>
+                      )}
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table.Root>
+          </Table.ScrollArea>
+          {filteredAthletes.length === 0 && (
+            <Text textAlign="center" color="gray.500" py={4}>{t('admin.noFilteredAthletes')}</Text>
+          )}
+        </>
       )}
 
       <DialogRoot open={showAddAthleteModal} onOpenChange={(open) => { if (!open) setShowAddAthleteModal(false) }}>

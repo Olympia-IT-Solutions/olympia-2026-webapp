@@ -155,6 +155,14 @@
     "noAthletes": "Nessun atleta trovato",
     "noSports": "Nessuno sport trovato",
     "noCountries": "Nessun paese trovato",
+    "searchUsersPlaceholder": "Cerca utenti...",
+    "searchAthletesPlaceholder": "Cerca atleti...",
+    "filters": {
+      "all": "Tutti"
+    },
+    "resetFilters": "Reimposta filtri",
+    "noFilteredUsers": "Nessun utente corrisponde ai filtri attuali",
+    "noFilteredAthletes": "Nessun atleta corrisponde ai filtri attuali",
     "addAthlete": "Aggiungi atleta",
     "addAthleteTitle": "Aggiungi nuovo atleta",
     "addAthleteValidationError": "Si prega di compilare tutti i campi obbligatori",
@@ -191,7 +199,7 @@
     "buttons": {
       "save": "Salva",
       "cancel": "Annulla",
-      "confirm": "Conferma",
+      "confirm": "Conferma"
     },
     "table": {
       "columns": {
