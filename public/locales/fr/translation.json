@@ -14,10 +14,11 @@
     "countries": "Pays",
     "sports": "Sports",
     "dashboard": "Tableau de bord",
-    "admin": "Admin",
+        "title": "Tableau des résultats",
+        "demoNote": "Données en direct depuis l'API des arbitres.",
     "login": "Connexion",
-    "logout": "Déconnexion",
-    "openMenu": "Ouvrir le menu",
+        "infoTitle": "Aperçu des résultats en direct",
+        "infoText": "Ce tableau de bord charge les résultats actuels de tous les sports actifs directement depuis l'API.",
     "closeMenu": "Fermer le menu",
     "menuTitle": "Menu",
     "language": "Langue",
@@ -60,7 +61,9 @@
   "status": {
     "pending": "En attente",
     "approved": "Approuvé",
-    "published": "Publié"
+    "published": "Publié",
+    "rejected": "Rejeté",
+    "invalidated": "Invalidé"
   },
   "dashboard": {
     "title": "Tableau de bord des arbitres",
@@ -72,42 +75,59 @@
     "addResult": "Ajouter un résultat",
     "labels": {
       "sport": "Sport",
+      "athleteId": "ID de l'athlète",
       "event": "Épreuve",
       "athlete": "Athlète",
       "country": "Pays",
       "result": "Résultat",
+      "resultValue": "Valeur du résultat",
+      "rank": "Classement",
       "notes": "Remarques (optionnel)",
       "notesPlaceholder": "Commentaires supplémentaires..."
     },
     "placeholders": {
+      "selectSport": "Sélectionnez un sport",
+      "selectAthlete": "Sélectionnez un athlète",
+      "loadingAthletes": "Chargement des athlètes...",
       "sportExample": "ex: Ski Alpin",
+      "athleteIdExample": "ex: 1",
       "eventExample": "ex: Downhill Men",
       "athleteExample": "Nom de l'athlète",
       "countryExample": "ex: Austria",
-      "resultExample": "ex: 1:42.56"
+      "resultExample": "ex: 1:42.56",
+      "resultValueExample": "ex: 00:25:34.5",
+      "rankExample": "ex: 1"
     },
     "buttons": {
       "submit": "Soumettre",
       "cancel": "Annuler",
       "approve": "Approuver",
+      "reject": "Refuser",
+      "invalidate": "Invalider",
+      "confirm": "Confirmer",
       "publish": "Publier"
     },
     "table": {
       "title": "Résultats soumis",
       "noResults": "Aucun résultat disponible",
+      "noActions": "Aucune action disponible",
       "waiting": "En attente d'approbation",
       "publishedCheck": "✓ Publié",
       "approvedBy": "Approuvé par: {{person}}",
       "columns": {
-        "sportEvent": "Sport / Épreuve",
         "athlete": "Athlète",
         "country": "Pays",
         "result": "Résultat",
+        "medal": "Médaille",
         "submittedBy": "Soumis par",
         "status": "Statut",
         "actions": "Actions"
       }
-    }
+    },
+    "confirmActionTitle": "Confirmer l'action",
+    "confirmActionText": "Voulez-vous {{action}} le résultat pour {{athlete}} ?"
+    ,"createResultValidationError": "Veuillez remplir tous les champs obligatoires",
+    "noActiveSports": "Aucun sport actif n'est disponible."
   },
   "footer": {
     "cookiePolicy": "Politique de cookies",
@@ -120,6 +140,7 @@
     "accessDeniedTitle": "Accès refusé",
     "accessDeniedText": "Vous n'avez pas la permission d'accéder à cette page.",
     "usersManage": "Gérer les utilisateurs",
+    "athletesManage": "Gérer les athlètes",
     "addUser": "Ajouter un utilisateur",
     "addUserTitle": "Ajouter un nouvel utilisateur",
     "addUserValidationError": "Veuillez remplir tous les champs obligatoires",
@@ -128,12 +149,28 @@
     "confirmDeactivateUser": "Êtes-vous sûr de vouloir désactiver cet utilisateur ?",
     "loading": "Chargement...",
     "usersLoadError": "Erreur lors du chargement des utilisateurs",
+    "athletesLoadError": "Erreur lors du chargement des athlètes",
+    "countriesLoadError": "Erreur lors du chargement des pays",
     "noUsers": "Aucun utilisateur trouvé",
+    "noAthletes": "Aucun athlète trouvé",
+    "noSports": "Aucun sport trouvé",
+    "noCountries": "Aucun pays trouvé",
+    "addAthlete": "Ajouter un athlète",
+    "addAthleteTitle": "Ajouter un nouvel athlète",
+    "addAthleteValidationError": "Veuillez remplir tous les champs obligatoires",
+    "editAthleteTitle": "Modifier l'athlète",
+    "editAthleteValidationError": "Veuillez remplir tous les champs obligatoires",
+    "athletesStatusActionError": "Erreur lors de la mise à jour du statut de l'athlète",
+    "athleteActivate": "Activer",
+    "athleteDeactivate": "Désactiver",
+    "athleteEdit": "Modifier",
+    "athleteStatusConfirmTitle": "Confirmer le changement de statut",
+    "athleteStatusConfirmText": "Voulez-vous vraiment {{action}} {{athlete}} ?",
     "roleAdmin": "Administrateur",
     "roleReferee": "Arbitre",
     "active": "Actif",
     "inactive": "Inactif",
-    "resultsTitle": "Gérer les résultats",
+    "athletesTitle": "Aperçu des athlètes",
     "form": {
       "name": "Nom complet",
       "namePlaceholder": "par ex. Jean Dupont",
@@ -143,10 +180,18 @@
       "passwordPlaceholder": "Entrer le mot de passe",
       "role": "Rôle"
     },
+    "athleteForm": {
+      "name": "Nom",
+      "namePlaceholder": "par ex. Marco Odermatt",
+      "sportId": "ID sport",
+      "sportIdPlaceholder": "Sélectionnez un sport",
+      "countryId": "ID pays",
+      "countryIdPlaceholder": "Sélectionnez un pays"
+    },
     "buttons": {
       "save": "Enregistrer",
       "cancel": "Annuler",
-      "deleteAll": "Supprimer tous les résultats"
+      "confirm": "Confirmer"
     },
     "table": {
       "columns": {
@@ -154,6 +199,19 @@
         "name": "Nom",
         "role": "Rôle",
         "status": "Statut",
+        "actions": "Actions"
+      }
+    },
+    "athletesTable": {
+      "columns": {
+        "id": "ID",
+        "name": "Nom",
+        "countryCode": "Code pays",
+        "countryName": "Pays",
+        "sportId": "ID sport",
+        "sportName": "Sport",
+        "active": "Actif",
+        "edit": "Modifier",
         "actions": "Actions"
       }
     }

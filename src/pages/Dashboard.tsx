@@ -1,163 +1,268 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box, Heading, Text, Button, Input, Stack, Table, Badge, Card, Textarea, Container } from '@chakra-ui/react'
+import { Badge, Box, Button, Card, Container, DialogBackdrop, DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogPositioner, DialogRoot, DialogTitle, Heading, Input, Spinner, Stack, Text } from '@chakra-ui/react'
 import { getCurrentUser } from '../logic/rights'
-import { FaPlus, FaCheck, FaGlobe, FaClipboardList, FaEye } from 'react-icons/fa'
+import { ResultsBySportTable } from '../components/ResultsBySportTable'
+import { type Sport } from '../services/sports'
+import { approveResult, createResult, fetchResultsBySport, invalidateResult, rejectResult, type Result as ApiResult } from '../services/results'
+import { fetchAthletesBySport, type Athlete } from '../services/athletes'
+import { useSportsStore } from '../store/sports'
 
-interface Result {
-  id: string
-  sport: string
-  event: string
-  athlete: string
-  country: string
-  result: string
-  notes: string
-  submittedBy: string
-  submittedAt: string
-  status: 'pending' | 'approved' | 'published'
-  approvedBy?: string
-  approvedAt?: string
-  publishedBy?: string
-  publishedAt?: string
+const getResultsErrorMessage = (error: unknown) =>
+  error instanceof Error ? error.message : 'Failed to fetch results'
+
+type PendingAction = {
+  action: 'approve' | 'reject' | 'invalidate'
+  resultId: number
+  sportId: number
+  athleteName: string
 }
 
-// Demo data with 4-eye principle workflow
-const initialResults: Result[] = [
-  { 
-    id: '1', 
-    sport: 'Ski Alpin', 
-    event: 'Downhill Men', 
-    athlete: 'Marco Schwarz', 
-    country: 'Austria', 
-    result: '1:42.56',
-    notes: 'Excellent run, no penalties',
-    submittedBy: 'referee@test.com', 
-    submittedAt: '2026-01-20 14:30',
-    status: 'published',
-    approvedBy: 'hans.mueller@olympic.org',
-    approvedAt: '2026-01-20 15:00',
-    publishedBy: 'hans.mueller@olympic.org',
-    publishedAt: '2026-01-20 15:05'
-  },
-  { 
-    id: '2', 
-    sport: 'Biathlon', 
-    event: '10km Sprint Women', 
-    athlete: 'Lisa Vittozzi', 
-    country: 'Italy', 
-    result: '26:34.2',
-    notes: 'One missed shot',
-    submittedBy: 'referee@test.com', 
-    submittedAt: '2026-01-22 10:15',
-    status: 'approved',
-    approvedBy: 'maria.rossi@olympic.org',
-    approvedAt: '2026-01-22 10:45'
-  },
-  { 
-    id: '3', 
-    sport: 'Figure Skating', 
-    event: 'Short Program Men', 
-    athlete: 'Yuzuru Hanyu', 
-    country: 'Japan', 
-    result: '111.82',
-    notes: 'Flawless performance',
-    submittedBy: 'jean.dupont@olympic.org', 
-    submittedAt: '2026-01-24 18:00',
-    status: 'pending'
-  },
-]
-
-const sportOptions = [
-  'Ski Alpin', 'Biathlon', 'Bobsled', 'Cross-Country Skiing', 
-  'Curling', 'Figure Skating', 'Freestyle Skiing', 'Ice Hockey',
-  'Luge', 'Nordic Combined', 'Short Track', 'Skeleton',
-  'Ski Jumping', 'Snowboard', 'Speed Skating'
-]
+type CreateResultFormState = {
+  athleteId: string
+  sportId: string
+  value: string
+  rank: string
+}
 
 export function Dashboard() {
   const currentUser = getCurrentUser()
   const { t } = useTranslation()
-  const [results, setResults] = useState<Result[]>(initialResults)
-  const [showAddForm, setShowAddForm] = useState(false)
-  const [newResult, setNewResult] = useState({
-    sport: '',
-    event: '',
-    athlete: '',
-    country: '',
-    result: '',
-    notes: ''
+  const currentRole = currentUser?.role ?? null
+  const sports = useSportsStore((state) => state.sports)
+  const sportsLoading = useSportsStore((state) => state.loading)
+  const sportsError = useSportsStore((state) => state.error)
+  const initializeSports = useSportsStore((state) => state.initializeSports)
+  const [resultsBySport, setResultsBySport] = useState<Record<number, ApiResult[]>>({})
+  const [resultsLoading, setResultsLoading] = useState(false)
+  const [resultsError, setResultsError] = useState<string | null>(null)
+  const [pendingAction, setPendingAction] = useState<PendingAction | null>(null)
+  const [actionLoading, setActionLoading] = useState(false)
+  const [showCreateResultModal, setShowCreateResultModal] = useState(false)
+  const [createResultLoading, setCreateResultLoading] = useState(false)
+  const [createResultError, setCreateResultError] = useState<string | null>(null)
+  const [newResult, setNewResult] = useState<CreateResultFormState>({
+    athleteId: '',
+    sportId: '',
+    value: '',
+    rank: '',
   })
+  const [athletesBySport, setAthletesBySport] = useState<Record<number, Athlete[]>>({})
+  const [athletesLoading, setAthletesLoading] = useState(false)
+  const [athletesError, setAthletesError] = useState<string | null>(null)
 
-  const handleAddResult = () => {
-    if (newResult.sport && newResult.event && newResult.athlete && newResult.result) {
-      const result: Result = {
-        id: Date.now().toString(),
-        ...newResult,
-        submittedBy: currentUser?.email || 'unknown',
-        submittedAt: new Date().toLocaleString('de-DE'),
-        status: 'pending'
-      }
-      setResults([result, ...results])
-      setNewResult({ sport: '', event: '', athlete: '', country: '', result: '', notes: '' })
-      setShowAddForm(false)
+  useEffect(() => {
+    if (sports.length === 0 && !sportsLoading) {
+      initializeSports()
     }
-  }
+  }, [initializeSports, sports.length, sportsLoading])
 
-  const handleApprove = (id: string) => {
-    setResults(results.map(r => {
-      if (r.id === id && r.submittedBy !== currentUser?.email) {
-        return {
-          ...r,
-          status: 'approved' as const,
-          approvedBy: currentUser?.email,
-          approvedAt: new Date().toLocaleString('de-DE')
+  useEffect(() => {
+    let isActive = true
+
+    const loadResults = async (sportList: Sport[]) => {
+      const activeSports = sportList.filter((sport) => sport.active)
+
+      if (activeSports.length === 0) {
+        setResultsBySport({})
+        return
+      }
+
+      setResultsLoading(true)
+      setResultsError(null)
+
+      try {
+        const responses = await Promise.all(
+          activeSports.map(async (sport) => ({
+            sportId: sport.id,
+            results: await fetchResultsBySport(sport.id),
+          }))
+        )
+
+        if (!isActive) return
+
+        const nextResults = responses.reduce<Record<number, ApiResult[]>>((accumulator, entry) => {
+          accumulator[entry.sportId] = entry.results
+          return accumulator
+        }, {})
+
+        setResultsBySport(nextResults)
+      } catch (error) {
+        if (!isActive) return
+        setResultsError(getResultsErrorMessage(error))
+      } finally {
+        if (isActive) {
+          setResultsLoading(false)
         }
       }
-      return r
+    }
+
+    if (sports.length > 0) {
+      void loadResults(sports)
+    }
+
+    return () => {
+      isActive = false
+    }
+  }, [sports])
+
+  const activeSports = useMemo(() => sports.filter((sport) => sport.active), [sports])
+  const hasAnyResults = Object.values(resultsBySport).some((sportResults) => sportResults.length > 0)
+  const isInitialLoading = sportsLoading || (resultsLoading && !hasAnyResults)
+
+  const updateSportResultStatus = (sportId: number, resultId: number, nextStatus: ApiResult['status']) => {
+    setResultsBySport((previousResults) => ({
+      ...previousResults,
+      [sportId]: (previousResults[sportId] || []).map((result) =>
+        result.id === resultId ? { ...result, status: nextStatus } : result
+      ),
     }))
   }
 
-  const handlePublish = (id: string) => {
-    setResults(results.map(r => {
-      if (r.id === id && r.status === 'approved') {
-        return {
-          ...r,
-          status: 'published' as const,
-          publishedBy: currentUser?.email,
-          publishedAt: new Date().toLocaleString('de-DE')
-        }
+  const openActionConfirmation = (
+    action: PendingAction['action'],
+    sportId: number,
+    resultId: number,
+    athleteName: string
+  ) => {
+    setPendingAction({ action, sportId, resultId, athleteName })
+  }
+
+  const closeActionConfirmation = () => {
+    if (!actionLoading) {
+      setPendingAction(null)
+    }
+  }
+
+  const confirmPendingAction = async () => {
+    if (!pendingAction) return
+
+    setActionLoading(true)
+    setResultsError(null)
+
+    try {
+      if (pendingAction.action === 'approve') {
+        await approveResult(pendingAction.resultId)
+        updateSportResultStatus(pendingAction.sportId, pendingAction.resultId, 'APPROVED')
       }
-      return r
-    }))
-  }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'pending': return 'yellow'
-      case 'approved': return 'blue'
-      case 'published': return 'green'
-      default: return 'gray'
+      if (pendingAction.action === 'reject') {
+        await rejectResult(pendingAction.resultId)
+        updateSportResultStatus(pendingAction.sportId, pendingAction.resultId, 'REJECTED')
+      }
+
+      if (pendingAction.action === 'invalidate') {
+        await invalidateResult(pendingAction.resultId)
+        updateSportResultStatus(pendingAction.sportId, pendingAction.resultId, 'INVALIDATED')
+      }
+
+      setPendingAction(null)
+    } catch (error) {
+      setResultsError(getResultsErrorMessage(error))
+    } finally {
+      setActionLoading(false)
     }
   }
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'pending': return t('status.pending')
-      case 'approved': return t('status.approved')
-      case 'published': return t('status.published')
-      default: return status
+  const getActionLabel = (action: PendingAction['action']) => {
+    switch (action) {
+      case 'approve':
+        return t('dashboard.buttons.approve')
+      case 'reject':
+        return t('dashboard.buttons.reject')
+      case 'invalidate':
+        return t('dashboard.buttons.invalidate')
     }
   }
 
-  const canApprove = (result: Result) => {
-    // 4-eye principle: Cannot approve your own submission
-    return result.status === 'pending' && result.submittedBy !== currentUser?.email
+  const loadAthletesForSport = async (sportId: number) => {
+    if (athletesBySport[sportId]) {
+      return
+    }
+
+    setAthletesLoading(true)
+    setAthletesError(null)
+
+    try {
+      const athletes = await fetchAthletesBySport(sportId)
+      setAthletesBySport((previousAthletes) => ({
+        ...previousAthletes,
+        [sportId]: athletes,
+      }))
+    } catch (error) {
+      setAthletesError(getResultsErrorMessage(error))
+    } finally {
+      setAthletesLoading(false)
+    }
   }
 
-  const canPublish = (result: Result) => {
-    // Can publish if approved
-    return result.status === 'approved'
+  const openCreateResultModal = () => {
+    const defaultSportId = activeSports[0]?.id
+
+    if (!defaultSportId) {
+      setResultsError(t('dashboard.noActiveSports'))
+      return
+    }
+
+    setCreateResultError(null)
+    setNewResult({
+      athleteId: '',
+      sportId: String(defaultSportId),
+      value: '',
+      rank: '',
+    })
+    setShowCreateResultModal(true)
+    void loadAthletesForSport(defaultSportId)
   }
+
+  const closeCreateResultModal = () => {
+    if (!createResultLoading) {
+      setShowCreateResultModal(false)
+    }
+  }
+
+  const handleCreateResult = async () => {
+    if (!newResult.athleteId || !newResult.sportId || !newResult.value || !newResult.rank) {
+      setCreateResultError(t('dashboard.createResultValidationError'))
+      return
+    }
+
+    setCreateResultLoading(true)
+    setCreateResultError(null)
+    setResultsError(null)
+
+    const sportId = Number(newResult.sportId)
+
+    try {
+      await createResult({
+        athleteId: Number(newResult.athleteId),
+        sportId,
+        value: newResult.value,
+        rank: Number(newResult.rank),
+      })
+
+      const refreshedResults = await fetchResultsBySport(sportId)
+      setResultsBySport((previousResults) => ({
+        ...previousResults,
+        [sportId]: refreshedResults,
+      }))
+
+      setShowCreateResultModal(false)
+      setNewResult({ athleteId: '', sportId: '', value: '', rank: '' })
+    } catch (error) {
+      setCreateResultError(getResultsErrorMessage(error))
+    } finally {
+      setCreateResultLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    const sportId = Number(newResult.sportId)
+
+    if (showCreateResultModal && sportId) {
+      void loadAthletesForSport(sportId)
+    }
+  }, [newResult.sportId, showCreateResultModal])
 
   return (
     <Box p={10}>
@@ -166,197 +271,223 @@ export function Dashboard() {
         <Text color="gray.500" mb={2}>
           {t('dashboard.demoNote')}
         </Text>
-      {currentUser && (
-        <Text fontSize="sm" color="teal.600" mb={8}>
-          {t('dashboard.loggedInAs', { email: currentUser.email, role: currentUser.role })}
-        </Text>
-      )}
+        {currentUser && (
+          <Text fontSize="sm" color="teal.600" mb={8}>
+            {t('dashboard.loggedInAs', { email: currentUser.email, role: currentUser.role })}
+          </Text>
+        )}
 
-      {/* Info Box about 4-Eye Principle */}
-      <Card.Root mb={6} p={4} bg="blue.50" borderRadius="lg" borderLeft="4px solid" borderLeftColor="blue.500">
-        <Stack direction="row" align="center" gap={3}>
-          <FaEye color="#3182CE" size={24} />
-          <Box>
-            <Text fontWeight="bold" color="blue.800">{t('dashboard.infoTitle')}</Text>
-            <Text fontSize="sm" color="blue.700">
-              {t('dashboard.infoText')}
-            </Text>
+        <Button colorScheme="teal" mb={6} onClick={openCreateResultModal}>
+          {t('dashboard.addResult')}
+        </Button>
+
+        <Card.Root mb={6} p={4} bg="blue.50" borderRadius="lg" borderLeft="4px solid" borderLeftColor="blue.500">
+          <Stack direction="row" align="center" gap={3}>
+            <Box>
+              <Text fontWeight="bold" color="blue.800">
+                {t('dashboard.infoTitle')}
+              </Text>
+              <Text fontSize="sm" color="blue.700">
+                {t('dashboard.infoText')}
+              </Text>
+            </Box>
+          </Stack>
+        </Card.Root>
+
+        {isInitialLoading ? (
+          <Box p={8} display="flex" justifyContent="center" alignItems="center" minH="240px">
+            <Spinner size="lg" />
           </Box>
-        </Stack>
-      </Card.Root>
+        ) : sportsError ? (
+          <Box bg="red.50" p={4} borderRadius="md" borderLeft="4px solid red" mb={6}>
+            <Text color="red.700">{sportsError}</Text>
+          </Box>
+        ) : resultsError ? (
+          <Box bg="red.50" p={4} borderRadius="md" borderLeft="4px solid red" mb={6}>
+            <Text color="red.700">{resultsError}</Text>
+          </Box>
+        ) : null}
 
-      {/* Add New Result Section */}
-      <Card.Root mb={8} p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
-        <Stack direction="row" justify="space-between" align="center" mb={4}>
-          <Heading size="lg">
-            <FaClipboardList style={{ display: 'inline', marginRight: '10px' }} />
-            {t('dashboard.newResultTitle')}
-          </Heading>
-          <Button
-            colorScheme="teal"
-            onClick={() => setShowAddForm(!showAddForm)}
-          >
-            <FaPlus style={{ marginRight: '8px' }} />
-            {t('dashboard.addResult')}
-          </Button>
-        </Stack>
+        {activeSports.map((sport) => {
+          const sportResults = resultsBySport[sport.id] || []
 
-        {showAddForm && (
-          <Box bg="var(--muted-bg)" p={4} borderRadius="md" mb={4}>
-            <Stack gap={3}>
-              <Stack direction={{ base: 'column', md: 'row' }} gap={3}>
-                <Box flex={1}>
-                  <Text fontSize="sm" mb={1} fontWeight="medium">{t('dashboard.labels.sport')}</Text>
-                  <Input
-                    placeholder={t('dashboard.placeholders.sportExample')}
-                    value={newResult.sport}
-                    onChange={(e) => setNewResult({ ...newResult, sport: e.target.value })}
-                    list="sports"
-                  />
-                  <datalist id="sports">
-                    {sportOptions.map(s => <option key={s} value={s} />)}
-                  </datalist>
-                </Box>
-                <Box flex={1}>
-                  <Text fontSize="sm" mb={1} fontWeight="medium">{t('dashboard.labels.event')}</Text>
-                  <Input
-                    placeholder={t('dashboard.placeholders.eventExample')}
-                    value={newResult.event}
-                    onChange={(e) => setNewResult({ ...newResult, event: e.target.value })}
-                  />
-                </Box>
+          return (
+            <Card.Root key={sport.id} mb={8} p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
+              <Stack direction="row" justify="space-between" align="center" mb={4}>
+                <Heading size="lg">{sport.name}</Heading>
+                <Badge colorPalette={sport.active ? 'green' : 'gray'}>
+                  {sport.active ? t('admin.active') : t('admin.inactive')}
+                </Badge>
               </Stack>
-              <Stack direction={{ base: 'column', md: 'row' }} gap={3}>
-                <Box flex={1}>
-                  <Text fontSize="sm" mb={1} fontWeight="medium">{t('dashboard.labels.athlete')}</Text>
-                  <Input
-                    placeholder={t('dashboard.placeholders.athleteExample')}
-                    value={newResult.athlete}
-                    onChange={(e) => setNewResult({ ...newResult, athlete: e.target.value })}
-                  />
+
+              {resultsLoading && sportResults.length === 0 ? (
+                <Box p={4} display="flex" justifyContent="center" alignItems="center" minH="160px">
+                  <Spinner size="md" />
                 </Box>
-                <Box flex={1}>
-                  <Text fontSize="sm" mb={1} fontWeight="medium">{t('dashboard.labels.country')}</Text>
-                  <Input
-                    placeholder={t('dashboard.placeholders.countryExample')}
-                    value={newResult.country}
-                    onChange={(e) => setNewResult({ ...newResult, country: e.target.value })}
-                  />
-                </Box>
-                <Box flex={1}>
-                  <Text fontSize="sm" mb={1} fontWeight="medium">{t('dashboard.labels.result')}</Text>
-                  <Input
-                    placeholder={t('dashboard.placeholders.resultExample')}
-                    value={newResult.result}
-                    onChange={(e) => setNewResult({ ...newResult, result: e.target.value })}
-                  />
-                </Box>
-              </Stack>
-              <Box>
-                <Text fontSize="sm" mb={1} fontWeight="medium">{t('dashboard.labels.notes')}</Text>
-                <Textarea
-                  placeholder={t('dashboard.labels.notesPlaceholder')}
-                  value={newResult.notes}
-                  onChange={(e) => setNewResult({ ...newResult, notes: e.target.value })}
+              ) : sportResults.length === 0 ? (
+                <Text textAlign="center" color="gray.500" py={4}>
+                  {t('dashboard.table.noResults')}
+                </Text>
+              ) : (
+                <ResultsBySportTable
+                  data={sportResults}
+                  currentRole={currentRole}
+                  onApprove={(resultId) => {
+                    const result = sportResults.find((entry) => entry.id === resultId)
+                    if (result) {
+                      openActionConfirmation('approve', sport.id, resultId, result.athleteName)
+                    }
+                  }}
+                  onReject={(resultId) => {
+                    const result = sportResults.find((entry) => entry.id === resultId)
+                    if (result) {
+                      openActionConfirmation('reject', sport.id, resultId, result.athleteName)
+                    }
+                  }}
+                  onInvalidate={(resultId) => {
+                    const result = sportResults.find((entry) => entry.id === resultId)
+                    if (result) {
+                      openActionConfirmation('invalidate', sport.id, resultId, result.athleteName)
+                    }
+                  }}
                 />
-              </Box>
-              <Stack direction="row" gap={2}>
-                <Button colorScheme="green" onClick={handleAddResult}>{t('dashboard.buttons.submit')}</Button>
-                <Button variant="outline" onClick={() => setShowAddForm(false)}>{t('dashboard.buttons.cancel')}</Button>
-              </Stack>
-            </Stack>
+              )}
+            </Card.Root>
+          )
+        })}
+
+        {!sportsLoading && activeSports.length === 0 && (
+          <Box bg="gray.50" p={4} borderRadius="md" borderLeft="4px solid gray">
+            <Text color="gray.700">{t('dashboard.table.noResults')}</Text>
           </Box>
         )}
-      </Card.Root>
 
-      {/* Results Table */}
-      <Card.Root p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
-        <Heading size="lg" mb={4}>
-          {t('dashboard.table.title')}
-        </Heading> 
+        <DialogRoot open={showCreateResultModal} onOpenChange={(open) => { if (!open) closeCreateResultModal() }}>
+          <DialogPositioner>
+            <DialogBackdrop />
+            <DialogContent bg="var(--card-bg)" p={6} borderRadius="lg" boxShadow="xl" maxW="md">
+              <DialogHeader display="flex" alignItems="start" justifyContent="space-between" p={0} pb={3}>
+                <DialogTitle>{t('dashboard.newResultTitle')}</DialogTitle>
+                <DialogCloseTrigger asChild>
+                  <Button size="sm" variant="ghost" onClick={closeCreateResultModal}>×</Button>
+                </DialogCloseTrigger>
+              </DialogHeader>
 
-        <Box overflowX="auto">
-          <Table.Root variant="line">
-            <Table.Header>
-              <Table.Row>
-                <Table.ColumnHeader>{t('dashboard.table.columns.sportEvent')}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t('dashboard.table.columns.athlete')}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t('dashboard.table.columns.country')}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t('dashboard.table.columns.result')}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t('dashboard.table.columns.submittedBy')}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t('dashboard.table.columns.status')}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t('dashboard.table.columns.actions')}</Table.ColumnHeader>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {results.map((result) => (
-                <Table.Row key={result.id}>
-                  <Table.Cell>
-                    <Text fontWeight="bold">{result.sport}</Text>
-                    <Text fontSize="sm" color="gray.500">{result.event}</Text>
-                  </Table.Cell>
-                  <Table.Cell>{result.athlete}</Table.Cell>
-                  <Table.Cell>{result.country}</Table.Cell>
-                  <Table.Cell fontWeight="bold" fontFamily="mono">{result.result}</Table.Cell>
-                  <Table.Cell>
-                    <Text fontSize="sm">{result.submittedBy}</Text>
-                    <Text fontSize="xs" color="gray.500">{result.submittedAt}</Text>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Badge colorPalette={getStatusColor(result.status)}>
-                      {getStatusText(result.status)}
-                    </Badge>
-                    {result.approvedBy && (
-                      <Text fontSize="xs" color="gray.500" mt={1}>
-                        {t('dashboard.table.approvedBy', { person: result.approvedBy })}
-                      </Text>
-                    )}
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Stack direction="row" gap={2}>
-                      {canApprove(result) && (
-                        <Button
-                          size="sm"
-                          colorScheme="blue"
-                          onClick={() => handleApprove(result.id)}
-                          title={t('dashboard.buttons.approve') + ' (4-Augen-Prinzip)'}
-                        >
-                          <FaCheck style={{ marginRight: '4px' }} />
-                          {t('dashboard.buttons.approve')}
-                        </Button>
-                      )}
-                      {canPublish(result) && (
-                        <Button
-                          size="sm"
-                          colorScheme="green"
-                          onClick={() => handlePublish(result.id)}
-                          title={t('dashboard.buttons.publish')}
-                        >
-                          <FaGlobe style={{ marginRight: '4px' }} />
-                          {t('dashboard.buttons.publish')}
-                        </Button>
-                      )}
-                      {result.status === 'pending' && result.submittedBy === currentUser?.email && (
-                        <Text fontSize="xs" color="gray.500" alignSelf="center">
-                          {t('dashboard.table.waiting')}
-                        </Text>
-                      )}
-                      {result.status === 'published' && (
-                        <Text fontSize="xs" color="green.500" alignSelf="center">
-                          {t('dashboard.table.publishedCheck')}
-                        </Text>
-                      )}
-                    </Stack>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table.Root>
-        </Box>
-        {results.length === 0 && (
-          <Text textAlign="center" color="gray.500" py={4}>{t('dashboard.table.noResults')}</Text>
-        )}
-      </Card.Root>
+              <DialogBody p={0}>
+                {createResultError && (
+                  <Box bg="red.50" p={4} borderRadius="md" borderLeft="4px solid red" mb={4}>
+                    <Text color="red.700">{createResultError}</Text>
+                  </Box>
+                )}
+
+                {athletesError && (
+                  <Box bg="red.50" p={4} borderRadius="md" borderLeft="4px solid red" mb={4}>
+                    <Text color="red.700">{athletesError}</Text>
+                  </Box>
+                )}
+
+                <Stack gap={4}>
+                  <Box>
+                    <Text mb={2} fontWeight="500">{t('dashboard.labels.sport')} *</Text>
+                    <select
+                      style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--input-bg)' }}
+                      value={newResult.sportId}
+                      onChange={(e) => setNewResult({ ...newResult, sportId: e.target.value, athleteId: '' })}
+                    >
+                      <option value="">{t('dashboard.placeholders.selectSport')}</option>
+                      {activeSports.map((sport) => (
+                        <option key={sport.id} value={sport.id}>{sport.name}</option>
+                      ))}
+                    </select>
+                  </Box>
+
+                  <Box>
+                    <Text mb={2} fontWeight="500">{t('dashboard.labels.athlete')} *</Text>
+                    <select
+                      style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--input-bg)' }}
+                      value={newResult.athleteId}
+                      onChange={(e) => setNewResult({ ...newResult, athleteId: e.target.value })}
+                      disabled={!newResult.sportId || athletesLoading}
+                    >
+                      <option value="">
+                        {athletesLoading
+                          ? t('dashboard.placeholders.loadingAthletes')
+                          : t('dashboard.placeholders.selectAthlete')}
+                      </option>
+                      {(athletesBySport[Number(newResult.sportId)] || []).map((athlete) => (
+                        <option key={athlete.id} value={athlete.id}>
+                          {athlete.name}
+                        </option>
+                      ))}
+                    </select>
+                  </Box>
+
+                  <Box>
+                    <Text mb={2} fontWeight="500">{t('dashboard.labels.resultValue')} *</Text>
+                    <Input
+                      value={newResult.value}
+                      onChange={(e) => setNewResult({ ...newResult, value: e.target.value })}
+                      placeholder={t('dashboard.placeholders.resultValueExample')}
+                    />
+                  </Box>
+
+                  <Box>
+                    <Text mb={2} fontWeight="500">{t('dashboard.labels.rank')} *</Text>
+                    <Input
+                      type="number"
+                      value={newResult.rank}
+                      onChange={(e) => setNewResult({ ...newResult, rank: e.target.value })}
+                      placeholder={t('dashboard.placeholders.rankExample')}
+                    />
+                  </Box>
+                </Stack>
+              </DialogBody>
+
+              <DialogFooter p={0} gap={3} justifyContent="flex-end" mt={6}>
+                <Button variant="outline" onClick={closeCreateResultModal} disabled={createResultLoading}>
+                  {t('dashboard.buttons.cancel')}
+                </Button>
+                <Button colorScheme="teal" onClick={handleCreateResult} loading={createResultLoading}>
+                  {t('dashboard.buttons.submit')}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </DialogPositioner>
+        </DialogRoot>
+
+        <DialogRoot open={pendingAction !== null} onOpenChange={(open) => { if (!open) closeActionConfirmation() }}>
+          <DialogPositioner>
+            <DialogBackdrop />
+            <DialogContent bg="var(--card-bg)" p={6} borderRadius="lg" boxShadow="xl" maxW="md">
+              <DialogHeader display="flex" alignItems="start" justifyContent="space-between" p={0} pb={3}>
+                <DialogTitle>{t('dashboard.confirmActionTitle')}</DialogTitle>
+                <DialogCloseTrigger asChild>
+                  <Button size="sm" variant="ghost" onClick={closeActionConfirmation}>×</Button>
+                </DialogCloseTrigger>
+              </DialogHeader>
+
+              <DialogBody p={0} pb={6}>
+                <Text>
+                  {pendingAction
+                    ? t('dashboard.confirmActionText', {
+                        action: getActionLabel(pendingAction.action),
+                        athlete: pendingAction.athleteName,
+                      })
+                    : ''}
+                </Text>
+              </DialogBody>
+
+              <DialogFooter p={0} gap={3} justifyContent="flex-end">
+                <Button variant="outline" onClick={closeActionConfirmation} disabled={actionLoading}>
+                  {t('dashboard.buttons.cancel')}
+                </Button>
+                <Button colorScheme="red" onClick={confirmPendingAction} loading={actionLoading}>
+                  {t('dashboard.buttons.confirm')}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </DialogPositioner>
+        </DialogRoot>
       </Container>
     </Box>
   )

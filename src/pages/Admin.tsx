@@ -1,33 +1,15 @@
 import { useState, useEffect, type ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Box, Heading, Text, Button, Stack, Table, Badge, Container, Spinner, VStack, Input, DialogRoot, DialogPositioner, DialogBackdrop, DialogContent, DialogHeader, DialogBody, DialogFooter, DialogTitle, DialogCloseTrigger } from '@chakra-ui/react'
+import { AthletesTable } from '../components/AthletesTable'
 import { isAdmin } from '../logic/rights'
 import { fetchAllUsers, createUser, deactivateUser, type ApiUser, type CreateUserRequest } from '../services/auth'
-import { FaUserPlus, FaTrash, FaUsers, FaBan } from 'react-icons/fa'
-
-interface Result {
-  id: string
-  sport: string
-  event: string
-  athlete: string
-  country: string
-  result: string
-  submittedBy: string
-  status: 'pending' | 'approved' | 'published'
-  createdAt: string
-}
-
-const initialResults: Result[] = [
-  { id: '1', sport: 'Ski Alpin', event: 'Downhill Men', athlete: 'Marco Schwarz', country: 'Austria', result: '1:42.56', submittedBy: 'Hans Müller', status: 'published', createdAt: '2026-01-20' },
-  { id: '2', sport: 'Biathlon', event: '10km Sprint Women', athlete: 'Lisa Vittozzi', country: 'Italy', result: '26:34.2', submittedBy: 'Maria Rossi', status: 'approved', createdAt: '2026-01-22' },
-  { id: '3', sport: 'Figure Skating', event: 'Short Program Men', athlete: 'Yuzuru Hanyu', country: 'Japan', result: '111.82', submittedBy: 'Jean Dupont', status: 'pending', createdAt: '2026-01-24' },
-]
+import { FaUserPlus, FaUsers, FaBan } from 'react-icons/fa'
 
 export function Admin() {
   const [users, setUsers] = useState<ApiUser[]>([])
   const [usersLoading, setUsersLoading] = useState(false)
   const [usersError, setUsersError] = useState<string | null>(null)
-  const [results, setResults] = useState<Result[]>(initialResults)
   const [showAddUserModal, setShowAddUserModal] = useState(false)
   const [confirmDeactivateUserId, setConfirmDeactivateUserId] = useState<number | null>(null)
   const [addUserLoading, setAddUserLoading] = useState(false)
@@ -119,24 +101,6 @@ export function Admin() {
     closeDeactivateDialog()
   }
 
-
-  const handleDeleteResult = (id: string) => {
-    setResults(results.filter(r => r.id !== id))
-  }
-
-  const handleDeleteAllResults = () => {
-    setResults([])
-  }
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'pending': return 'yellow'
-      case 'approved': return 'blue'
-      case 'published': return 'green'
-      default: return 'gray'
-    }
-  }
-
   return (
     <Box p={10}>
       <Container maxW="container.xl">
@@ -217,6 +181,8 @@ export function Admin() {
             </>
           )}
         </Box>
+
+        <AthletesTable />
 
         {/* Add User Modal */}
         {showAddUserModal && (
@@ -341,68 +307,6 @@ export function Admin() {
             </DialogContent>
           </DialogPositioner>
         </DialogRoot>
-
-        {/* Results Management Section */}
-        <Box p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
-          <Stack direction="row" justify="space-between" align="center" mb={4}>
-            <Heading size="lg">
-              {t('admin.resultsTitle')}
-            </Heading> 
-            <Button
-              colorScheme="red"
-              variant="outline"
-              onClick={handleDeleteAllResults}
-              disabled={results.length === 0}
-            >
-              <FaTrash style={{ marginRight: '8px' }} />
-              {t('admin.buttons.deleteAll')}
-            </Button>
-          </Stack>
-
-          <Table.Root variant="line">
-            <Table.Header>
-              <Table.Row>
-                <Table.ColumnHeader>{t('dashboard.table.columns.sportEvent')}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t('dashboard.table.columns.athlete')}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t('dashboard.table.columns.country')}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t('dashboard.table.columns.result')}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t('dashboard.table.columns.submittedBy')}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t('dashboard.table.columns.status')}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t('dashboard.table.columns.actions')}</Table.ColumnHeader>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {results.map((result) => (
-                <Table.Row key={result.id}>
-                  <Table.Cell>{result.sport}</Table.Cell>
-                  <Table.Cell>{result.event}</Table.Cell>
-                  <Table.Cell>{result.athlete}</Table.Cell>
-                  <Table.Cell>{result.country}</Table.Cell>
-                  <Table.Cell fontWeight="bold">{result.result}</Table.Cell>
-                  <Table.Cell>{result.submittedBy}</Table.Cell>
-                  <Table.Cell>
-                    <Badge colorScheme={getStatusColor(result.status)}>
-                      {result.status === 'pending' ? t('status.pending') : result.status === 'approved' ? t('status.approved') : t('status.published')}
-                    </Badge>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Button
-                      size="sm"
-                      colorScheme="red"
-                      variant="ghost"
-                      onClick={() => handleDeleteResult(result.id)}
-                    >
-                      <FaTrash />
-                    </Button>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table.Root>
-          {results.length === 0 && (
-            <Text textAlign="center" color="gray.500" py={4}>{t('dashboard.table.noResults')}</Text>
-          )}
-        </Box>
       </Container>
     </Box>
   )

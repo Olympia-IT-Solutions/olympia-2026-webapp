@@ -15,10 +15,11 @@
     "sports": "Sports",
     "dashboard": "Dashboard",
     "admin": "Admin",
-    "login": "Login",
+        "title": "Results Dashboard",
+        "demoNote": "Live data from the referee API.",
     "logout": "Logout",
-    "openMenu": "Open menu",
-    "closeMenu": "Close menu",
+        "infoTitle": "Live results overview",
+        "infoText": "This dashboard loads the current results for all active sports directly from the API.",
     "menuTitle": "Menu",
     "language": "Language",
     "darkMode": "Dark mode",
@@ -60,7 +61,9 @@
   "status": {
     "pending": "Pending",
     "approved": "Approved",
-    "published": "Published"
+    "published": "Published",
+    "rejected": "Rejected",
+    "invalidated": "Invalidated"
   },
   "dashboard": {
     "title": "Referee Dashboard",
@@ -72,42 +75,59 @@
     "addResult": "Add Result",
     "labels": {
       "sport": "Sport",
+      "athleteId": "Athlete ID",
       "event": "Event",
       "athlete": "Athlete",
       "country": "Country",
       "result": "Result",
+      "resultValue": "Result value",
+      "rank": "Rank",
       "notes": "Notes (optional)",
       "notesPlaceholder": "Additional comments..."
     },
     "placeholders": {
+      "selectSport": "Select a sport",
+      "selectAthlete": "Select an athlete",
+      "loadingAthletes": "Loading athletes...",
       "sportExample": "e.g. Ski Alpin",
+      "athleteIdExample": "e.g. 1",
       "eventExample": "e.g. Downhill Men",
       "athleteExample": "Athlete name",
       "countryExample": "e.g. Austria",
-      "resultExample": "e.g. 1:42.56"
+      "resultExample": "e.g. 1:42.56",
+      "resultValueExample": "e.g. 00:25:34.5",
+      "rankExample": "e.g. 1"
     },
     "buttons": {
       "submit": "Submit",
       "cancel": "Cancel",
       "approve": "Approve",
+      "reject": "Reject",
+      "invalidate": "Invalidate",
+      "confirm": "Confirm",
       "publish": "Publish"
     },
     "table": {
       "title": "Submitted Results",
       "noResults": "No results available",
+      "noActions": "No actions available",
       "waiting": "Waiting for approval",
       "publishedCheck": "✓ Published",
       "approvedBy": "Approved by: {{person}}",
       "columns": {
-        "sportEvent": "Sport / Event",
         "athlete": "Athlete",
         "country": "Country",
         "result": "Result",
+        "medal": "Medal",
         "submittedBy": "Submitted by",
         "status": "Status",
         "actions": "Actions"
       }
-    }
+    },
+    "confirmActionTitle": "Confirm action",
+    "confirmActionText": "Do you want to {{action}} the result for {{athlete}}?"
+    ,"createResultValidationError": "Please fill in all required fields",
+    "noActiveSports": "No active sports are available."
   },
   "footer": {
     "cookiePolicy": "Cookie Policy",
@@ -120,6 +140,7 @@
     "accessDeniedTitle": "Access denied",
     "accessDeniedText": "You do not have permission to access this page.",
     "usersManage": "Manage Users",
+    "athletesManage": "Manage Athletes",
     "addUser": "Add User",
     "addUserTitle": "Add New User",
     "addUserValidationError": "Please fill in all required fields",
@@ -128,12 +149,28 @@
     "confirmDeactivateUser": "Are you sure you want to deactivate this user?",
     "loading": "Loading...",
     "usersLoadError": "Error loading users",
+    "athletesLoadError": "Error loading athletes",
+    "countriesLoadError": "Error loading countries",
     "noUsers": "No users found",
+    "noAthletes": "No athletes found",
+    "noSports": "No sports found",
+    "noCountries": "No countries found",
+    "addAthlete": "Add athlete",
+    "addAthleteTitle": "Add new athlete",
+    "addAthleteValidationError": "Please fill in all required fields",
+    "editAthleteTitle": "Edit athlete",
+    "editAthleteValidationError": "Please fill in all required fields",
+    "athletesStatusActionError": "Error updating athlete status",
+    "athleteActivate": "Activate",
+    "athleteDeactivate": "Deactivate",
+    "athleteEdit": "Edit",
+    "athleteStatusConfirmTitle": "Confirm athlete status change",
+    "athleteStatusConfirmText": "Do you really want to {{action}} {{athlete}}?",
     "roleAdmin": "Admin",
     "roleReferee": "Referee",
     "active": "Active",
     "inactive": "Inactive",
-    "resultsTitle": "Results management",
+    "athletesTitle": "Athletes overview",
     "form": {
       "name": "Full Name",
       "namePlaceholder": "e.g. John Doe",
@@ -143,10 +180,18 @@
       "passwordPlaceholder": "Enter password",
       "role": "Role"
     },
+    "athleteForm": {
+      "name": "Name",
+      "namePlaceholder": "e.g. Marco Odermatt",
+      "sportId": "Sport ID",
+      "sportIdPlaceholder": "Select a sport",
+      "countryId": "Country ID",
+      "countryIdPlaceholder": "Select a country"
+    },
     "buttons": {
       "save": "Save",
       "cancel": "Cancel",
-      "deleteAll": "Delete all results"
+      "confirm": "Confirm"
     },
     "table": {
       "columns": {
@@ -154,6 +199,19 @@
         "name": "Name",
         "role": "Role",
         "status": "Status",
+        "actions": "Actions"
+      }
+    },
+    "athletesTable": {
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "countryCode": "Country code",
+        "countryName": "Country",
+        "sportId": "Sport ID",
+        "sportName": "Sport",
+        "active": "Active",
+        "edit": "Edit",
         "actions": "Actions"
       }
     }
