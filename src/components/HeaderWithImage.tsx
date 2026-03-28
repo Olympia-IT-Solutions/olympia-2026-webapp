@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Heading } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
+import { SectionHeading, Surface } from './ui';
 
 interface HeaderWithImageProps {
   imageUrl: string;
@@ -8,49 +9,45 @@ interface HeaderWithImageProps {
 
 export const HeaderWithImage: React.FC<HeaderWithImageProps> = ({ imageUrl, title }) => {
   return (
-    <Box mb={6}>
-      <Box
-        borderRadius="lg"
+    <Box mb={{ base: 6, md: 8 }}>
+      <Surface
+        elevated
+        borderRadius={{ base: '2xl', md: '3xl' }}
         overflow="hidden"
-        mb={4}
-        height={{ base: '140px', md: '220px' }}
-        position="relative"
         role="img"
         aria-label={title}
       >
         <Box
-          width="100%"
-          height="100%"
+          height={{ base: '150px', md: '240px' }}
+          position="relative"
           backgroundImage={`url(${imageUrl})`}
           backgroundSize="cover"
           backgroundPosition="center"
-        />
-
-        {/* Left-side overlay for title */}
-        <Box
-          position="absolute"
-          left={0}
-          top={0}
-          height="100%"
-          display="flex"
-          alignItems="center"
-          pl={{ base: 4, md: 8 }}
-          pr={6}
-          width={{ base: '100%', md: '60%' }}
-          background="linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.25) 40%, rgba(0,0,0,0) 100%)"
         >
-          <Heading
-            as="h1"
-            fontSize={{ base: '2xl', md: '4xl' }}
-            color="white"
-            fontFamily="'MilanoCortina2026-Bold'"
-            textAlign="left"
-            textShadow="0 6px 18px rgba(0,0,0,0.6)"
+          <Box
+            position="absolute"
+            left={0}
+            top={0}
+            height="100%"
+            display="flex"
+            alignItems="center"
+            pl={{ base: 5, md: 8 }}
+            pr={{ base: 5, md: 7 }}
+            width={{ base: '100%', md: '62%' }}
+            background="linear-gradient(90deg, rgba(0, 48, 73, 0.82) 0%, rgba(0, 48, 73, 0.38) 46%, rgba(0, 48, 73, 0) 100%)"
           >
-            {title}
-          </Heading>
+            <SectionHeading
+              as="h1"
+              tone="inverse"
+              fontSize={{ base: '2xl', md: '4xl' }}
+              textAlign="left"
+              textShadow="0 6px 18px rgba(0,0,0,0.5)"
+            >
+              {title}
+            </SectionHeading>
+          </Box>
         </Box>
-      </Box>
+      </Surface>
     </Box>
   );
 };

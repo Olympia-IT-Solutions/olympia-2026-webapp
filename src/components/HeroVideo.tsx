@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import styled, { keyframes } from 'styled-components'
-import { Heading, Button, ButtonGroup } from '@chakra-ui/react'
+import { keyframes } from '@emotion/react'
+import { Box, ButtonGroup, HStack, Icon, chakra } from '@chakra-ui/react'
 import { FaChevronDown } from 'react-icons/fa'
 import { useTranslation } from 'react-i18next'
+import { CTAButton, SectionHeading } from './ui'
 
 const VIDEO_SRC = 'https://img.olympics.com/s1/video/t_o_vod_mc_16-9_dev-auto/emvod/DrLv0dCxtXCMJ9MFoKOW6uOaDV5XegtG'
 
@@ -78,8 +79,28 @@ export const HeroVideo = ({ title }: { title?: string }) => {
   }
 
   return (
-    <Wrapper>
-      <Video
+    <Box
+      w="90%"
+      maxW="1400px"
+      my={{ base: '12px', md: 'var(--chakra-spacing-section)' }}
+      mx="auto"
+      borderRadius="3xl"
+      overflow="hidden"
+      position="relative"
+      h={{ base: '360px', md: '800px' }}
+      boxShadow="var(--ring-soft), 0 24px 52px rgba(0, 34, 45, 0.24)"
+      animation={prefersReducedMotion ? 'none' : `${heroReveal} var(--motion-enter) var(--motion-ease-interactive) both`}
+      _after={{
+        content: '""',
+        position: 'absolute',
+        inset: 'auto 0 0 0',
+        h: '120px',
+        background: 'linear-gradient(to top, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0))',
+        zIndex: 1,
+        pointerEvents: 'none',
+      }}
+    >
+      <chakra.video
         ref={videoRef}
         src={VIDEO_SRC}
         autoPlay={!prefersReducedMotion}
@@ -89,45 +110,93 @@ export const HeroVideo = ({ title }: { title?: string }) => {
         // disable controls and interaction so user can't stop easily
         controls={false}
         aria-hidden="true"
+        position="absolute"
+        inset="0"
+        w="100%"
+        h="100%"
+        objectFit="cover"
+        filter="brightness(0.55) saturate(1.05)"
+        pointerEvents="none"
       />
 
-      <Overlay>
-        <Heading
-          as="h1"
-          size="4xl"
-          color="white"
-          style={{ fontFamily: "'MilanoCortina2026-Bold'", textShadow: '0 6px 18px rgba(0,0,0,0.6)', letterSpacing: '0.01em' }}
-        >
-          {title}
-        </Heading>
-
-        <ButtonGroup mt={6}>
-          <CtaButton
-            onClick={() => scrollToSection('disciplines')}
-            colorScheme="teal"
-            borderRadius="full"
-            bg="#007f80"
-            color="white"
-            _hover={{ bg: '#006666' }}
+      <Box
+        position="absolute"
+        inset="0"
+        display="flex"
+        flexDirection="column"
+        justifyContent="flex-end"
+        alignItems="flex-start"
+        pl={{ base: 5, md: 12 }}
+        pb={{ base: 8, md: 14 }}
+        zIndex={1}
+        color="white"
+        _before={{
+          content: '""',
+          position: 'absolute',
+          top: '-15%',
+          left: '-10%',
+          w: '60%',
+          h: '70%',
+          background: 'radial-gradient(circle, rgba(0, 127, 128, 0.24), rgba(0, 127, 128, 0))',
+          animation: prefersReducedMotion
+            ? 'none'
+            : `${sheenDrift} var(--motion-ornament) var(--motion-ease-gentle) infinite alternate`,
+          pointerEvents: 'none',
+        }}
+      >
+        <Box position="relative" zIndex={2}>
+          <SectionHeading
+            as="h1"
+            tone="inverse"
+            fontSize={{ base: '3xl', md: '5xl' }}
+            maxW={{ base: '20ch', md: '16ch' }}
+            style={{ textShadow: '0 6px 18px rgba(0,0,0,0.6)', letterSpacing: '0.01em' }}
           >
-            <FaChevronDown style={{ marginRight: 8 }} />
-            {t('hero.disciplines')}
-          </CtaButton>
+            {title}
+          </SectionHeading>
 
-          <CtaButton
-            onClick={() => scrollToSection('countries-feature')}
-            colorScheme="teal"
-            borderRadius="full"
-            bg="#007f80"
-            color="white"
-            _hover={{ bg: '#006666' }}
-          >
-            <FaChevronDown style={{ marginRight: 8 }} />
-            {t('hero.countries')}
-          </CtaButton>
-        </ButtonGroup>
-      </Overlay>
-    </Wrapper>
+          <ButtonGroup mt={{ base: 5, md: 6 }} gap={3} flexWrap="wrap">
+            <CTAButton
+              onClick={() => scrollToSection('disciplines')}
+              h={{ base: '44px', md: '48px' }}
+              px={{ base: 4, md: 5 }}
+              fontWeight="semibold"
+              boxShadow="ring-soft"
+              _hover={{ bg: 'accent-strong', transform: 'translateY(-2px)', boxShadow: 'ring-soft' }}
+              _focusVisible={{
+                outline: '2px solid',
+                outlineColor: 'accent',
+                outlineOffset: '2px',
+              }}
+            >
+              <HStack gap={2}>
+                <Icon as={FaChevronDown} boxSize={3.5} />
+                <Box as="span">{t('hero.disciplines')}</Box>
+              </HStack>
+            </CTAButton>
+
+            <CTAButton
+              onClick={() => scrollToSection('countries-feature')}
+              h={{ base: '44px', md: '48px' }}
+              px={{ base: 4, md: 5 }}
+              fontWeight="semibold"
+              boxShadow="ring-soft"
+              _hover={{ bg: 'accent-strong', transform: 'translateY(-2px)', boxShadow: 'ring-soft' }}
+              _focusVisible={{
+                outline: '2px solid',
+                outlineColor: 'accent',
+                outlineOffset: '2px',
+              }}
+            >
+              <HStack gap={2}>
+                <Icon as={FaChevronDown} boxSize={3.5} />
+                <Box as="span">{t('hero.countries')}</Box>
+              </HStack>
+            </CTAButton>
+          </ButtonGroup>
+        </Box>
+      </Box>
+    </Box>
   )
 }
 
@@ -148,88 +217,5 @@ const sheenDrift = keyframes`
   }
   100% {
     transform: translateX(18%);
-  }
-`
-
-const Wrapper = styled.div`
-  width: 90%;
-  max-width: 1400px;
-  margin: 24px auto;
-  border-radius: 20px;
-  overflow: hidden;
-  position: relative;
-  height: 800px;
-  box-shadow: var(--ring-soft), 0 24px 52px rgba(0, 34, 45, 0.24);
-  animation: ${heroReveal} var(--motion-slow) var(--motion-ease) both;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: auto 0 0 0;
-    height: 120px;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0));
-    z-index: 1;
-    pointer-events: none;
-  }
-
-  @media (max-width: 768px) {
-    height: 360px;
-    margin-top: 12px;
-    margin-bottom: 12px;
-  }
-`
-
-const Video = styled.video`
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(0.55) saturate(1.05);
-  pointer-events: none; /* disable click -> pause */
-`
-
-const Overlay = styled.div`
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  padding-left: 3rem;
-  padding-bottom: 3.5rem;
-  z-index: 1;
-  color: white;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -15%;
-    left: -10%;
-    width: 60%;
-    height: 70%;
-    background: radial-gradient(circle, rgba(0, 127, 128, 0.24), rgba(0, 127, 128, 0));
-    animation: ${sheenDrift} 7s ease-in-out infinite alternate;
-    pointer-events: none;
-  }
-
-  > * {
-    position: relative;
-    z-index: 2;
-  }
-
-  @media (max-width: 768px) {
-    padding-left: 1.25rem;
-    padding-bottom: 2rem;
-  }
-`
-
-const CtaButton = styled(Button)`
-  transition: transform var(--motion-fast) var(--motion-ease), box-shadow var(--motion-fast) var(--motion-ease), background-color var(--motion-fast) var(--motion-ease);
-  box-shadow: 0 8px 20px rgba(0, 127, 128, 0.35);
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 28px rgba(0, 102, 102, 0.38);
   }
 `

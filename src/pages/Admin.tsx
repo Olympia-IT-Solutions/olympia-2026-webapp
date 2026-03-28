@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo, type ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box, Heading, Text, Button, Stack, Table, Badge, Container, Spinner, VStack, Input, DialogRoot, DialogPositioner, DialogBackdrop, DialogContent, DialogHeader, DialogBody, DialogFooter, DialogTitle, DialogCloseTrigger } from '@chakra-ui/react'
+import { Box, Heading, Text, Button, Stack, Table, Badge, Container, Spinner, VStack, Input, DialogRoot, DialogPositioner, DialogBackdrop, DialogContent, DialogHeader, DialogBody, DialogFooter, DialogTitle, DialogCloseTrigger, Icon } from '@chakra-ui/react'
 import { AthletesTable } from '../components/AthletesTable'
+import { DataTableSurface, DataTableState, getDataTableRowStyles } from '../components/ui'
 import { isAdmin } from '../logic/rights'
 import { fetchAllUsers, createUser, deactivateUser, type ApiUser, type CreateUserRequest } from '../services/auth'
 import { FaUserPlus, FaUsers, FaBan } from 'react-icons/fa'
@@ -196,17 +197,25 @@ export function Admin() {
         <Heading mb={2}>{t('admin.title')}</Heading>
 
         {/* Users Management Section */}
-        <Box mb={8} p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
-          <Stack direction="row" justify="space-between" align="center" mb={4}>
-            <Heading size="lg">
-              <FaUsers style={{ display: 'inline', marginRight: '10px' }} />
+        <Box
+          mb={8}
+          p={6}
+          bg="surface"
+          borderWidth="1px"
+          borderColor="border"
+          boxShadow="ring-soft"
+          borderRadius="3xl"
+        >
+          <Stack direction="row" justify="space-between" align="center" mb={4} gap={4}>
+            <Heading size="lg" display="flex" alignItems="center" gap={2}>
+              <Icon as={FaUsers} boxSize={4} color="accent" />
               {t('admin.usersManage')}
             </Heading>
             <Button
               colorScheme="teal"
               onClick={() => setShowAddUserModal(true)}
             >
-              <FaUserPlus style={{ marginRight: '8px' }} />
+              <Icon as={FaUserPlus} boxSize={3.5} mr={1.5} />
               {t('admin.addUser')}
             </Button>
           </Stack>
@@ -217,11 +226,13 @@ export function Admin() {
               <Text>{t('admin.loading')}</Text>
             </VStack>
           ) : usersError ? (
-            <Box bg="red.50" p={4} borderRadius="md" borderLeft="4px solid red">
-              <Text color="red.700">{t('admin.usersLoadError')}: {usersError}</Text>
-            </Box>
+            <DataTableState
+              tone="danger"
+              message={t('admin.usersLoadError')}
+              helperText={usersError}
+            />
           ) : users.length === 0 ? (
-            <Text textAlign="center" color="gray.500" py={4}>{t('admin.noUsers')}</Text>
+            <DataTableState message={t('admin.noUsers')} />
           ) : (
             <>
               <Stack gap={3} mb={4}>
@@ -263,50 +274,54 @@ export function Admin() {
                 </Stack>
               </Stack>
 
-              <Table.Root variant="line">
-                <Table.Header>
-                  <Table.Row>
-                    <Table.ColumnHeader>{renderUserSortHeader('username', t('admin.table.columns.username'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader>{renderUserSortHeader('name', t('admin.table.columns.name'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader>{renderUserSortHeader('role', t('admin.table.columns.role'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader>{renderUserSortHeader('status', t('admin.table.columns.status'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader>{t('admin.table.columns.actions')}</Table.ColumnHeader>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {filteredUsers.map((user) => (
-                    <Table.Row key={user.id}>
-                      <Table.Cell fontWeight="500">{user.username}</Table.Cell>
-                      <Table.Cell>{user.name}</Table.Cell>
-                      <Table.Cell>
-                        <Badge colorPalette={user.role === 'ADMIN' ? 'red' : 'blue'}>
-                          {user.role === 'ADMIN' ? t('admin.roleAdmin') : t('admin.roleReferee')}
-                        </Badge>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <Badge colorPalette={user.active ? 'green' : 'red'}>
-                          {user.active ? t('admin.active') : t('admin.inactive')}
-                        </Badge>
-                      </Table.Cell>
-                      <Table.Cell>
-                        {user.active && (
-                          <Button
-                            size="sm"
-                            colorScheme="red"
-                            variant="ghost"
-                            onClick={() => openDeactivateDialog(user.id)}
-                            title={t('admin.deactivateUser')}
-                          >
-                            <FaBan />
-                          </Button>
-                        )}
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table.Root>
+              <DataTableSurface elevated={false}>
+                <Table.ScrollArea>
+                  <Table.Root variant="outline" size="sm">
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{renderUserSortHeader('username', t('admin.table.columns.username'))}</Table.ColumnHeader>
+                        <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{renderUserSortHeader('name', t('admin.table.columns.name'))}</Table.ColumnHeader>
+                        <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{renderUserSortHeader('role', t('admin.table.columns.role'))}</Table.ColumnHeader>
+                        <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{renderUserSortHeader('status', t('admin.table.columns.status'))}</Table.ColumnHeader>
+                        <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('admin.table.columns.actions')}</Table.ColumnHeader>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                      {filteredUsers.map((user) => (
+                        <Table.Row key={user.id} {...getDataTableRowStyles()}>
+                          <Table.Cell fontWeight="500" py={3}>{user.username}</Table.Cell>
+                          <Table.Cell py={3}>{user.name}</Table.Cell>
+                          <Table.Cell py={3}>
+                            <Badge colorPalette={user.role === 'ADMIN' ? 'red' : 'blue'}>
+                              {user.role === 'ADMIN' ? t('admin.roleAdmin') : t('admin.roleReferee')}
+                            </Badge>
+                          </Table.Cell>
+                          <Table.Cell py={3}>
+                            <Badge colorPalette={user.active ? 'green' : 'red'}>
+                              {user.active ? t('admin.active') : t('admin.inactive')}
+                            </Badge>
+                          </Table.Cell>
+                          <Table.Cell py={3}>
+                            {user.active && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                colorScheme="red"
+                                onClick={() => openDeactivateDialog(user.id)}
+                              >
+                                <Icon as={FaBan} boxSize={3.5} mr={1.5} />
+                                {t('admin.deactivateUser')}
+                              </Button>
+                            )}
+                          </Table.Cell>
+                        </Table.Row>
+                      ))}
+                    </Table.Body>
+                  </Table.Root>
+                </Table.ScrollArea>
+              </DataTableSurface>
               {filteredUsers.length === 0 && (
-                <Text textAlign="center" color="gray.500" py={4}>{t('admin.noFilteredUsers')}</Text>
+                <DataTableState message={t('admin.noFilteredUsers')} />
               )}
             </>
           )}

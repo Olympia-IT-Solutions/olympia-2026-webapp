@@ -7,6 +7,7 @@
   },
   "cookieBanner": {
     "message": "We use cookies to improve your experience on our website.",
+    "messageWithPolicy": "We use cookies to improve your experience on our website. Learn more in the <0>Cookie Policy</0>.",
     "accept": "Accept Everything",
     "decline": "Decline Optional"
   },
@@ -67,10 +68,7 @@
   },
   "dashboard": {
     "title": "Referee Dashboard",
-    "demoNote": "Demo version - results management with 4-eye principle",
     "loggedInAs": "Logged in as: {{email}} ({{role}})",
-    "infoTitle": "4-eye principle",
-    "infoText": "Results must be approved by another referee before they can be published. You cannot approve your own submissions.",
     "newResultTitle": "Submit a New Result",
     "addResult": "Add Result",
     "labels": {

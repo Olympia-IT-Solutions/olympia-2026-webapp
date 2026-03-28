@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Badge, Box, Button, Card, Container, DialogBackdrop, DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogPositioner, DialogRoot, DialogTitle, Heading, Input, Spinner, Stack, Text } from '@chakra-ui/react'
 import { getCurrentUser } from '../logic/rights'
@@ -176,7 +176,7 @@ export function Dashboard() {
     }
   }
 
-  const loadAthletesForSport = async (sportId: number) => {
+  const loadAthletesForSport = useCallback(async (sportId: number) => {
     if (athletesBySport[sportId]) {
       return
     }
@@ -200,7 +200,7 @@ export function Dashboard() {
     } finally {
       setAthletesLoading(false)
     }
-  }
+  }, [allAthletes, athletesBySport])
 
   const openCreateResultModal = () => {
     const defaultSportId = activeSports[0]?.id
@@ -268,15 +268,12 @@ export function Dashboard() {
     if (showCreateResultModal && sportId) {
       void loadAthletesForSport(sportId)
     }
-  }, [newResult.sportId, showCreateResultModal])
+  }, [loadAthletesForSport, newResult.sportId, showCreateResultModal])
 
   return (
     <Box p={10}>
       <Container maxW="container.xl">
         <Heading mb={2}>{t('dashboard.title')}</Heading>
-        <Text color="gray.500" mb={2}>
-          {t('dashboard.demoNote')}
-        </Text>
         {currentUser && (
           <Text fontSize="sm" color="teal.600" mb={8}>
             {t('dashboard.loggedInAs', { email: currentUser.email, role: currentUser.role })}
@@ -286,19 +283,6 @@ export function Dashboard() {
         <Button colorScheme="teal" mb={6} onClick={openCreateResultModal}>
           {t('dashboard.addResult')}
         </Button>
-
-        <Card.Root mb={6} p={4} bg="blue.50" borderRadius="lg" borderLeft="4px solid" borderLeftColor="blue.500">
-          <Stack direction="row" align="center" gap={3}>
-            <Box>
-              <Text fontWeight="bold" color="blue.800">
-                {t('dashboard.infoTitle')}
-              </Text>
-              <Text fontSize="sm" color="blue.700">
-                {t('dashboard.infoText')}
-              </Text>
-            </Box>
-          </Stack>
-        </Card.Root>
 
         {isInitialLoading ? (
           <Box p={8} display="flex" justifyContent="center" alignItems="center" minH="240px">

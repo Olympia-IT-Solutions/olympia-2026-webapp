@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { Heading } from '@chakra-ui/react';
 import footerImg from '../assets/mc2026_footer.png';
+import { SectionHeading } from './ui';
 
 const FooterBannerContainer = styled.div`
   width: 100%;
@@ -15,20 +15,17 @@ const FooterBannerContainer = styled.div`
   z-index: 0;
 `;
 
-const BannerText = styled(Heading)`
-  && {
-    color: #003049;
-    font-family: 'MilanoCortina2026-Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-    font-size: 48px;
-    text-align: center;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.12);
-  }
-`;
-
 export const FooterBanner = () => {
   return (
     <FooterBannerContainer>
-      <BannerText as="h3">IT's your vibe</BannerText>
+      <SectionHeading
+        as="h3"
+        fontSize={{ base: '3xl', md: '5xl' }}
+        textAlign="center"
+        textShadow="0 2px 6px var(--chakra-colors-scrollbar-thumb)"
+      >
+        IT's your vibe
+      </SectionHeading>
     </FooterBannerContainer>
   );
 };

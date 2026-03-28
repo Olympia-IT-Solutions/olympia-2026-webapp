@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
+import { keyframes } from '@emotion/react';
 import {
   HStack,
   Button,
@@ -7,6 +7,7 @@ import {
   Image,
   Box,
   Flex,
+  Icon,
   useDisclosure,
 } from '@chakra-ui/react';
 import {
@@ -27,6 +28,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, useLocation } from 'react-router';
 import { getCurrentUser, logout, Role } from '../logic/rights';
 import { useTheme } from '../logic/theme';
+import { CTAButton } from './ui';
 
 const navIn = keyframes`
   from {
@@ -39,37 +41,52 @@ const navIn = keyframes`
   }
 `;
 
-// Styled-component for the main container
-const NavContainer = styled.nav`
-  background-color: var(--nav-bg);
-  border-radius: 50px;
-  padding: 10px 20px;
-  box-shadow: var(--ring-soft), 0 10px 30px rgba(0, 28, 41, 0.14);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 95%;
-  max-width: 1400px;
-  margin: 0 auto;
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  position: relative;
-  z-index: 100;
-  animation: ${navIn} var(--motion-base) var(--motion-ease) both;
-  transition: transform var(--motion-fast) var(--motion-ease), box-shadow var(--motion-fast) var(--motion-ease);
+const focusVisibleRing = {
+  outline: '2px solid',
+  outlineColor: 'accent',
+  outlineOffset: '2px',
+};
 
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--ring-soft), 0 14px 36px rgba(0, 28, 41, 0.18);
-  }
+const desktopActionButtonProps = {
+  ctaVariant: 'solid' as const,
+  h: '44px',
+  px: 5,
+  fontSize: 'sm',
+  fontWeight: 'semibold',
+  letterSpacing: '0.01em',
+  transition: 'all var(--motion-interactive) var(--motion-ease-interactive)',
+  _hover: {
+    bg: 'accent-strong',
+    transform: 'translateY(-2px)',
+    boxShadow: 'ring-soft',
+  },
+  _focusVisible: focusVisibleRing,
+};
 
-  /* Mobile tweaks */
-  @media (max-width: 768px) {
-    border-radius: 16px;
-    padding: 8px 12px;
-    width: 100%;
-  }
-`;
+const listItemButtonProps = {
+  variant: 'ghost' as const,
+  justifyContent: 'flex-start',
+  w: '100%',
+  minH: '48px',
+  borderRadius: 'xl',
+  px: 3,
+  color: 'text',
+  transition: 'all var(--motion-interactive) var(--motion-ease-interactive)',
+  _hover: {
+    bg: 'hover-bg',
+    color: 'accent',
+  },
+  _focusVisible: focusVisibleRing,
+};
+
+const mobileSectionLabelProps = {
+  fontSize: 'xs',
+  fontWeight: 'semibold',
+  textTransform: 'uppercase',
+  color: 'text-muted',
+  letterSpacing: '0.08em',
+  mb: 2,
+};
 
 export const NavBar = () => {
   const { i18n, t } = useTranslation();
@@ -151,20 +168,53 @@ export const NavBar = () => {
   };
 
   return (
-    <NavContainer>
+    <Box
+      as="nav"
+      bg="nav-bg"
+      borderRadius={{ base: '16px', md: '50px' }}
+      py={{ base: 2, md: '10px' }}
+      px={{ base: 3, md: 5 }}
+      boxShadow="var(--ring-soft), 0 10px 30px rgba(0, 28, 41, 0.14)"
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+      w={{ base: '100%', md: '95%' }}
+      maxW="1400px"
+      mx="auto"
+      backdropFilter="blur(12px)"
+      border="1px solid"
+      borderColor="border"
+      position="relative"
+      zIndex={100}
+      animation={`${navIn} var(--motion-enter) var(--motion-ease-interactive) both`}
+      transition="transform var(--motion-interactive) var(--motion-ease-interactive), box-shadow var(--motion-interactive) var(--motion-ease-interactive)"
+      _hover={{
+        transform: 'translateY(-1px)',
+        boxShadow: 'var(--ring-soft), 0 14px 36px rgba(0, 28, 41, 0.18)',
+      }}
+    >
       {/* Left Side: Logo + Mobile Burger */}
       <Flex align="center">
-        <Image 
-          src={logo} 
-          alt="Milano Cortina 2026" 
-          height="60px" 
-          objectFit="contain" 
-          mr={4}
-          cursor="pointer"
-          transition="transform var(--motion-fast) var(--motion-ease)"
-          _hover={{ transform: 'scale(1.03)' }}
+        <Button
+          variant="ghost"
           onClick={() => navigate(`/${currentLang}`)}
-        />
+          aria-label="Go to homepage"
+          p={0}
+          minW="unset"
+          h="auto"
+          mr={4}
+          borderRadius="md"
+          transition="transform var(--motion-interactive) var(--motion-ease-interactive)"
+          _hover={{ transform: 'scale(1.03)', bg: 'transparent' }}
+          _focusVisible={focusVisibleRing}
+        >
+          <Image
+            src={logo}
+            alt="Milano Cortina 2026"
+            height="60px"
+            objectFit="contain"
+          />
+        </Button>
 
         {/* Mobile burger button (visible on small screens) */}
         <Button
@@ -177,47 +227,37 @@ export const NavBar = () => {
           minW="44px"
           minH="44px"
           borderRadius="full"
+          color="text"
+          transition="background-color var(--motion-interactive) var(--motion-ease-interactive), color var(--motion-interactive) var(--motion-ease-interactive)"
+          _hover={{ bg: 'hover-bg' }}
+          _focusVisible={focusVisibleRing}
         >
-          <FaBars />
+          <Icon as={FaBars} boxSize={4} />
         </Button>
       </Flex>
 
       {/* Center: Countries and Sports (hidden on small screens) */}
       <Flex align="center" display={{ base: 'none', md: 'flex' }}>
         <HStack gap={3}>
-          <Button
-            bg="#007f80"
-            color="white"
-            borderRadius="full"
-            px={6}
-            py={5}
-            fontWeight="bold"
-            transition="all var(--motion-fast) var(--motion-ease)"
-            _hover={{ bg: '#006666', transform: 'translateY(-2px)', boxShadow: '0 10px 22px rgba(0, 102, 102, 0.3)' }}
-            onClick={() => navigate(`/${currentLang}/countries`)}
-          >
+          <CTAButton {...desktopActionButtonProps} onClick={() => navigate(`/${currentLang}/countries`)}>
             {t('nav.countries')}
-          </Button>
+          </CTAButton>
 
           <Box position="relative">
-            <HStack 
-              bg="#007f80"
-              color="white"
-              borderRadius="full" 
-              px={4} 
-              py={2} 
-              cursor="pointer"
-              border="1px solid #007f80"
-              boxShadow="sm"
-              transition="all var(--motion-fast) var(--motion-ease)"
-              _hover={{ bg: '#006666', transform: 'translateY(-2px)', boxShadow: '0 10px 22px rgba(0, 102, 102, 0.3)' }}
+            <CTAButton
+              {...desktopActionButtonProps}
+              px={4}
+              aria-expanded={isSportsOpen}
+              aria-haspopup="menu"
               onClick={() => setIsSportsOpen(!isSportsOpen)}
             >
-              <Text fontWeight="bold" fontSize="sm">
-                {t('nav.sports')}
-              </Text>
-              <FaChevronDown size={10} />
-            </HStack>
+              <HStack gap={2}>
+                <Text fontWeight="semibold" fontSize="sm">
+                  {t('nav.sports')}
+                </Text>
+                <Icon as={FaChevronDown} boxSize={2.5} />
+              </HStack>
+            </CTAButton>
             
             {isSportsOpen && (
               <Box
@@ -225,67 +265,47 @@ export const NavBar = () => {
                 top="100%"
                 left="0"
                 mt={2}
-                bg="var(--card-bg)"
+                bg="surface"
                 borderRadius="xl"
                 boxShadow="lg"
                 py={2}
-                minW="150px"
+                minW="160px"
                 zIndex={200}
                 overflow="hidden"
-                border="1px solid var(--border-color)"
-                style={{ animation: 'fadeUpIn var(--motion-base) var(--motion-ease)' }}
+                border="1px solid"
+                borderColor="border"
+                style={{ animation: 'fadeUpIn var(--motion-enter) var(--motion-ease-interactive)' }}
               >
                 {Object.entries(sports).map(([key, label]) => (
-                  <Box
+                  <Button
                     key={key}
-                    px={4}
-                    py={2}
-                    cursor="pointer"
-                    _hover={{ bg: 'var(--hover-bg)', color: '#007f80' }}
+                    {...listItemButtonProps}
+                    minH="40px"
+                    borderRadius="none"
                     onClick={() => {
                       navigate(`/${currentLang}/sports/${key}`);
                       setIsSportsOpen(false);
                     }}
                   >
-                    <Text fontSize="sm">
+                    <Text fontSize="sm" fontWeight="medium">
                       {label}
                     </Text>
-                  </Box>
+                  </Button>
                 ))}
               </Box>
             )} 
           </Box>
 
           {currentUser && (
-            <Button
-              bg="#007f80"
-              color="white"
-              borderRadius="full"
-              px={6}
-              py={5}
-              fontWeight="bold"
-              transition="all var(--motion-fast) var(--motion-ease)"
-              _hover={{ bg: '#006666', transform: 'translateY(-2px)', boxShadow: '0 10px 22px rgba(0, 102, 102, 0.3)' }}
-              onClick={() => navigate(`/${currentLang}/dashboard`)}
-            >
+            <CTAButton {...desktopActionButtonProps} onClick={() => navigate(`/${currentLang}/dashboard`)}>
               {t('nav.dashboard')}
-            </Button>
+            </CTAButton>
           )}
 
           {currentUser?.role === Role.Admin && (
-            <Button
-              bg="#007f80"
-              color="white"
-              borderRadius="full"
-              px={6}
-              py={5}
-              fontWeight="bold"
-              transition="all var(--motion-fast) var(--motion-ease)"
-              _hover={{ bg: '#006666', transform: 'translateY(-2px)', boxShadow: '0 10px 22px rgba(0, 102, 102, 0.3)' }}
-              onClick={() => navigate(`/${currentLang}/admin`)}
-            >
+            <CTAButton {...desktopActionButtonProps} onClick={() => navigate(`/${currentLang}/admin`)}>
               {t('nav.admin')}
-            </Button>
+            </CTAButton>
           )}
         </HStack>
       </Flex>
@@ -293,85 +313,86 @@ export const NavBar = () => {
       {/* Right Side: Desktop only */}
       <Flex align="center" display={{ base: 'none', md: 'flex' }}>
         <HStack gap={3}>
-          <Button
-            bg="#007f80"
-            color="white"
-            borderRadius="full"
-            px={6}
-            py={5}
-            fontWeight="bold"
-            transition="all var(--motion-fast) var(--motion-ease)"
-            _hover={{ bg: '#006666', transform: 'translateY(-2px)', boxShadow: '0 10px 22px rgba(0, 102, 102, 0.3)' }}
+          <CTAButton
+            {...desktopActionButtonProps}
             onClick={currentUser ? handleLogout : () => navigate(`/${currentLang}/login`)}
           >
             {currentUser ? t('nav.logout') : t('nav.login')}
-          </Button>
+          </CTAButton>
 
-          <Button
-            bg="transparent"
-            color={theme === 'light' ? '#003049' : 'white'}
-            borderRadius="full"
-            px={4}
-            py={2}
-            border="1px solid #eee"
-            boxShadow="sm"
-            transition="all var(--motion-fast) var(--motion-ease)"
-            _hover={{ borderColor: '#ccc', transform: 'translateY(-2px)' }}
+          <CTAButton
+            ctaVariant="subtle"
+            aria-label={theme === 'light' ? t('nav.darkMode') : t('nav.lightMode')}
+            h="44px"
+            px={3.5}
+            border="1px solid"
+            borderColor="border"
+            color="text"
+            _hover={{ bg: 'hover-bg', borderColor: 'border-hover', transform: 'translateY(-2px)' }}
+            _focusVisible={focusVisibleRing}
             onClick={toggleTheme}
           >
-            {theme === 'light' ? <FaMoon size={16} /> : <FaSun size={16} />}
-          </Button>
+            {theme === 'light' ? <Icon as={FaMoon} boxSize={4} /> : <Icon as={FaSun} boxSize={4} />}
+          </CTAButton>
 
           <Box position="relative">
-              <HStack 
-                  bg="var(--card-bg)" 
-                  borderRadius="full" 
-                  px={4} 
-                  py={2} 
-                  cursor="pointer"
-                  border="1px solid var(--border-color)"
-                  boxShadow="sm"
-                  _hover={{ borderColor: 'var(--hover-border)' }}
-                  onClick={() => setIsOpen(!isOpen)}
-              >
-                  <Text fontWeight="bold" fontSize="sm" color="var(--card-text)">
-                      {languages[currentLang] || 'Deutsch'}
-                  </Text>
-                  <FaChevronDown size={10} color="var(--card-text)" />
+            <Button
+              bg="surface"
+              color="text"
+              borderRadius="full"
+              px={4}
+              h="44px"
+              cursor="pointer"
+              border="1px solid"
+              borderColor="border"
+              boxShadow="sm"
+              transition="all var(--motion-interactive) var(--motion-ease-interactive)"
+              _hover={{ borderColor: 'border-hover', bg: 'hover-bg' }}
+              _focusVisible={focusVisibleRing}
+              aria-expanded={isOpen}
+              aria-haspopup="menu"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <HStack gap={2}>
+                <Text fontWeight="semibold" fontSize="sm" color="text">
+                  {languages[currentLang] || 'Deutsch'}
+                </Text>
+                <Icon as={FaChevronDown} boxSize={2.5} />
               </HStack>
-              
-              {isOpen && (
-                  <Box
-                      position="absolute"
-                      top="100%"
-                      right="0"
-                      mt={2}
-                      bg="var(--card-bg)"
-                      borderRadius="xl"
-                      boxShadow="lg"
-                      py={2}
-                      minW="150px"
-                      zIndex={200}
-                      overflow="hidden"
-                      border="1px solid var(--border-color)"
-                      style={{ animation: 'fadeUpIn var(--motion-base) var(--motion-ease)' }}
+            </Button>
+            
+            {isOpen && (
+              <Box
+                position="absolute"
+                top="100%"
+                right="0"
+                mt={2}
+                bg="surface"
+                borderRadius="xl"
+                boxShadow="lg"
+                py={2}
+                minW="160px"
+                zIndex={200}
+                overflow="hidden"
+                border="1px solid"
+                borderColor="border"
+                style={{ animation: 'fadeUpIn var(--motion-enter) var(--motion-ease-interactive)' }}
+              >
+                {Object.entries(languages).map(([code, label]) => (
+                  <Button
+                    key={code}
+                    {...listItemButtonProps}
+                    minH="40px"
+                    borderRadius="none"
+                    onClick={() => handleLanguageChange(code)}
                   >
-                      {Object.entries(languages).map(([code, label]) => (
-                          <Box
-                              key={code}
-                              px={4}
-                              py={2}
-                              cursor="pointer"
-                              _hover={{ bg: 'var(--hover-bg)', color: '#007f80' }}
-                              onClick={() => handleLanguageChange(code)}
-                          >
-                              <Text fontSize="sm" fontWeight={currentLang === code ? 'bold' : 'normal'}>
-                                  {label}
-                              </Text>
-                          </Box>
-                      ))}
-                  </Box>
-              )}
+                    <Text fontSize="sm" fontWeight={currentLang === code ? 'semibold' : 'normal'}>
+                      {label}
+                    </Text>
+                  </Button>
+                ))}
+              </Box>
+            )}
           </Box>
         </HStack>
       </Flex>
@@ -381,7 +402,7 @@ export const NavBar = () => {
         <Box
           position="fixed"
           inset="0"
-          bg="rgba(0, 15, 20, 0.42)"
+          bg="blackAlpha.500"
           backdropFilter="blur(3px)"
           zIndex={12000}
           onClick={onMobileClose}
@@ -397,22 +418,23 @@ export const NavBar = () => {
           h="100vh"
           w={{ base: '100vw', md: '72%' }}
           maxW={{ base: 'none', md: '360px' }}
-          bg="var(--card-bg)"
+          bg="surface"
           zIndex={12001}
-          boxShadow="0 18px 48px rgba(0, 22, 32, 0.35)"
+          boxShadow="2xl"
           px={5}
           pt="calc(1.25rem + env(safe-area-inset-top, 0px))"
           pb="calc(1.25rem + env(safe-area-inset-bottom, 0px))"
           overflowY="auto"
           borderTopRightRadius={{ base: '0', md: '3xl' }}
           borderBottomRightRadius={{ base: '0', md: '3xl' }}
-          borderRight="1px solid var(--border-color)"
+          borderRight="1px solid"
+          borderColor="border"
           role="dialog"
           aria-modal="true"
           aria-labelledby="mobile-nav-title"
           style={{
             height: '100dvh',
-            animation: 'fadeUpIn var(--motion-base) var(--motion-ease)',
+            animation: 'fadeUpIn var(--motion-enter) var(--motion-ease-interactive)',
           }}
           onClick={(event) => event.stopPropagation()}
         >
@@ -422,13 +444,13 @@ export const NavBar = () => {
             mb={5}
             position="sticky"
             top="0"
-            bg="var(--card-bg)"
+            bg="surface"
             zIndex={1}
             py={2}
           >
             <HStack>
               <Image src={logo} alt="logo" height="40px" objectFit="contain" />
-              <Text id="mobile-nav-title" fontWeight="bold" fontSize="lg" color="var(--card-text)">
+              <Text id="mobile-nav-title" fontWeight="bold" fontSize="lg" color="text">
                 {t('nav.menuTitle')}
               </Text>
             </HStack>
@@ -439,53 +461,48 @@ export const NavBar = () => {
               borderRadius="full"
               minW="44px"
               minH="44px"
+              transition="background-color var(--motion-interactive) var(--motion-ease-interactive), color var(--motion-interactive) var(--motion-ease-interactive)"
+              _hover={{ bg: 'hover-bg' }}
+              _focusVisible={focusVisibleRing}
             >
-              <FaTimes />
+              <Icon as={FaTimes} boxSize={4} />
             </Button>
           </Flex>
 
           <Box mb={4}>
-            <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" color="var(--card-text)" opacity={0.7} mb={2}>
+            <Text {...mobileSectionLabelProps}>
               {t('nav.countries')}
             </Text>
             <Button
-              variant="ghost"
-              justifyContent="flex-start"
-              w="100%"
-              minH="48px"
-              borderRadius="xl"
+              {...listItemButtonProps}
               onClick={() => {
                 navigate(`/${currentLang}/countries`);
                 onMobileClose();
               }}
             >
               <HStack gap={3}>
-                <FaGlobe />
+                <Icon as={FaGlobe} boxSize={4} />
                 <Text>{t('nav.countries')}</Text>
               </HStack>
             </Button>
           </Box>
 
           <Box mb={4}>
-            <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" color="var(--card-text)" opacity={0.7} mb={2}>
+            <Text {...mobileSectionLabelProps}>
               {t('nav.sports')}
             </Text>
             <Box>
               {Object.entries(sports).map(([key, label]) => (
                 <Button
                   key={key}
-                  variant="ghost"
-                  justifyContent="flex-start"
-                  w="100%"
-                  minH="48px"
-                  borderRadius="xl"
+                  {...listItemButtonProps}
                   onClick={() => {
                     navigate(`/${currentLang}/sports/${key}`);
                     onMobileClose();
                   }}
                 >
                   <HStack gap={3}>
-                    <FaSnowflake />
+                    <Icon as={FaSnowflake} boxSize={4} />
                     <Text>{label}</Text>
                   </HStack>
                 </Button>
@@ -493,100 +510,93 @@ export const NavBar = () => {
             </Box>
           </Box>
 
-          <Box borderTop="1px solid var(--border-color)" pt={4} mb={4}>
+          <Box borderTop="1px solid" borderColor="border" pt={4} mb={4}>
             {currentUser ? (
-              <Button variant="ghost" justifyContent="flex-start" w="100%" minH="48px" borderRadius="xl" onClick={handleLogout}>
-                <HStack gap={3}><FaSignOutAlt /><Text>{t('nav.logout')}</Text></HStack>
+              <Button {...listItemButtonProps} onClick={handleLogout}>
+                <HStack gap={3}><Icon as={FaSignOutAlt} boxSize={4} /><Text>{t('nav.logout')}</Text></HStack>
               </Button>
             ) : (
               <Button
-                variant="ghost"
-                justifyContent="flex-start"
-                w="100%"
-                minH="48px"
-                borderRadius="xl"
+                {...listItemButtonProps}
                 onClick={() => {
                   navigate(`/${currentLang}/login`);
                   onMobileClose();
                 }}
               >
-                <HStack gap={3}><FaSignInAlt /><Text>{t('nav.login')}</Text></HStack>
+                <HStack gap={3}><Icon as={FaSignInAlt} boxSize={4} /><Text>{t('nav.login')}</Text></HStack>
               </Button>
             )}
 
             {currentUser && (
               <Button
-                variant="ghost"
-                justifyContent="flex-start"
-                w="100%"
-                minH="48px"
-                borderRadius="xl"
+                {...listItemButtonProps}
                 onClick={() => {
                   navigate(`/${currentLang}/dashboard`);
                   onMobileClose();
                 }}
               >
-                <HStack gap={3}><FaUser /><Text>{t('nav.dashboard')}</Text></HStack>
+                <HStack gap={3}><Icon as={FaUser} boxSize={4} /><Text>{t('nav.dashboard')}</Text></HStack>
               </Button>
             )}
 
             {currentUser?.role === Role.Admin && (
               <Button
-                variant="ghost"
-                justifyContent="flex-start"
-                w="100%"
-                minH="48px"
-                borderRadius="xl"
+                {...listItemButtonProps}
                 onClick={() => {
                   navigate(`/${currentLang}/admin`);
                   onMobileClose();
                 }}
               >
-                <HStack gap={3}><FaTrophy /><Text>{t('nav.admin')}</Text></HStack>
+                <HStack gap={3}><Icon as={FaTrophy} boxSize={4} /><Text>{t('nav.admin')}</Text></HStack>
               </Button>
             )}
           </Box>
 
-          <Box borderTop="1px solid var(--border-color)" pt={4}>
+          <Box borderTop="1px solid" borderColor="border" pt={4}>
             <Button
-              variant="ghost"
-              justifyContent="flex-start"
-              w="100%"
-              minH="48px"
-              borderRadius="xl"
+              {...listItemButtonProps}
               onClick={() => {
                 toggleTheme();
               }}
             >
               <HStack gap={3}>
-                <Box>{theme === 'light' ? <FaMoon /> : <FaSun />}</Box>
+                {theme === 'light' ? <Icon as={FaMoon} boxSize={4} /> : <Icon as={FaSun} boxSize={4} />}
                 <Text>{theme === 'light' ? t('nav.darkMode') : t('nav.lightMode')}</Text>
               </HStack>
             </Button>
 
             <Box mt={3}>
-              <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" color="var(--card-text)" opacity={0.7} mb={2}>
+              <Text {...mobileSectionLabelProps}>
                 {t('nav.language')}
               </Text>
               {Object.entries(languages).map(([code, label]) => (
                 <Button
                   key={code}
                   variant={currentLang === code ? 'solid' : 'ghost'}
+                  bg={currentLang === code ? 'accent' : 'transparent'}
+                  color={currentLang === code ? 'neutral.0' : 'text'}
                   w="100%"
                   mb={1}
                   minH="46px"
                   borderRadius="xl"
                   justifyContent="space-between"
+                  transition="all var(--motion-interactive) var(--motion-ease-interactive)"
+                  _hover={
+                    currentLang === code
+                      ? { bg: 'accent-strong' }
+                      : { bg: 'hover-bg', color: 'accent' }
+                  }
+                  _focusVisible={focusVisibleRing}
                   onClick={() => handleLanguageChange(code)}
                 >
                   <Text>{label}</Text>
-                  {currentLang === code ? <FaChevronDown size={12} /> : null}
+                  {currentLang === code ? <Icon as={FaChevronDown} boxSize={3} /> : null}
                 </Button>
               ))}
             </Box>
           </Box>
         </Box>
       )}
-    </NavContainer>
+    </Box>
   );
 };

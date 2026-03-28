@@ -3,12 +3,12 @@ import {
   Table,
   Button,
   Box,
-  Text,
   Spinner
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import type { CountryMedalData } from '../services/medals';
 import { fetchMedalsTable } from '../services/medals';
+import { DataTableState, DataTableSurface, getDataTableRowStyles } from './ui';
 
 interface CountryTableProps {
   data?: CountryMedalData[];
@@ -50,6 +50,24 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
   const visibleData = showAll ? displayData : displayData.slice(0, 50);
   const hasMore = displayData.length > 50;
 
+  const rowLinkButtonProps = {
+    variant: 'ghost' as const,
+    p: 0,
+    minH: 'unset',
+    h: 'auto',
+    justifyContent: 'flex-start',
+    fontWeight: 'semibold',
+    color: 'text',
+    transition: 'color var(--motion-fast) var(--motion-ease)',
+    _hover: { textDecoration: 'underline', color: 'accent', bg: 'transparent' },
+    _focusVisible: {
+      outline: '2px solid',
+      outlineColor: 'accent',
+      outlineOffset: '2px',
+      borderRadius: 'sm',
+    },
+  };
+
   if (loading) {
     return (
       <Box p={4} display="flex" justifyContent="center" alignItems="center" minH="200px">
@@ -60,56 +78,50 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
 
   if (error) {
     return (
-      <Box p={4} textAlign="center">
-        <Text color="red.500">{t('countryTable.error', { defaultValue: 'Error loading data' })}</Text>
-        <Text fontSize="sm" mt={2}>{error}</Text>
-      </Box>
+      <DataTableState
+        tone="danger"
+        message={t('countryTable.error', { defaultValue: 'Error loading data' })}
+        helperText={error}
+      />
     );
   }
 
   if (displayData.length === 0) {
       return (
-          <Box p={4} textAlign="center">
-              <Text>{t('countryTable.noData')}</Text>
-          </Box>
+          <DataTableState message={t('countryTable.noData')} />
       );
   }
 
   return (
-    <Box
-      className="responsive-data-table"
-      width="100%"
-      overflowX="auto"
-      bg="var(--card-bg)"
-      border="1px solid"
-      borderColor="var(--border-color)"
-      borderRadius="2xl"
-      boxShadow="var(--ring-soft)"
-      p={2}
-      style={{ animation: 'fadeUpIn var(--motion-base) var(--motion-ease)' }}
-    >
+    <DataTableSurface>
       <Table.ScrollArea>
-        <Table.Root variant='outline' className="responsive-country-table">
+        <Table.Root variant='outline' size="sm" className="responsive-country-table">
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader whiteSpace="nowrap" minW="220px">{t('countryTable.columns.country')}</Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="110px">{t('countryTable.columns.bronze')}</Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="110px">{t('countryTable.columns.silver')}</Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="110px">{t('countryTable.columns.gold')}</Table.ColumnHeader>
+              <Table.ColumnHeader whiteSpace="nowrap" minW="220px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('countryTable.columns.country')}</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="110px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('countryTable.columns.bronze')}</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="110px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('countryTable.columns.silver')}</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="110px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('countryTable.columns.gold')}</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
             {visibleData.map((row, index) => (
               <Table.Row 
                 key={row.country || index}
-                onClick={() => onCountryClick?.(row.country)}
-                transition="background-color var(--motion-fast) var(--motion-ease)"
-                _hover={onCountryClick ? { bg: 'var(--hover-bg)', cursor: 'pointer' } : undefined}
+                {...getDataTableRowStyles(false)}
               >
-                <Table.Cell whiteSpace="nowrap" minW="220px">{row.country}</Table.Cell>
-                <Table.Cell textAlign="right" whiteSpace="nowrap">{row.bronze}</Table.Cell>
-                <Table.Cell textAlign="right" whiteSpace="nowrap">{row.silver}</Table.Cell>
-                <Table.Cell textAlign="right" whiteSpace="nowrap">{row.gold}</Table.Cell>
+                <Table.Cell whiteSpace="nowrap" minW="220px" py={3}>
+                  {onCountryClick ? (
+                    <Button {...rowLinkButtonProps} onClick={() => onCountryClick(row.country)}>
+                      {row.country}
+                    </Button>
+                  ) : (
+                    <Box as="span" fontWeight="semibold">{row.country}</Box>
+                  )}
+                </Table.Cell>
+                <Table.Cell textAlign="right" whiteSpace="nowrap" py={3} fontFamily="mono">{row.bronze}</Table.Cell>
+                <Table.Cell textAlign="right" whiteSpace="nowrap" py={3} fontFamily="mono">{row.silver}</Table.Cell>
+                <Table.Cell textAlign="right" whiteSpace="nowrap" py={3} fontFamily="mono">{row.gold}</Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>
@@ -117,11 +129,23 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
       </Table.ScrollArea>
       {!showAll && hasMore && (
         <Box display="flex" justifyContent="center" mt={4}>
-            <Button onClick={() => setShowAll(true)} colorPalette="teal" borderRadius="full" transition="all var(--motion-fast) var(--motion-ease)" _hover={{ transform: 'translateY(-2px)' }}>
+            <Button
+              onClick={() => setShowAll(true)}
+              bg="accent"
+              color="neutral.0"
+              borderRadius="full"
+              transition="all var(--motion-fast) var(--motion-ease)"
+              _hover={{ transform: 'translateY(-2px)', bg: 'accent-strong' }}
+              _focusVisible={{
+                outline: '2px solid',
+                outlineColor: 'accent',
+                outlineOffset: '2px',
+              }}
+            >
             {t('countryTable.loadMore')}
             </Button>
         </Box>
       )}
-    </Box>
+    </DataTableSurface>
   );
 };

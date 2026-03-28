@@ -7,6 +7,7 @@
   },
   "cookieBanner": {
     "message": "Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern.",
+    "messageWithPolicy": "Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern. Mehr dazu in der <0>Cookie-Richtlinie</0>.",
     "accept": "Alle akzeptieren",
     "decline": "Optionale ablehnen"
   },
@@ -67,10 +68,7 @@
   },
   "dashboard": {
     "title": "Schiedsrichter Dashboard",
-    "demoNote": "Demo Version - Ergebnisverwaltung mit 4-Augen-Prinzip",
     "loggedInAs": "Angemeldet als: {{email}} ({{role}})",
-    "infoTitle": "4-Augen-Prinzip",
-    "infoText": "Ergebnisse müssen von einem anderen Schiedsrichter genehmigt werden, bevor sie veröffentlicht werden können. Sie können Ihre eigenen Einreichungen nicht genehmigen.",
     "newResultTitle": "Neues Ergebnis einreichen",
     "addResult": "Ergebnis hinzufügen",
     "labels": {

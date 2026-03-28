@@ -1,7 +1,8 @@
 import styled, { keyframes } from 'styled-components';
-import { Text, Button, HStack, Link } from '@chakra-ui/react';
+import { Text, HStack } from '@chakra-ui/react';
 import headerImg from '../assets/mc2026_header.png';
 import { NavBar } from './NavBar';
+import { CTAButton } from './ui';
 
 const shimmer = keyframes`
   from {
@@ -30,8 +31,14 @@ const BannerContainer = styled.div`
     position: absolute;
     inset: 0;
     background: linear-gradient(120deg, rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0) 80%);
-    animation: ${shimmer} 10s ease-in-out infinite alternate;
+    animation: ${shimmer} var(--motion-ornament-slow) var(--motion-ease-gentle) infinite alternate;
     pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::after {
+      animation: none;
+    }
   }
 `;
 
@@ -62,38 +69,26 @@ export const Banner = () => {
             Olympische Winterspiele™ · 6. bis 22. Februar 2026 | Paralympische Winterspiele™ · 6. bis 15. März 2026
           </Text>
           <HStack gap={3} flex="0 1 auto" flexWrap="wrap" justify="flex-start">
-            <Link 
+            <CTAButton
+              as="a"
               href="https://tickets.milanocortina2026.org"
               target="_blank"
               rel="noopener noreferrer"
-              _hover={{ textDecoration: 'none' }}
+              ctaVariant="solid"
+              size="sm"
             >
-              <Button 
-                size="xs" 
-                variant="outline" 
-                color="white" 
-                borderColor="white"
-                _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
-              >
-                Tickets
-              </Button>
-            </Link>
-            <Link 
+              Tickets
+            </CTAButton>
+            <CTAButton
+              as="a"
               href="https://shop.olympics.com/milano-cortina-2026"
               target="_blank"
               rel="noopener noreferrer"
-              _hover={{ textDecoration: 'none' }}
+              ctaVariant="solid"
+              size="sm"
             >
-              <Button 
-                size="xs" 
-                variant="outline" 
-                color="white" 
-                borderColor="white"
-                _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
-              >
-                Shop
-              </Button>
-            </Link>
+              Shop
+            </CTAButton>
           </HStack>
         </ContentWrapper>
       </BannerContainer>

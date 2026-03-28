@@ -80,11 +80,11 @@ export const Slider = () => {
     }
 
     const interval = setInterval(() => {
-      nextSlide();
+      setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [prefersReducedMotion]);
+  }, [prefersReducedMotion, slides.length]);
 
   return (
     <Box

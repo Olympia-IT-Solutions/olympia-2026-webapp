@@ -7,6 +7,7 @@
   },
   "cookieBanner": {
     "message": "Utilizziamo i cookie per migliorare la tua esperienza sul nostro sito web.",
+    "messageWithPolicy": "Utilizziamo i cookie per migliorare la tua esperienza sul nostro sito web. Scopri di più nella <0>Cookie Policy</0>.",
     "accept": "Accetta tutto",
     "decline": "Rifiuta opzionali"
   },
@@ -67,10 +68,7 @@
   },
   "dashboard": {
     "title": "Cruscotto arbitri",
-    "demoNote": "Versione demo - gestione risultati con principio dei 4 occhi",
     "loggedInAs": "Connesso come: {{email}} ({{role}})",
-    "infoTitle": "Principio dei 4 occhi",
-    "infoText": "I risultati devono essere approvati da un altro arbitro prima di poter essere pubblicati. Non puoi approvare le tue stesse segnalazioni.",
     "newResultTitle": "Invia un nuovo risultato",
     "addResult": "Aggiungi risultato",
     "labels": {

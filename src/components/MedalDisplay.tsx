@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text, VStack, HStack, Icon, Spinner, SimpleGrid } from '@chakra-ui/react';
+import { Box, Text, VStack, HStack, Icon, Spinner, SimpleGrid, Button } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router';
 import { FaMedal } from 'react-icons/fa';
 import type { Medal } from '../services/medals';
@@ -10,17 +10,32 @@ interface MedalDisplayProps {
   country?: string;
 }
 
-const getMedalColor = (medalType: 'GOLD' | 'SILVER' | 'BRONZE') => {
-  const colors: Record<string, { bg: string; color: string; borderColor: string }> = {
-    GOLD: { bg: 'rgba(255, 215, 0, 0.1)', color: '#FFD700', borderColor: '#FFB700' },
-    SILVER: { bg: 'rgba(192, 192, 192, 0.1)', color: '#C0C0C0', borderColor: '#A9A9A9' },
-    BRONZE: { bg: 'rgba(205, 127, 50, 0.1)', color: '#CD7F32', borderColor: '#B87333' },
-  };
-  return colors[medalType];
+const medalVisuals: Record<Medal['medalType'], { accentColor: string; label: string }> = {
+  GOLD: { accentColor: 'medal-gold', label: 'Gold' },
+  SILVER: { accentColor: 'medal-silver', label: 'Silber' },
+  BRONZE: { accentColor: 'medal-bronze', label: 'Bronze' },
+};
+
+const interactiveTextButtonProps = {
+  variant: 'ghost' as const,
+  p: 0,
+  minH: 'unset',
+  h: 'auto',
+  justifyContent: 'flex-start',
+  textAlign: 'left' as const,
+  color: 'text',
+  transition: 'color var(--motion-fast) var(--motion-ease)',
+  _hover: { textDecoration: 'underline', color: 'accent', bg: 'transparent' },
+  _focusVisible: {
+    outline: '2px solid',
+    outlineColor: 'accent',
+    outlineOffset: '2px',
+    borderRadius: 'sm',
+  },
 };
 
 const MedalCard: React.FC<{ medal: Medal; index: number }> = ({ medal, index }) => {
-  const medalColor = getMedalColor(medal.medalType);
+  const medalVisual = medalVisuals[medal.medalType];
   const { lang } = useParams<{ lang: string }>();
   const navigate = useNavigate();
 
@@ -35,56 +50,62 @@ const MedalCard: React.FC<{ medal: Medal; index: number }> = ({ medal, index }) 
 
   return (
     <Box
-      bg={medalColor.bg}
-      border="2px solid"
-      borderColor={medalColor.borderColor}
-      borderRadius="lg"
+      bg="surface"
+      borderWidth="1px"
+      borderColor="border"
+      borderRadius="2xl"
       p={6}
-      boxShadow="sm"
+      boxShadow="ring-soft"
+      position="relative"
+      overflow="hidden"
       transition="transform var(--motion-fast) var(--motion-ease), box-shadow var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease)"
-      _hover={{ transform: 'translateY(-4px)', boxShadow: 'lg' }}
+      _hover={{ transform: 'translateY(-4px)', borderColor: 'border-hover' }}
+      _before={{
+        content: '""',
+        position: 'absolute',
+        insetInlineStart: 0,
+        top: 0,
+        bottom: 0,
+        width: '4px',
+        bg: medalVisual.accentColor,
+      }}
       style={{ animation: 'fadeUpIn var(--motion-base) var(--motion-ease) both', animationDelay: `${index * 45}ms` }}
     >
       <VStack gap={4} align="start" h="100%">
-        {/* Medal Icon */}
         <HStack gap={3}>
-          <Icon as={FaMedal} color={medalColor.color} boxSize={8} />
+          <Icon as={FaMedal} color={medalVisual.accentColor} boxSize={8} />
           <Box>
-            <Text fontWeight="bold" fontSize="sm" color={medalColor.color} textTransform="uppercase">
+            <Text fontWeight="bold" fontSize="sm" color={medalVisual.accentColor} textTransform="uppercase" letterSpacing="0.06em">
               {medal.medalType}
             </Text>
           </Box>
         </HStack>
 
-        {/* Athlete Name */}
         <Box flex="1">
-          <Text
+          <Button
+            {...interactiveTextButtonProps}
             onClick={handleClick}
-            _hover={{ textDecoration: 'underline' }}
-            cursor="pointer"
-            color="var(--card-text)"
             fontWeight="bold"
             fontSize="lg"
+            aria-label={`Show ${medal.sportName} details`}
           >
             {medal.athleteName}
-          </Text>
+          </Button>
         </Box>
 
-        {/* Sport */}
         <Box w="100%">
-          <Text fontSize="sm" color="var(--card-text)" opacity={0.7}>
+          <Text fontSize="sm" color="text-muted">
             Sport
           </Text>
-          <Text
+          <Button
+            {...interactiveTextButtonProps}
             onClick={handleClick}
-            _hover={{ textDecoration: 'underline' }}
-            cursor="pointer"
-            color="var(--card-text)"
             fontWeight="600"
             fontSize="md"
+            aria-label={`Show ${medal.sportName} details`}
           >
             {medal.sportName}
-          </Text>
+          </Button>
         </Box>
       </VStack>
     </Box>
@@ -103,13 +124,16 @@ export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, loading = fa
   if (!medals || medals.length === 0) {
     return (
       <Box
-        bg="var(--card-bg)"
-        borderRadius="lg"
+        bg="surface"
+        borderWidth="1px"
+        borderColor="border"
+        boxShadow="ring-soft"
+        borderRadius="3xl"
         p={12}
         textAlign="center"
-        color="var(--card-text)"
+        color="text"
       >
-        <Icon as={FaMedal} boxSize={12} opacity={0.3} mb={4} />
+        <Icon as={FaMedal} boxSize={12} color="text-muted" mb={4} />
         <Text fontSize="lg" fontWeight="600">
           {country ? `Keine Medaillen für ${country} gefunden.` : 'Keine Medaillen verfügbar.'}
         </Text>
@@ -117,78 +141,56 @@ export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, loading = fa
     );
   }
 
-  // Separate medals by type and count
-  const goldMedals = medals.filter(m => m.medalType === 'GOLD');
-  const silverMedals = medals.filter(m => m.medalType === 'SILVER');
-  const bronzeMedals = medals.filter(m => m.medalType === 'BRONZE');
+  const medalTypeOrder: Medal['medalType'][] = ['GOLD', 'SILVER', 'BRONZE'];
+  const medalCounts = medalTypeOrder.map((medalType) => ({
+    medalType,
+    count: medals.filter((medal) => medal.medalType === medalType).length,
+  }));
 
   return (
     <VStack gap={8} align="stretch">
-      {/* Medal Summary */}
       <HStack gap={6} justify="center" wrap="wrap">
-        {goldMedals.length > 0 && (
-          <Box
-            textAlign="center"
-            p={4}
-            bg="rgba(255, 215, 0, 0.1)"
-            borderRadius="lg"
-            border="1px solid rgba(255, 183, 0, 0.32)"
-            boxShadow="sm"
-            transition="transform var(--motion-fast) var(--motion-ease)"
-            _hover={{ transform: 'translateY(-3px)' }}
-          >
-            <Icon as={FaMedal} color="#FFD700" boxSize={8} mb={2} />
-            <Text fontWeight="bold" fontSize="2xl" color="#FFD700">
-              {goldMedals.length}
-            </Text>
-            <Text fontSize="sm" color="var(--card-text)">
-              Gold
-            </Text>
-          </Box>
-        )}
-        {silverMedals.length > 0 && (
-          <Box
-            textAlign="center"
-            p={4}
-            bg="rgba(192, 192, 192, 0.1)"
-            borderRadius="lg"
-            border="1px solid rgba(169, 169, 169, 0.34)"
-            boxShadow="sm"
-            transition="transform var(--motion-fast) var(--motion-ease)"
-            _hover={{ transform: 'translateY(-3px)' }}
-          >
-            <Icon as={FaMedal} color="#C0C0C0" boxSize={8} mb={2} />
-            <Text fontWeight="bold" fontSize="2xl" color="#C0C0C0">
-              {silverMedals.length}
-            </Text>
-            <Text fontSize="sm" color="var(--card-text)">
-              Silber
-            </Text>
-          </Box>
-        )}
-        {bronzeMedals.length > 0 && (
-          <Box
-            textAlign="center"
-            p={4}
-            bg="rgba(205, 127, 50, 0.1)"
-            borderRadius="lg"
-            border="1px solid rgba(184, 115, 51, 0.34)"
-            boxShadow="sm"
-            transition="transform var(--motion-fast) var(--motion-ease)"
-            _hover={{ transform: 'translateY(-3px)' }}
-          >
-            <Icon as={FaMedal} color="#CD7F32" boxSize={8} mb={2} />
-            <Text fontWeight="bold" fontSize="2xl" color="#CD7F32">
-              {bronzeMedals.length}
-            </Text>
-            <Text fontSize="sm" color="var(--card-text)">
-              Bronze
-            </Text>
-          </Box>
-        )}
+        {medalCounts
+          .filter(({ count }) => count > 0)
+          .map(({ medalType, count }) => {
+            const medalVisual = medalVisuals[medalType];
+
+            return (
+              <Box
+                key={medalType}
+                textAlign="center"
+                p={4}
+                bg="surface-muted"
+                borderWidth="1px"
+                borderColor="border"
+                borderRadius="2xl"
+                boxShadow="ring-soft"
+                position="relative"
+                overflow="hidden"
+                transition="transform var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease)"
+                _hover={{ transform: 'translateY(-3px)', borderColor: 'border-hover' }}
+                _before={{
+                  content: '""',
+                  position: 'absolute',
+                  insetInlineStart: 0,
+                  top: 0,
+                  bottom: 0,
+                  width: '4px',
+                  bg: medalVisual.accentColor,
+                }}
+              >
+                <Icon as={FaMedal} color={medalVisual.accentColor} boxSize={8} mb={2} />
+                <Text fontWeight="bold" fontSize="2xl" color={medalVisual.accentColor}>
+                  {count}
+                </Text>
+                <Text fontSize="sm" color="text-muted">
+                  {medalVisual.label}
+                </Text>
+              </Box>
+            );
+          })}
       </HStack>
 
-      {/* Medal Cards Grid */}
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
         {medals.map((medal, index) => (
           <MedalCard key={`${medal.athleteId}-${medal.sportName}`} medal={medal} index={index} />

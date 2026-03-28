@@ -142,7 +142,7 @@ export function Login() {
       } else {
         setError(t('login.invalidCredentials'));
       }
-    } catch (err) {
+    } catch {
       setError(t('login.invalidCredentials'));
     } finally {
       setLoading(false);

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Box, Text, Button, Stack, Container } from '@chakra-ui/react';
+import { Trans, useTranslation } from 'react-i18next';
+import { Box, Text, Stack, Container, Link } from '@chakra-ui/react';
+import { Link as RouterLink, useParams } from 'react-router';
+import { CTAButton, Surface } from './ui';
 
 export const CookieMenu: React.FC = () => {
   const { t } = useTranslation();
+  const { lang } = useParams<{ lang: string }>();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -12,7 +15,7 @@ export const CookieMenu: React.FC = () => {
       if (!consent) {
         setIsVisible(true);
       }
-    } catch (e) {
+    } catch {
       setIsVisible(true);
     }
   }, []);
@@ -29,16 +32,18 @@ export const CookieMenu: React.FC = () => {
   if (!isVisible) return null;
 
   return (
-    <Box
+    <Surface
+      as="section"
       position="fixed"
       bottom="0"
       left="0"
       right="0"
-      bg="#00313d"
-      color="white"
+      surfaceVariant="inverted"
       py={5}
+      borderBottomWidth="0"
+      borderRadius="3xl 3xl 0 0"
       zIndex={9999}
-      boxShadow="0 -2px 10px rgba(0, 0, 0, 0.3)"
+      boxShadow="ring-soft"
     >
       <Container maxW="container.xl">
         <Stack
@@ -47,34 +52,42 @@ export const CookieMenu: React.FC = () => {
           alignItems="center"
           gap={4}
         >
-          <Box flex="1">
-            <Text fontSize="sm">
-              {t('cookieBanner.message')}
+          <Box flex="1" minW={0}>
+            <Text fontSize="sm" lineHeight="1.5" whiteSpace={{ base: 'normal', lg: 'nowrap' }}>
+              <Trans
+                i18nKey="cookieBanner.messageWithPolicy"
+                components={[
+                  <Link
+                    key="cookie-policy-link"
+                    as={RouterLink}
+                    to={`/${lang ?? 'de'}/cookie-policy`}
+                    color="accent"
+                    fontWeight="semibold"
+                    _hover={{ color: 'accent-strong', textDecoration: 'underline' }}
+                    _focusVisible={{ outline: '2px solid', outlineColor: 'accent', outlineOffset: '2px' }}
+                  />,
+                ]}
+              />
             </Text>
           </Box>
           <Stack direction="row" gap={4}>
-            <Button
+            <CTAButton
               size="sm"
-              variant="outline"
-              borderColor="white"
-              color="white"
-              _hover={{ bg: 'var(--hover-bg)' }}
+              ctaVariant="outline"
               onClick={() => handleConsent('decline')}
             >
               {t('cookieBanner.decline')}
-            </Button>
-            <Button
+            </CTAButton>
+            <CTAButton
               size="sm"
-              bg="var(--btn-bg)"
-              color="var(--btn-text)"
-              _hover={{ bg: 'var(--hover-bg)' }}
+              ctaVariant="subtle"
               onClick={() => handleConsent('accept')}
             >
               {t('cookieBanner.accept')}
-            </Button>
+            </CTAButton>
           </Stack>
         </Stack>
       </Container>
-    </Box>
+    </Surface>
   );
 };

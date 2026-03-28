@@ -19,10 +19,13 @@ const FeatureWrapper = styled.div`
   margin: 24px auto;
 `;
 
-const Card = styled.div`
+const Card = styled.button`
   position: relative;
   width: 100%;
   height: 800px;
+  display: block;
+  padding: 0;
+  background: transparent;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: var(--ring-soft), 0 18px 40px rgba(0, 28, 41, 0.24);
@@ -34,6 +37,11 @@ const Card = styled.div`
   &:hover {
     transform: translateY(-6px);
     box-shadow: var(--ring-soft), 0 26px 50px rgba(0, 28, 41, 0.28);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--chakra-colors-accent);
+    outline-offset: 2px;
   }
 
   @media (max-width: 768px) {
@@ -77,7 +85,7 @@ export const CountriesFeature = ({ id }: { id?: string }) => {
 
   return (
     <FeatureWrapper>
-      <Card id={id} onClick={() => navigate(`/${currentLang}/countries`)} role="link" aria-label={t('countries.featureAria')}>
+      <Card id={id} type="button" onClick={() => navigate(`/${currentLang}/countries`)} aria-label={t('countries.featureAria')}>
         <Bg />
         <Overlay>
           <Heading

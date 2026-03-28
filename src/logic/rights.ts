@@ -68,7 +68,7 @@ export async function login(email: string, password: string): Promise<User | nul
     DebugManager.log(`Benutzer ${email} über API eingeloggt mit Rolle: ${apiRole}`);
     
     return user;
-  } catch (apiError) {
+  } catch {
     DebugManager.log('API Login fehlgeschlagen, versuche Debug-Modus...');
     
     // Fallback auf Debug-Modus wenn API fehlschlägt und Debug-Modus aktiv ist

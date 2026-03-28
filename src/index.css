@@ -1,51 +1,49 @@
 /* Light theme (default) */
 :root {
-  --bg-color: rgba(255, 255, 255, 0.95);
-  --text-color: #003049;
-  --nav-bg: rgba(255, 255, 255, 0.9);
-  --border-color: #eee;
-  --hover-border: #ccc;
-  --card-bg: white;
-  --card-text: #003049;
-  --muted-bg: #f7f7f7;
-  --btn-bg: white;
-  --btn-text: #003049;
-  --hover-bg: #f0f0f0;
-  --accent-main: #007f80;
-  --accent-main-strong: #006666;
-  --motion-fast: 180ms;
-  --motion-base: 320ms;
-  --motion-slow: 560ms;
-  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --ring-soft: 0 0 0 1px rgba(0, 127, 128, 0.18), 0 16px 32px rgba(0, 48, 73, 0.08);
+  --bg: var(--chakra-colors-bg);
+  --bg-color: var(--chakra-colors-bg);
+  --text-color: var(--chakra-colors-text);
+  --nav-bg: var(--chakra-colors-nav-bg);
+  --border-color: var(--chakra-colors-border);
+  --hover-border: var(--chakra-colors-border-hover);
+  --card-bg: var(--chakra-colors-surface);
+  --card-text: var(--chakra-colors-text);
+  --muted-bg: var(--chakra-colors-surface-muted);
+  --btn-bg: var(--chakra-colors-button-bg);
+  --btn-text: var(--chakra-colors-button-text);
+  --hover-bg: var(--chakra-colors-hover-bg);
+  --input-bg: var(--chakra-colors-input-bg);
+  --accent-main: var(--chakra-colors-accent);
+  --accent-main-strong: var(--chakra-colors-accent-strong);
+  --motion-fast: var(--chakra-durations-fast);
+  --motion-base: var(--chakra-durations-base);
+  --motion-slow: var(--chakra-durations-slow);
+  --motion-ease: var(--chakra-easings-emphasized);
+  --motion-interactive: var(--motion-fast);
+  --motion-enter: var(--motion-base);
+  --motion-emphasis: var(--motion-slow);
+  --motion-ornament: var(--chakra-durations-ornament);
+  --motion-ornament-slow: var(--chakra-durations-ornament-slow);
+  --motion-ambient: var(--chakra-durations-ambient);
+  --motion-ambient-alt: var(--chakra-durations-ambient-alt);
+  --motion-ease-interactive: var(--motion-ease);
+  --motion-ease-gentle: var(--chakra-easings-gentle);
+  --ring-soft: var(--chakra-shadows-ring-soft);
 
   /* Scrollbar: small & unobtrusive */
   --scrollbar-size: 8px;
   --scrollbar-track: transparent;
-  --scrollbar-thumb: rgba(0, 0, 0, 0.22);
-  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.36);
+  --scrollbar-thumb: var(--chakra-colors-scrollbar-thumb);
+  --scrollbar-thumb-hover: var(--chakra-colors-scrollbar-thumb-hover);
 }
 
 /* Dark theme */
 [data-theme="dark"] {
-  --bg-color: #070707;
-  --text-color: white;
-  --border-color: #444;
-  --hover-border: #666;
-  /* Use cohesive greys: nav/header/cards should stand out from page bg */
-  --nav-bg: #1b1b1b; /* Navbar & table headers */
-  --card-bg: #1f1f1f; /* Cards and panels */
-  --card-text: white;
-  --muted-bg: #161616; /* table rows and muted areas */
-  --btn-bg: rgba(255,255,255,0.08);
-  --btn-text: white;
-  --hover-bg: rgba(255,255,255,0.04);
+  color-scheme: dark;
+}
 
-  /* Scrollbar: small & unobtrusive for dark theme */
-  --scrollbar-size: 8px;
-  --scrollbar-track: transparent;
-  --scrollbar-thumb: rgba(255, 255, 255, 0.12);
-  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.22);
+[data-theme="light"] {
+  color-scheme: light;
 }
 
 /* Table header should match nav/card background for better contrast */
@@ -55,10 +53,31 @@ table thead th {
   color: var(--card-text);
 }
 
-/* Table body rows use muted background to create separation */
+/* Table body cells use muted background to create separation */
 table tbody tr {
-  background-color: var(--muted-bg);
   color: var(--card-text);
+}
+
+table tbody tr td {
+  background-color: var(--muted-bg);
+  background-clip: padding-box;
+}
+
+table tbody tr:hover td {
+  background-color: var(--hover-bg);
+}
+
+.responsive-data-table table tbody tr:last-child td {
+  border-bottom-width: 0 !important;
+  border-bottom-color: transparent !important;
+}
+
+.responsive-data-table table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: var(--chakra-radii-3xl) !important;
+}
+
+.responsive-data-table table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: var(--chakra-radii-3xl) !important;
 }
 
 /* Make table header cells visually distinct */
@@ -71,9 +90,11 @@ thead th {
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
+  font-family: var(--chakra-fonts-body);
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+  transition: background-color var(--motion-enter) var(--motion-ease-interactive), color var(--motion-enter) var(--motion-ease-interactive);
 }
 
 body::before,
@@ -92,7 +113,7 @@ body::before {
   top: -140px;
   left: -120px;
   background: radial-gradient(circle at center, rgba(0, 127, 128, 0.22), rgba(0, 127, 128, 0));
-  animation: ambientFloat 18s ease-in-out infinite;
+  animation: ambientFloat var(--motion-ambient) var(--motion-ease-gentle) infinite;
 }
 
 body::after {
@@ -101,7 +122,7 @@ body::after {
   right: -120px;
   bottom: -90px;
   background: radial-gradient(circle at center, rgba(0, 48, 73, 0.2), rgba(0, 48, 73, 0));
-  animation: ambientFloat 22s ease-in-out infinite reverse;
+  animation: ambientFloat var(--motion-ambient-alt) var(--motion-ease-gentle) infinite reverse;
 } 
 
 @font-face {
