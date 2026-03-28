@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router';
 import { Box, Heading, Text, Container } from '@chakra-ui/react';
 import { SportsTable } from '../components/SportsTable';
 import { HeaderWithImage } from '../components/HeaderWithImage';
 import { useTranslation } from 'react-i18next';
+import { getCurrentUser } from '../logic/rights';
 import { useSportsStore } from '../store/sports';
 import { useResultsStore } from '../store/results';
 
@@ -39,14 +40,31 @@ const sportsData: Record<string, { title: string; imageUrl: string }> = {
   }
 };
 
+type SportMeasurement = {
+  resultLabel: string
+  resultUnitLabel: string
+}
+
+const sportMeasurements: Record<string, SportMeasurement> = {
+  biathlon: { resultLabel: 'Ergebnis', resultUnitLabel: 'Zeit in s' },
+  bobsport: { resultLabel: 'Ergebnis', resultUnitLabel: 'Zeit in s' },
+  curling: { resultLabel: 'Ergebnis', resultUnitLabel: 'Endstand' },
+  eishockey: { resultLabel: 'Ergebnis', resultUnitLabel: 'Endstand' },
+  eiskunstlauf: { resultLabel: 'Ergebnis', resultUnitLabel: 'Punkte' },
+  skilanglauf: { resultLabel: 'Ergebnis', resultUnitLabel: 'Zeit in s' },
+  skispringen: { resultLabel: 'Ergebnis', resultUnitLabel: 'Punkte' },
+};
+
 export function SportPage() {
   const { sportId } = useParams<{ sportId: string }>();
   const { t } = useTranslation();
+  const currentUser = getCurrentUser();
   
   const sports = useSportsStore((state) => state.sports);
   const results = useResultsStore((state) => state.results);
   const loading = useResultsStore((state) => state.loading);
   const fetchResults = useResultsStore((state) => state.fetchResults);
+  const canSeePendingResults = currentUser?.role === 'admin' || currentUser?.role === 'referee';
 
   // Helper function to convert sport name to ID
   const getSportIdFromParam = (param: string | undefined): number | null => {
@@ -78,9 +96,18 @@ export function SportPage() {
   }, [numericSportId, fetchResults]);
   
   const sportData = sport && sportsData[sport.name.toLowerCase()];
+  const sportMeasurement = sport ? sportMeasurements[sport.name.toLowerCase()] ?? null : null;
   
   // Get results for this sport from the store
-  const sportResults = numericSportId !== null ? results[numericSportId] || [] : [];
+  const sportResults = useMemo(() => {
+    const allResults = numericSportId !== null ? results[numericSportId] || [] : [];
+
+    if (canSeePendingResults) {
+      return allResults;
+    }
+
+    return allResults.filter((result) => result.status.toUpperCase() !== 'PENDING');
+  }, [canSeePendingResults, numericSportId, results]);
 
   if (!sportData || !sport) {
     return (
@@ -95,7 +122,12 @@ export function SportPage() {
     <Container maxW="container.xl" py={{ base: 4, md: 10 }} className="responsive-page-shell">
       <HeaderWithImage imageUrl={sportData.imageUrl} title={sportData.title} />
       <Box bg="whiteAlpha.200" p={{ base: 3, md: 6 }} borderRadius="lg" boxShadow="lg" className="responsive-card-shell">
-        <SportsTable data={sportResults} loading={loading} />
+        <SportsTable
+          data={sportResults}
+          loading={loading}
+          resultLabel={sportMeasurement?.resultLabel}
+          resultUnitLabel={sportMeasurement?.resultUnitLabel}
+        />
       </Box>
     </Container>
   );

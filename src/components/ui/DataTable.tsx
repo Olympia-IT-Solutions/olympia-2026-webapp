@@ -38,7 +38,7 @@ export const DataTableSurface = ({
       transitionDuration="var(--motion-fast)"
       transitionTimingFunction="var(--motion-ease)"
       _focusWithin={{ borderColor: 'border-hover' }}
-      sx={{
+      css={{
         '& table': {
           borderCollapse: 'separate',
           borderSpacing: 0,

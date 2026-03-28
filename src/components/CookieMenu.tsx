@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Box, Text, Stack, Container, Link } from '@chakra-ui/react';
-import { Link as RouterLink, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { CTAButton, Surface } from './ui';
 
 export const CookieMenu: React.FC = () => {
@@ -52,20 +52,20 @@ export const CookieMenu: React.FC = () => {
           alignItems="center"
           gap={4}
         >
-          <Box flex="1" minW={0}>
+          <Box>
             <Text fontSize="sm" lineHeight="1.5" whiteSpace={{ base: 'normal', lg: 'nowrap' }}>
               <Trans
                 i18nKey="cookieBanner.messageWithPolicy"
                 components={[
                   <Link
                     key="cookie-policy-link"
-                    as={RouterLink}
-                    to={`/${lang ?? 'de'}/cookie-policy`}
+                    href={`/${lang ?? 'de'}/cookie-policy`}
                     color="accent"
                     fontWeight="semibold"
                     _hover={{ color: 'accent-strong', textDecoration: 'underline' }}
                     _focusVisible={{ outline: '2px solid', outlineColor: 'accent', outlineOffset: '2px' }}
-                  />,
+                  >
+                  </Link>,
                 ]}
               />
             </Text>

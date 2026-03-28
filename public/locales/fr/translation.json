@@ -50,14 +50,20 @@
       "country": "Pays",
       "bronze": "Bronze",
       "silver": "Argent",
-      "gold": "Or"
+      "gold": "Or",
+      "total": "Total"
     },
     "noData": "Aucune donnée disponible.",
     "loadMore": "Charger plus d'entrées"
   },
   "sport": {
     "notFoundTitle": "Sport non trouvé",
-    "notFoundText": "Le sport \"{{sport}}\" que vous recherchez n'existe pas ou aucune donnée n'est disponible."
+    "notFoundText": "Le sport \"{{sport}}\" que vous recherchez n'existe pas ou aucune donnée n'est disponible.",
+    "measurements": {
+      "time": "Temps en s",
+      "points": "Points",
+      "score": "Score"
+    }
   },
   "status": {
     "pending": "En attente",
@@ -99,6 +105,7 @@
     "buttons": {
       "submit": "Soumettre",
       "cancel": "Annuler",
+      "edit": "Modifier",
       "approve": "Approuver",
       "reject": "Refuser",
       "invalidate": "Invalider",
@@ -125,9 +132,35 @@
       }
     },
     "confirmActionTitle": "Confirmer l'action",
-    "confirmActionText": "Voulez-vous {{action}} le résultat pour {{athlete}} ?"
-    ,"createResultValidationError": "Veuillez remplir tous les champs obligatoires",
-    "noActiveSports": "Aucun sport actif n'est disponible."
+    "confirmActionText": "Voulez-vous {{action}} le résultat pour {{athlete}} ?",
+    "editResultTitle": "Modifier le résultat",
+    "editResultSave": "Enregistrer les modifications",
+    "editResultContext": "Sport modifié",
+    "editResultValidationError": "Veuillez vérifier les valeurs du résultat.",
+    "createResultValidationError": "Veuillez remplir tous les champs obligatoires",
+    "noActiveSports": "Aucun sport actif n'est disponible.",
+    "resultTemplates": {
+      "title": "Modèle de résultat",
+      "selected": "Modèle pour {{sport}}",
+      "selectSportHint": "Sélectionnez d'abord un sport pour activer la validation appropriée."
+    },
+    "validation": {
+      "selectSport": "Veuillez d'abord sélectionner un sport.",
+      "templateMissing": "Aucun modèle de formulaire n'est configuré pour ce sport.",
+      "editLocked": "Ce résultat ne peut plus être modifié car il a déjà été approuvé.",
+      "selectAthlete": "Veuillez sélectionner un athlète.",
+      "valueRequired": "Veuillez saisir une valeur de résultat.",
+      "timeFormat": "La valeur temporelle doit respecter le format mm:ss.hh.",
+      "scoreFormat": "Le score final doit respecter le format x:y.",
+      "scoreRange": "Les valeurs saisies doivent être comprises entre 0 et 20.",
+      "pointsFormat": "Le score doit être un nombre avec au maximum deux décimales.",
+      "pointsRange": "Le score doit être compris entre 0 et 300.",
+      "rankRequired": "Veuillez saisir un classement.",
+      "rankInvalid": "Le classement doit être un entier positif.",
+      "athleteMismatch": "L'athlète sélectionné n'appartient pas à ce sport.",
+      "duplicateAthlete": "Un résultat existe déjà pour cet athlète dans ce sport.",
+      "duplicateRank": "Ce classement est déjà utilisé dans ce sport."
+    }
   },
   "footer": {
     "cookiePolicy": "Politique de cookies",

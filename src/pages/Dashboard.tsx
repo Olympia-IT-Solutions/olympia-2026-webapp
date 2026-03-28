@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Badge, Box, Button, Card, Container, DialogBackdrop, DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogPositioner, DialogRoot, DialogTitle, Heading, Input, Spinner, Stack, Text } from '@chakra-ui/react'
+import { Box, Button, Card, Container, DialogBackdrop, DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogPositioner, DialogRoot, DialogTitle, Heading, Input, Spinner, Stack, Text } from '@chakra-ui/react'
 import { getCurrentUser } from '../logic/rights'
 import { ResultsBySportTable } from '../components/ResultsBySportTable'
 import { type Sport } from '../services/sports'
-import { approveResult, createResult, fetchResultsBySport, invalidateResult, rejectResult, type Result as ApiResult } from '../services/results'
+import { approveResult, createResult, fetchResultsBySport, invalidateResult, rejectResult, updateResult, type Result as ApiResult } from '../services/results'
 import { fetchAllAthletes, type Athlete } from '../services/athletes'
 import { useSportsStore } from '../store/sports'
 
@@ -25,6 +25,110 @@ type CreateResultFormState = {
   rank: string
 }
 
+type EditResultFormState = {
+  resultId: number
+  sportId: number
+  sportName: string
+  athleteName: string
+  value: string
+  rank: string
+  status: string
+}
+
+type SportResultTemplate = {
+  label: string
+  placeholder: string
+  helperText: string
+  inputMode: 'text' | 'numeric' | 'decimal'
+  normalize: (value: string) => string
+  validate: (value: string) => string | null
+}
+
+const TIME_RESULT_REGEX = /^\d{1,3}:[0-5]\d(?:\.\d{1,2})?$/
+const SCORE_RESULT_REGEX = /^\d{1,2}:\d{1,2}$/
+const POINTS_RESULT_REGEX = /^\d{1,3}(?:\.\d{1,2})?$/
+
+const normalizeTrimmedValue = (value: string) => value.trim()
+
+const normalizeDecimalValue = (value: string) => value.trim().replace(',', '.')
+
+const createTimeTemplate = (placeholder: string, helperText: string): SportResultTemplate => ({
+  label: 'Zeit',
+  placeholder,
+  helperText,
+  inputMode: 'text',
+  normalize: normalizeDecimalValue,
+  validate: (value) => (TIME_RESULT_REGEX.test(normalizeDecimalValue(value)) ? null : 'dashboard.validation.timeFormat'),
+})
+
+const createScoreTemplate = (placeholder: string, helperText: string, maxScore: number): SportResultTemplate => ({
+  label: 'Endstand',
+  placeholder,
+  helperText,
+  inputMode: 'numeric',
+  normalize: normalizeTrimmedValue,
+  validate: (value) => {
+    const normalizedValue = normalizeTrimmedValue(value)
+
+    if (!SCORE_RESULT_REGEX.test(normalizedValue)) {
+      return 'dashboard.validation.scoreFormat'
+    }
+
+    const [leftScore, rightScore] = normalizedValue.split(':').map(Number)
+
+    if (!Number.isInteger(leftScore) || !Number.isInteger(rightScore) || leftScore < 0 || rightScore < 0 || leftScore > maxScore || rightScore > maxScore) {
+      return 'dashboard.validation.scoreRange'
+    }
+
+    return null
+  },
+})
+
+const createPointsTemplate = (placeholder: string, helperText: string, maxPoints: number): SportResultTemplate => ({
+  label: 'Punkte',
+  placeholder,
+  helperText,
+  inputMode: 'decimal',
+  normalize: normalizeDecimalValue,
+  validate: (value) => {
+    const normalizedValue = normalizeDecimalValue(value)
+
+    if (!POINTS_RESULT_REGEX.test(normalizedValue)) {
+      return 'dashboard.validation.pointsFormat'
+    }
+
+    const points = Number(normalizedValue)
+
+    if (!Number.isFinite(points) || points < 0 || points > maxPoints) {
+      return 'dashboard.validation.pointsRange'
+    }
+
+    return null
+  },
+})
+
+const sportResultTemplates: Record<string, SportResultTemplate> = {
+  biathlon: createTimeTemplate('z. B. 25:34.50', 'Erwartet wird ein Zeitwert im Format mm:ss.hh. Sekunden müssen zwischen 00 und 59 liegen.'),
+  bobsport: createTimeTemplate('z. B. 1:39.18', 'Erwartet wird ein Zeitwert im Format m:ss.hh für die Laufzeit.'),
+  curling: createScoreTemplate('z. B. 6:4', 'Erwartet wird ein Endstand im Format x:y mit ganzen Zahlen.', 20),
+  eishockey: createScoreTemplate('z. B. 3:2', 'Erwartet wird ein Endstand im Format x:y mit ganzen Zahlen.', 20),
+  eiskunstlauf: createPointsTemplate('z. B. 184.72', 'Erwartet werden Punkte zwischen 0 und 300 mit bis zu zwei Nachkommastellen.', 300),
+  skilanglauf: createTimeTemplate('z. B. 31:08.40', 'Erwartet wird ein Zeitwert im Format mm:ss.hh für die Laufzeit.'),
+  skispringen: createPointsTemplate('z. B. 131.5', 'Erwartet werden Punkte zwischen 0 und 300 mit bis zu zwei Nachkommastellen.', 300),
+}
+
+const getSportTemplateKey = (sportName?: string | null) => sportName?.toLowerCase().replace(/\s+/g, '') ?? ''
+const getResultValueString = (value: unknown) => (value == null ? '' : String(value))
+
+const parsePositiveInteger = (value: string) => {
+  if (!/^\d+$/.test(value.trim())) {
+    return null
+  }
+
+  const parsedValue = Number(value)
+  return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : null
+}
+
 export function Dashboard() {
   const currentUser = getCurrentUser()
   const { t } = useTranslation()
@@ -41,6 +145,10 @@ export function Dashboard() {
   const [showCreateResultModal, setShowCreateResultModal] = useState(false)
   const [createResultLoading, setCreateResultLoading] = useState(false)
   const [createResultError, setCreateResultError] = useState<string | null>(null)
+  const [showEditResultModal, setShowEditResultModal] = useState(false)
+  const [editResultLoading, setEditResultLoading] = useState(false)
+  const [editResultError, setEditResultError] = useState<string | null>(null)
+  const [editResult, setEditResult] = useState<EditResultFormState | null>(null)
   const [newResult, setNewResult] = useState<CreateResultFormState>({
     athleteId: '',
     sportId: '',
@@ -110,6 +218,16 @@ export function Dashboard() {
   const activeSports = useMemo(() => sports.filter((sport) => sport.active), [sports])
   const hasAnyResults = Object.values(resultsBySport).some((sportResults) => sportResults.length > 0)
   const isInitialLoading = sportsLoading || (resultsLoading && !hasAnyResults)
+  const selectedSportId = newResult.sportId ? Number(newResult.sportId) : null
+  const selectedSport = useMemo(
+    () => (selectedSportId !== null ? sports.find((sport) => sport.id === selectedSportId) ?? null : null),
+    [selectedSportId, sports]
+  )
+  const selectedSportTemplate = selectedSport ? sportResultTemplates[getSportTemplateKey(selectedSport.name)] ?? null : null
+  const editSport = editResult ? sports.find((sport) => sport.id === editResult.sportId) ?? null : null
+  const editSportTemplate = editSport ? sportResultTemplates[getSportTemplateKey(editSport.name)] ?? null : null
+  const selectedSportResults = selectedSportId !== null ? resultsBySport[selectedSportId] || [] : []
+  const selectedSportAthletes = selectedSportId !== null ? athletesBySport[selectedSportId] || [] : []
 
   const updateSportResultStatus = (sportId: number, resultId: number, nextStatus: ApiResult['status']) => {
     setResultsBySport((previousResults) => ({
@@ -129,9 +247,104 @@ export function Dashboard() {
     setPendingAction({ action, sportId, resultId, athleteName })
   }
 
+  const openEditResultModal = (result: ApiResult, fallbackSportName?: string) => {
+    const numericSportId = Number(result.sportId)
+    const resolvedSportName = fallbackSportName ?? result.sportName ?? sports.find((sport) => sport.id === numericSportId)?.name ?? ''
+    setEditResultError(null)
+    setEditResult({
+      resultId: result.id,
+      sportId: Number.isFinite(numericSportId) ? numericSportId : 0,
+      sportName: resolvedSportName,
+      athleteName: result.athleteName,
+      value: getResultValueString(result.value),
+      rank: getResultValueString(result.rank),
+      status: result.status.toUpperCase(),
+    })
+    setShowEditResultModal(true)
+  }
+
   const closeActionConfirmation = () => {
     if (!actionLoading) {
       setPendingAction(null)
+    }
+  }
+
+  const closeEditResultModal = () => {
+    if (!editResultLoading) {
+      setShowEditResultModal(false)
+      setEditResult(null)
+    }
+  }
+
+  const handleUpdateResult = async () => {
+    if (!editResult) {
+      setEditResultError(t('dashboard.editResultValidationError'))
+      return
+    }
+
+    if (editResult.status === 'APPROVED' || editResult.status === 'PUBLISHED') {
+      setEditResultError(t('dashboard.validation.editLocked'))
+      return
+    }
+
+    const sport = sports.find((entry) => entry.id === editResult.sportId) ?? null
+    const template = sport ? sportResultTemplates[getSportTemplateKey(sport.name)] ?? null : null
+
+    if (!sport || !template) {
+      setEditResultError(t('dashboard.validation.templateMissing'))
+      return
+    }
+
+    if (!editResult.value.trim()) {
+      setEditResultError(t('dashboard.validation.valueRequired'))
+      return
+    }
+
+    if (!editResult.rank.trim()) {
+      setEditResultError(t('dashboard.validation.rankRequired'))
+      return
+    }
+
+    const rank = parsePositiveInteger(editResult.rank)
+    if (rank === null) {
+      setEditResultError(t('dashboard.validation.rankInvalid'))
+      return
+    }
+
+    const valueErrorKey = template.validate(editResult.value)
+    if (valueErrorKey) {
+      setEditResultError(t(valueErrorKey))
+      return
+    }
+
+    const currentSportResults = resultsBySport[editResult.sportId] || []
+    if (currentSportResults.some((entry) => entry.id !== editResult.resultId && entry.rank === rank)) {
+      setEditResultError(t('dashboard.validation.duplicateRank'))
+      return
+    }
+
+    setEditResultLoading(true)
+    setEditResultError(null)
+    setResultsError(null)
+
+    try {
+      await updateResult(editResult.resultId, {
+        value: template.normalize(editResult.value),
+        rank,
+      })
+
+      const refreshedResults = await fetchResultsBySport(editResult.sportId)
+      setResultsBySport((previousResults) => ({
+        ...previousResults,
+        [editResult.sportId]: refreshedResults,
+      }))
+
+      setShowEditResultModal(false)
+      setEditResult(null)
+    } catch (error) {
+      setEditResultError(getResultsErrorMessage(error))
+    } finally {
+      setEditResultLoading(false)
     }
   }
 
@@ -228,29 +441,83 @@ export function Dashboard() {
   }
 
   const handleCreateResult = async () => {
-    if (!newResult.athleteId || !newResult.sportId || !newResult.value || !newResult.rank) {
-      setCreateResultError(t('dashboard.createResultValidationError'))
+    if (!selectedSportId || !selectedSport) {
+      setCreateResultError(t('dashboard.validation.selectSport'))
       return
     }
+
+    if (!selectedSportTemplate) {
+      setCreateResultError(t('dashboard.validation.templateMissing'))
+      return
+    }
+
+    if (!newResult.athleteId) {
+      setCreateResultError(t('dashboard.validation.selectAthlete'))
+      return
+    }
+
+    if (!newResult.value.trim()) {
+      setCreateResultError(t('dashboard.validation.valueRequired'))
+      return
+    }
+
+    if (!newResult.rank.trim()) {
+      setCreateResultError(t('dashboard.validation.rankRequired'))
+      return
+    }
+
+    const athleteId = Number(newResult.athleteId)
+    const rank = parsePositiveInteger(newResult.rank)
+
+    if (!Number.isInteger(athleteId)) {
+      setCreateResultError(t('dashboard.validation.selectAthlete'))
+      return
+    }
+
+    if (rank === null) {
+      setCreateResultError(t('dashboard.validation.rankInvalid'))
+      return
+    }
+
+    if (!selectedSportAthletes.some((athlete) => athlete.id === athleteId)) {
+      setCreateResultError(t('dashboard.validation.athleteMismatch'))
+      return
+    }
+
+    if (selectedSportResults.some((result) => result.athleteId === athleteId)) {
+      setCreateResultError(t('dashboard.validation.duplicateAthlete'))
+      return
+    }
+
+    if (selectedSportResults.some((result) => result.rank === rank)) {
+      setCreateResultError(t('dashboard.validation.duplicateRank'))
+      return
+    }
+
+    const valueErrorKey = selectedSportTemplate.validate(newResult.value)
+    if (valueErrorKey) {
+      setCreateResultError(t(valueErrorKey))
+      return
+    }
+
+    const normalizedValue = selectedSportTemplate.normalize(newResult.value)
 
     setCreateResultLoading(true)
     setCreateResultError(null)
     setResultsError(null)
 
-    const sportId = Number(newResult.sportId)
-
     try {
       await createResult({
-        athleteId: Number(newResult.athleteId),
-        sportId,
-        value: newResult.value,
-        rank: Number(newResult.rank),
+        athleteId,
+        sportId: selectedSportId,
+        value: normalizedValue,
+        rank,
       })
 
-      const refreshedResults = await fetchResultsBySport(sportId)
+      const refreshedResults = await fetchResultsBySport(selectedSportId)
       setResultsBySport((previousResults) => ({
         ...previousResults,
-        [sportId]: refreshedResults,
+        [selectedSportId]: refreshedResults,
       }))
 
       setShowCreateResultModal(false)
@@ -263,19 +530,19 @@ export function Dashboard() {
   }
 
   useEffect(() => {
-    const sportId = Number(newResult.sportId)
+    const sportId = selectedSportId ?? 0
 
     if (showCreateResultModal && sportId) {
       void loadAthletesForSport(sportId)
     }
-  }, [loadAthletesForSport, newResult.sportId, showCreateResultModal])
+  }, [loadAthletesForSport, selectedSportId, showCreateResultModal])
 
   return (
     <Box p={10}>
       <Container maxW="container.xl">
         <Heading mb={2}>{t('dashboard.title')}</Heading>
         {currentUser && (
-          <Text fontSize="sm" color="teal.600" mb={8}>
+          <Text fontSize="sm" color="text-muted" mb={8}>
             {t('dashboard.loggedInAs', { email: currentUser.email, role: currentUser.role })}
           </Text>
         )}
@@ -304,10 +571,7 @@ export function Dashboard() {
           return (
             <Card.Root key={sport.id} mb={8} p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
               <Stack direction="row" justify="space-between" align="center" mb={4}>
-                <Heading size="lg">{sport.name}</Heading>
-                <Badge colorPalette={sport.active ? 'green' : 'gray'}>
-                  {sport.active ? t('admin.active') : t('admin.inactive')}
-                </Badge>
+                <Heading size="lg" color="text" fontWeight="semibold">{sport.name}</Heading>
               </Stack>
 
               {resultsLoading && sportResults.length === 0 ? (
@@ -315,7 +579,7 @@ export function Dashboard() {
                   <Spinner size="md" />
                 </Box>
               ) : sportResults.length === 0 ? (
-                <Text textAlign="center" color="gray.500" py={4}>
+                <Text textAlign="center" color="text-muted" py={4}>
                   {t('dashboard.table.noResults')}
                 </Text>
               ) : (
@@ -323,6 +587,8 @@ export function Dashboard() {
                   data={sportResults}
                   currentRole={currentRole}
                   currentUserEmail={currentUser?.email ?? null}
+                  sportName={sport.name}
+                  onEdit={currentRole === 'admin' ? openEditResultModal : undefined}
                   onApprove={(resultId) => {
                     const result = sportResults.find((entry) => entry.id === resultId)
                     if (result) {
@@ -348,8 +614,8 @@ export function Dashboard() {
         })}
 
         {!sportsLoading && activeSports.length === 0 && (
-          <Box bg="gray.50" p={4} borderRadius="md" borderLeft="4px solid gray">
-            <Text color="gray.700">{t('dashboard.table.noResults')}</Text>
+          <Box bg="surface-muted" p={4} borderRadius="md" borderLeft="4px solid" borderLeftColor="border">
+            <Text color="text">{t('dashboard.table.noResults')}</Text>
           </Box>
         )}
 
@@ -383,7 +649,7 @@ export function Dashboard() {
                     <select
                       style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--input-bg)' }}
                       value={newResult.sportId}
-                      onChange={(e) => setNewResult({ ...newResult, sportId: e.target.value, athleteId: '' })}
+                      onChange={(e) => setNewResult({ ...newResult, sportId: e.target.value, athleteId: '', value: '', rank: '' })}
                     >
                       <option value="">{t('dashboard.placeholders.selectSport')}</option>
                       {activeSports.map((sport) => (
@@ -392,20 +658,40 @@ export function Dashboard() {
                     </select>
                   </Box>
 
+                  <Box bg="surface-muted" p={4} borderRadius="lg" borderWidth="1px" borderColor="border">
+                    <Text fontSize="xs" fontWeight="700" letterSpacing="0.08em" textTransform="uppercase" color="text-muted">
+                      {t('dashboard.resultTemplates.title')}
+                    </Text>
+                    {selectedSportTemplate ? (
+                      <Stack gap={1} mt={2}>
+                        <Text fontWeight="600" color="text">
+                          {t('dashboard.resultTemplates.selected', { sport: selectedSport?.name ?? '' })}
+                        </Text>
+                        <Text fontSize="sm" color="text-muted">
+                          {selectedSportTemplate.helperText}
+                        </Text>
+                      </Stack>
+                    ) : (
+                      <Text mt={2} fontSize="sm" color="text-muted">
+                        {t('dashboard.resultTemplates.selectSportHint')}
+                      </Text>
+                    )}
+                  </Box>
+
                   <Box>
                     <Text mb={2} fontWeight="500">{t('dashboard.labels.athlete')} *</Text>
                     <select
                       style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--input-bg)' }}
                       value={newResult.athleteId}
                       onChange={(e) => setNewResult({ ...newResult, athleteId: e.target.value })}
-                      disabled={!newResult.sportId || athletesLoading}
+                      disabled={!selectedSportId || athletesLoading}
                     >
                       <option value="">
                         {athletesLoading
                           ? t('dashboard.placeholders.loadingAthletes')
                           : t('dashboard.placeholders.selectAthlete')}
                       </option>
-                      {(athletesBySport[Number(newResult.sportId)] || []).map((athlete) => (
+                      {selectedSportAthletes.map((athlete) => (
                         <option key={athlete.id} value={athlete.id}>
                           {athlete.name}
                         </option>
@@ -414,11 +700,13 @@ export function Dashboard() {
                   </Box>
 
                   <Box>
-                    <Text mb={2} fontWeight="500">{t('dashboard.labels.resultValue')} *</Text>
+                    <Text mb={2} fontWeight="500">{selectedSportTemplate ? selectedSportTemplate.label : t('dashboard.labels.resultValue')} *</Text>
                     <Input
                       value={newResult.value}
                       onChange={(e) => setNewResult({ ...newResult, value: e.target.value })}
-                      placeholder={t('dashboard.placeholders.resultValueExample')}
+                      placeholder={selectedSportTemplate ? selectedSportTemplate.placeholder : t('dashboard.placeholders.resultValueExample')}
+                      inputMode={selectedSportTemplate?.inputMode ?? 'text'}
+                      disabled={!selectedSportTemplate}
                     />
                   </Box>
 
@@ -426,6 +714,8 @@ export function Dashboard() {
                     <Text mb={2} fontWeight="500">{t('dashboard.labels.rank')} *</Text>
                     <Input
                       type="number"
+                      min={1}
+                      step={1}
                       value={newResult.rank}
                       onChange={(e) => setNewResult({ ...newResult, rank: e.target.value })}
                       placeholder={t('dashboard.placeholders.rankExample')}
@@ -435,11 +725,80 @@ export function Dashboard() {
               </DialogBody>
 
               <DialogFooter p={0} gap={3} justifyContent="flex-end" mt={6}>
-                <Button variant="outline" onClick={closeCreateResultModal} disabled={createResultLoading}>
+                <Button variant="solid" colorPalette="gray" onClick={closeCreateResultModal} disabled={createResultLoading}>
                   {t('dashboard.buttons.cancel')}
                 </Button>
                 <Button colorScheme="teal" onClick={handleCreateResult} loading={createResultLoading}>
                   {t('dashboard.buttons.submit')}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </DialogPositioner>
+        </DialogRoot>
+
+        <DialogRoot open={showEditResultModal} onOpenChange={(open) => { if (!open) closeEditResultModal() }}>
+          <DialogPositioner>
+            <DialogBackdrop />
+            <DialogContent bg="var(--card-bg)" p={6} borderRadius="lg" boxShadow="xl" maxW="md">
+              <DialogHeader display="flex" alignItems="start" justifyContent="space-between" p={0} pb={3}>
+                <DialogTitle>{t('dashboard.editResultTitle')}</DialogTitle>
+                <DialogCloseTrigger asChild>
+                  <Button size="sm" variant="ghost" onClick={closeEditResultModal}>×</Button>
+                </DialogCloseTrigger>
+              </DialogHeader>
+
+              <DialogBody p={0}>
+                {editResultError && (
+                  <Box bg="red.50" p={4} borderRadius="md" borderLeft="4px solid red" mb={4}>
+                    <Text color="red.700">{editResultError}</Text>
+                  </Box>
+                )}
+
+                {editResult && (
+                  <Stack gap={4}>
+                    <Box bg="surface-muted" p={4} borderRadius="lg" borderWidth="1px" borderColor="border">
+                      <Text fontSize="xs" fontWeight="700" letterSpacing="0.08em" textTransform="uppercase" color="text-muted">
+                        {t('dashboard.editResultContext', { defaultValue: 'Bearbeitete Sportart' })}
+                      </Text>
+                      <Text mt={2} fontWeight="600" color="text">{editSport?.name ?? editResult.sportName ?? t('dashboard.labels.sport')}</Text>
+                      <Text fontSize="sm" color="text-muted">{editResult.athleteName}</Text>
+                    </Box>
+
+                    <Box>
+                      <Text mb={2} fontWeight="500">{editSportTemplate ? editSportTemplate.label : t('dashboard.labels.resultValue')} *</Text>
+                      <Input
+                        value={editResult.value}
+                        onChange={(event) => setEditResult({ ...editResult, value: event.target.value })}
+                        placeholder={editSportTemplate ? editSportTemplate.placeholder : t('dashboard.placeholders.resultValueExample')}
+                      />
+                      {editSportTemplate && (
+                        <Text mt={2} fontSize="sm" color="text-muted">
+                          {editSportTemplate.helperText}
+                        </Text>
+                      )}
+                    </Box>
+
+                    <Box>
+                      <Text mb={2} fontWeight="500">{t('dashboard.labels.rank')} *</Text>
+                      <Input
+                        type="number"
+                        min={1}
+                        step={1}
+                        value={editResult.rank}
+                        onChange={(event) => setEditResult({ ...editResult, rank: event.target.value })}
+                        placeholder={t('dashboard.placeholders.rankExample')}
+                      />
+                    </Box>
+                  </Stack>
+                )}
+              </DialogBody>
+
+              <DialogFooter p={0} gap={3} justifyContent="flex-end" mt={6}>
+                <Button variant="solid" colorPalette="gray" onClick={closeEditResultModal} disabled={editResultLoading}>
+                  {t('dashboard.buttons.cancel')}
+                </Button>
+                <Button colorScheme="blue" variant="solid" onClick={handleUpdateResult} loading={editResultLoading}>
+                  {t('dashboard.editResultSave')}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -469,7 +828,7 @@ export function Dashboard() {
               </DialogBody>
 
               <DialogFooter p={0} gap={3} justifyContent="flex-end">
-                <Button variant="outline" onClick={closeActionConfirmation} disabled={actionLoading}>
+                <Button variant="solid" colorPalette="gray" onClick={closeActionConfirmation} disabled={actionLoading}>
                   {t('dashboard.buttons.cancel')}
                 </Button>
                 <Button colorScheme="red" onClick={confirmPendingAction} loading={actionLoading}>

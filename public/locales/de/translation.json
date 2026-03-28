@@ -50,14 +50,20 @@
       "country": "Land",
       "bronze": "Bronze",
       "silver": "Silber",
-      "gold": "Gold"
+      "gold": "Gold",
+      "total": "Total"
     },
     "noData": "Keine Daten verfügbar.",
     "loadMore": "Weitere Einträge laden"
   },
   "sport": {
     "notFoundTitle": "Sportart nicht gefunden",
-    "notFoundText": "Die gesuchte Sportart \"{{sport}}\" existiert nicht oder es liegen keine Daten vor."
+    "notFoundText": "Die gesuchte Sportart \"{{sport}}\" existiert nicht oder es liegen keine Daten vor.",
+    "measurements": {
+      "time": "Zeit in s",
+      "points": "Punkte",
+      "score": "Endstand"
+    }
   },
   "status": {
     "pending": "Ausstehend",
@@ -99,6 +105,7 @@
     "buttons": {
       "submit": "Einreichen",
       "cancel": "Abbrechen",
+      "edit": "Bearbeiten",
       "approve": "Genehmigen",
       "reject": "Ablehnen",
       "invalidate": "Ungültig machen",
@@ -125,9 +132,35 @@
       }
     },
     "confirmActionTitle": "Aktion bestätigen",
-    "confirmActionText": "Möchten Sie das Ergebnis für {{athlete}} wirklich {{action}}?"
-    ,"createResultValidationError": "Bitte füllen Sie alle erforderlichen Felder aus",
-    "noActiveSports": "Es sind keine aktiven Sportarten verfügbar."
+    "confirmActionText": "Möchten Sie das Ergebnis für {{athlete}} wirklich {{action}}?",
+    "editResultTitle": "Ergebnis bearbeiten",
+    "editResultSave": "Änderungen speichern",
+    "editResultContext": "Bearbeitete Sportart",
+    "editResultValidationError": "Bitte überprüfen Sie die Ergebnisangaben.",
+    "createResultValidationError": "Bitte füllen Sie alle erforderlichen Felder aus",
+    "noActiveSports": "Es sind keine aktiven Sportarten verfügbar.",
+    "resultTemplates": {
+      "title": "Formvorlage",
+      "selected": "Vorlage für {{sport}}",
+      "selectSportHint": "Wählen Sie zuerst eine Sportart aus, damit die passende Eingabeprüfung aktiviert wird."
+    },
+    "validation": {
+      "selectSport": "Bitte wählen Sie zuerst eine Sportart aus.",
+      "templateMissing": "Für diese Sportart ist keine Formvorlage hinterlegt.",
+      "editLocked": "Diese Ergebnisse können nicht mehr bearbeitet werden, weil sie bereits genehmigt wurden.",
+      "selectAthlete": "Bitte wählen Sie einen Athleten aus.",
+      "valueRequired": "Bitte geben Sie einen Ergebniswert ein.",
+      "timeFormat": "Der Zeitwert muss dem Format mm:ss.hh entsprechen.",
+      "scoreFormat": "Der Endstand muss dem Format x:y entsprechen.",
+      "scoreRange": "Die eingegebenen Werte müssen zwischen 0 und 20 liegen.",
+      "pointsFormat": "Die Punktzahl muss eine Zahl mit bis zu zwei Nachkommastellen sein.",
+      "pointsRange": "Die Punktzahl muss zwischen 0 und 300 liegen.",
+      "rankRequired": "Bitte geben Sie einen Platz ein.",
+      "rankInvalid": "Der Platz muss eine positive ganze Zahl sein.",
+      "athleteMismatch": "Der ausgewählte Athlet gehört nicht zu dieser Sportart.",
+      "duplicateAthlete": "Für diesen Athleten existiert bereits ein Ergebnis in dieser Sportart.",
+      "duplicateRank": "Dieser Platz ist für diese Sportart bereits vergeben."
+    }
   },
   "footer": {
     "cookiePolicy": "Cookie-Richtlinie",

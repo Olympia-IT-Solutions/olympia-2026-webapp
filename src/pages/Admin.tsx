@@ -120,10 +120,12 @@ export function Admin() {
         size="sm"
         px={0}
         justifyContent="flex-start"
+        color="text"
+        fontWeight="semibold"
         onClick={() => toggleUserSort(field)}
       >
         {label}
-        <Text as="span" ml={2} fontSize="xs" color="gray.500">
+        <Text as="span" ml={2} fontSize="xs" color="text-muted">
           {isActiveSort ? (userSortDirection === 'asc' ? '↑' : '↓') : '↕'}
         </Text>
       </Button>
@@ -239,6 +241,10 @@ export function Admin() {
                 <Input
                   placeholder={t('admin.searchUsersPlaceholder')}
                   value={userSearchTerm}
+                  color="text"
+                  bg="input-bg"
+                  borderColor="border"
+                  _placeholder={{ color: 'text-muted' }}
                   onChange={(event) => setUserSearchTerm(event.target.value)}
                 />
                 <Stack direction={{ base: 'column', md: 'row' }} gap={3}>
@@ -267,7 +273,7 @@ export function Admin() {
                     </select>
                   </Box>
                   <Box display="flex" alignItems="end">
-                    <Button variant="outline" onClick={resetUserFilters} width={{ base: '100%', md: 'auto' }}>
+                    <Button variant="solid" colorPalette="gray" onClick={resetUserFilters} width={{ base: '100%', md: 'auto' }}>
                       {t('admin.resetFilters')}
                     </Button>
                   </Box>
@@ -279,11 +285,11 @@ export function Admin() {
                   <Table.Root variant="outline" size="sm">
                     <Table.Header>
                       <Table.Row>
-                        <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{renderUserSortHeader('username', t('admin.table.columns.username'))}</Table.ColumnHeader>
-                        <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{renderUserSortHeader('name', t('admin.table.columns.name'))}</Table.ColumnHeader>
-                        <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{renderUserSortHeader('role', t('admin.table.columns.role'))}</Table.ColumnHeader>
-                        <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{renderUserSortHeader('status', t('admin.table.columns.status'))}</Table.ColumnHeader>
-                        <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('admin.table.columns.actions')}</Table.ColumnHeader>
+                        <Table.ColumnHeader py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderUserSortHeader('username', t('admin.table.columns.username'))}</Table.ColumnHeader>
+                        <Table.ColumnHeader py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderUserSortHeader('name', t('admin.table.columns.name'))}</Table.ColumnHeader>
+                        <Table.ColumnHeader py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderUserSortHeader('role', t('admin.table.columns.role'))}</Table.ColumnHeader>
+                        <Table.ColumnHeader py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderUserSortHeader('status', t('admin.table.columns.status'))}</Table.ColumnHeader>
+                        <Table.ColumnHeader py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{t('admin.table.columns.actions')}</Table.ColumnHeader>
                       </Table.Row>
                     </Table.Header>
                     <Table.Body>
@@ -305,7 +311,7 @@ export function Admin() {
                             {user.active && (
                               <Button
                                 size="sm"
-                                variant="outline"
+                                variant="solid"
                                 colorScheme="red"
                                 onClick={() => openDeactivateDialog(user.id)}
                               >
@@ -406,6 +412,7 @@ export function Admin() {
               <Stack direction="row" gap={3}>
                 <Button
                   colorScheme="teal"
+                  variant="solid"
                   onClick={handleAddUser}
                   loading={addUserLoading}
                   flex="1"
@@ -413,7 +420,8 @@ export function Admin() {
                   {t('admin.buttons.save')}
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="solid"
+                  colorPalette="gray"
                   onClick={() => setShowAddUserModal(false)}
                   disabled={addUserLoading}
                   flex="1"
@@ -442,10 +450,10 @@ export function Admin() {
               </DialogBody>
 
               <DialogFooter p={0} gap={3} justifyContent="flex-end">
-                <Button variant="outline" onClick={closeDeactivateDialog}>
+                <Button variant="solid" colorPalette="gray" onClick={closeDeactivateDialog}>
                   {t('admin.buttons.cancel')}
                 </Button>
-                <Button colorScheme="red" onClick={confirmDeactivate}>
+                <Button colorScheme="red" variant="solid" onClick={confirmDeactivate}>
                   {t('admin.deactivateUser')}
                 </Button>
               </DialogFooter>

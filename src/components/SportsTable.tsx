@@ -15,6 +15,8 @@ import { DataTableState, DataTableSurface, getDataTableRowStyles } from './ui';
 interface SportsTableProps {
   data: Result[];
   loading?: boolean;
+  resultLabel?: string;
+  resultUnitLabel?: string;
 }
 
 const MedalIcon = ({ medalType }: { medalType: Result['medalType'] }) => {
@@ -31,7 +33,7 @@ const MedalIcon = ({ medalType }: { medalType: Result['medalType'] }) => {
   );
 };
 
-export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false }) => {
+export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false, resultLabel = 'Ergebnis', resultUnitLabel }) => {
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
   const currentLang = lang ?? 'de';
@@ -86,7 +88,14 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false 
               <Table.ColumnHeader whiteSpace="nowrap" w="88px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">Platz</Table.ColumnHeader>
               <Table.ColumnHeader minW="240px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">Athlet</Table.ColumnHeader>
               <Table.ColumnHeader whiteSpace="nowrap" w="140px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">Land</Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="140px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">Ergebnis</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="140px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">
+                <Box as="span" display="block">{resultLabel}</Box>
+                {resultUnitLabel && (
+                  <Text as="span" display="block" fontSize="2xs" color="text-muted" textTransform="none" letterSpacing="0">
+                    {resultUnitLabel}
+                  </Text>
+                )}
+              </Table.ColumnHeader>
               <Table.ColumnHeader textAlign="center" whiteSpace="nowrap" w="110px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">Medaille</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>

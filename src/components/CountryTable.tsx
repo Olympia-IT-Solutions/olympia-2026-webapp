@@ -3,11 +3,13 @@ import {
   Table,
   Button,
   Box,
-  Spinner
+  Spinner,
+  Badge
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import type { CountryMedalData } from '../services/medals';
 import { fetchMedalsTable } from '../services/medals';
+import { fetchAllCountries } from '../services/countries';
 import { DataTableState, DataTableSurface, getDataTableRowStyles } from './ui';
 
 interface CountryTableProps {
@@ -19,6 +21,7 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
   const { t } = useTranslation();
   const [showAll, setShowAll] = useState(false);
   const [apiData, setApiData] = useState<CountryMedalData[]>([]);
+  const [countryNames, setCountryNames] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,6 +45,42 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
     fetchData();
   }, []);
 
+  useEffect(() => {
+    let isActive = true;
+
+    const fetchCountryNames = async () => {
+      try {
+        const countries = await fetchAllCountries();
+
+        if (!isActive) {
+          return;
+        }
+
+        const nextCountryNames = countries.reduce<Record<string, string>>((accumulator, country) => {
+          if (country.code) {
+            accumulator[country.code.toUpperCase()] = country.name;
+            accumulator[country.code.toLowerCase()] = country.name;
+          }
+
+          accumulator[country.name.toUpperCase()] = country.name;
+          accumulator[country.name.toLowerCase()] = country.name;
+
+          return accumulator;
+        }, {});
+
+        setCountryNames(nextCountryNames);
+      } catch (fetchError) {
+        console.error('Error fetching countries for name lookup:', fetchError);
+      }
+    };
+
+    void fetchCountryNames();
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
+
   const displayData = useMemo(() => {
     // Use API data if available, otherwise use passed data
     return apiData.length > 0 ? apiData : data;
@@ -49,6 +88,9 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
 
   const visibleData = showAll ? displayData : displayData.slice(0, 50);
   const hasMore = displayData.length > 50;
+
+  const resolveCountryName = (country: string) =>
+    countryNames[country] ?? countryNames[country.toUpperCase()] ?? countryNames[country.toLowerCase()] ?? country;
 
   const rowLinkButtonProps = {
     variant: 'ghost' as const,
@@ -67,6 +109,50 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
       borderRadius: 'sm',
     },
   };
+
+  const renderMedalCount = (value: number, medalType: 'bronze' | 'silver' | 'gold') => {
+    const medalStyles = {
+      bronze: {
+        bg: '#b87333',
+        color: '#fffaf4',
+        borderColor: '#8a4f1f',
+      },
+      silver: {
+        bg: '#d2d7de',
+        color: '#111827',
+        borderColor: '#8b95a1',
+      },
+      gold: {
+        bg: '#d6a400',
+        color: '#111827',
+        borderColor: '#9c7600',
+      },
+    } as const
+
+    const styles = medalStyles[medalType]
+
+    return (
+      <Badge
+        display="inline-flex"
+        alignItems="center"
+        justifyContent="center"
+        minW="2.4rem"
+        px={2.5}
+        py={0.5}
+        borderRadius="full"
+        borderWidth="1px"
+        borderColor={styles.borderColor}
+        bg={styles.bg}
+        color={styles.color}
+        fontWeight="800"
+        fontSize="sm"
+        lineHeight="1"
+        textShadow={medalType === 'silver' ? 'none' : '0 1px 0 rgba(0, 0, 0, 0.18)'}
+      >
+        {value}
+      </Badge>
+    )
+  }
 
   if (loading) {
     return (
@@ -102,6 +188,7 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
               <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="110px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('countryTable.columns.bronze')}</Table.ColumnHeader>
               <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="110px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('countryTable.columns.silver')}</Table.ColumnHeader>
               <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="110px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('countryTable.columns.gold')}</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="110px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('countryTable.columns.total')}</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -113,15 +200,22 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
                 <Table.Cell whiteSpace="nowrap" minW="220px" py={3}>
                   {onCountryClick ? (
                     <Button {...rowLinkButtonProps} onClick={() => onCountryClick(row.country)}>
-                      {row.country}
+                      {resolveCountryName(row.country)}
                     </Button>
                   ) : (
-                    <Box as="span" fontWeight="semibold">{row.country}</Box>
+                    <Box as="span" fontWeight="semibold">{resolveCountryName(row.country)}</Box>
                   )}
                 </Table.Cell>
-                <Table.Cell textAlign="right" whiteSpace="nowrap" py={3} fontFamily="mono">{row.bronze}</Table.Cell>
-                <Table.Cell textAlign="right" whiteSpace="nowrap" py={3} fontFamily="mono">{row.silver}</Table.Cell>
-                <Table.Cell textAlign="right" whiteSpace="nowrap" py={3} fontFamily="mono">{row.gold}</Table.Cell>
+                <Table.Cell textAlign="right" whiteSpace="nowrap" py={3} fontFamily="mono">
+                  {renderMedalCount(row.bronze, 'bronze')}
+                </Table.Cell>
+                <Table.Cell textAlign="right" whiteSpace="nowrap" py={3} fontFamily="mono">
+                  {renderMedalCount(row.silver, 'silver')}
+                </Table.Cell>
+                <Table.Cell textAlign="right" whiteSpace="nowrap" py={3} fontFamily="mono">
+                  {renderMedalCount(row.gold, 'gold')}
+                </Table.Cell>
+                <Table.Cell textAlign="right" whiteSpace="nowrap" py={3} fontFamily="mono">{row.total ?? row.bronze + row.silver + row.gold}</Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>

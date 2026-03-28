@@ -195,6 +195,8 @@ export function AthletesTable() {
         size="sm"
         px={0}
         justifyContent="flex-start"
+        color="text"
+        fontWeight="semibold"
         onClick={() => toggleAthleteSort(field)}
       >
         {label}
@@ -362,6 +364,10 @@ export function AthletesTable() {
             <Input
               placeholder={t('admin.searchAthletesPlaceholder')}
               value={athleteSearchTerm}
+              color="text"
+              bg="input-bg"
+              borderColor="border"
+              _placeholder={{ color: 'text-muted' }}
               onChange={(event) => setAthleteSearchTerm(event.target.value)}
             />
             <Stack direction={{ base: 'column', lg: 'row' }} gap={3}>
@@ -433,7 +439,7 @@ export function AthletesTable() {
                 )}
               </Box>
               <Box display="flex" alignItems="end">
-                <Button variant="outline" onClick={resetAthleteFilters} width={{ base: '100%', lg: 'auto' }}>
+                <Button variant="solid" colorPalette="gray" onClick={resetAthleteFilters} width={{ base: '100%', lg: 'auto' }}>
                   {t('admin.resetFilters')}
                 </Button>
               </Box>
@@ -445,15 +451,15 @@ export function AthletesTable() {
               <Table.Root variant="outline" size="sm">
                 <Table.Header>
                   <Table.Row>
-                    <Table.ColumnHeader whiteSpace="nowrap" w="90px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('id', t('admin.athletesTable.columns.id'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader minW="220px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('name', t('admin.athletesTable.columns.name'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader whiteSpace="nowrap" w="140px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('countryCode', t('admin.athletesTable.columns.countryCode'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader minW="180px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('countryName', t('admin.athletesTable.columns.countryName'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader whiteSpace="nowrap" w="100px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('sportId', t('admin.athletesTable.columns.sportId'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader minW="180px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('sportName', t('admin.athletesTable.columns.sportName'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader whiteSpace="nowrap" w="110px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('active', t('admin.athletesTable.columns.active'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader whiteSpace="nowrap" w="120px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('admin.athletesTable.columns.edit')}</Table.ColumnHeader>
-                    <Table.ColumnHeader whiteSpace="nowrap" w="130px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('admin.athletesTable.columns.actions')}</Table.ColumnHeader>
+                    <Table.ColumnHeader whiteSpace="nowrap" w="90px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('id', t('admin.athletesTable.columns.id'))}</Table.ColumnHeader>
+                    <Table.ColumnHeader minW="220px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('name', t('admin.athletesTable.columns.name'))}</Table.ColumnHeader>
+                    <Table.ColumnHeader whiteSpace="nowrap" w="140px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('countryCode', t('admin.athletesTable.columns.countryCode'))}</Table.ColumnHeader>
+                    <Table.ColumnHeader minW="180px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('countryName', t('admin.athletesTable.columns.countryName'))}</Table.ColumnHeader>
+                    <Table.ColumnHeader whiteSpace="nowrap" w="100px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('sportId', t('admin.athletesTable.columns.sportId'))}</Table.ColumnHeader>
+                    <Table.ColumnHeader minW="180px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('sportName', t('admin.athletesTable.columns.sportName'))}</Table.ColumnHeader>
+                    <Table.ColumnHeader whiteSpace="nowrap" w="110px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('active', t('admin.athletesTable.columns.active'))}</Table.ColumnHeader>
+                    <Table.ColumnHeader whiteSpace="nowrap" w="120px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{t('admin.athletesTable.columns.edit')}</Table.ColumnHeader>
+                    <Table.ColumnHeader whiteSpace="nowrap" w="130px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{t('admin.athletesTable.columns.actions')}</Table.ColumnHeader>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -474,7 +480,7 @@ export function AthletesTable() {
                         <Button
                           size="sm"
                           colorScheme="blue"
-                          variant="outline"
+                          variant="solid"
                           onClick={() => openEditAthleteModal(athlete)}
                         >
                           <Icon as={FaEdit} boxSize={3.5} mr={1.5} />
@@ -486,7 +492,7 @@ export function AthletesTable() {
                           <Button
                             size="sm"
                             colorScheme="red"
-                            variant="outline"
+                            variant="solid"
                             onClick={() => openStatusActionPrompt(athlete.id, athlete.name, 'deactivate')}
                             loading={statusActionLoadingId === athlete.id}
                           >
@@ -497,7 +503,7 @@ export function AthletesTable() {
                           <Button
                             size="sm"
                             colorScheme="green"
-                            variant="outline"
+                            variant="solid"
                             onClick={() => openStatusActionPrompt(athlete.id, athlete.name, 'activate')}
                             loading={statusActionLoadingId === athlete.id}
                           >
@@ -606,10 +612,10 @@ export function AthletesTable() {
             </DialogBody>
 
             <DialogFooter p={0} gap={3} justifyContent="flex-end" mt={6}>
-              <Button variant="outline" onClick={() => setShowAddAthleteModal(false)} disabled={addAthleteLoading}>
+              <Button variant="solid" colorPalette="gray" onClick={() => setShowAddAthleteModal(false)} disabled={addAthleteLoading}>
                 {t('admin.buttons.cancel')}
               </Button>
-              <Button colorScheme="teal" onClick={handleCreateAthlete} loading={addAthleteLoading}>
+              <Button colorScheme="teal" variant="solid" onClick={handleCreateAthlete} loading={addAthleteLoading}>
                 {t('admin.buttons.save')}
               </Button>
             </DialogFooter>
@@ -690,10 +696,10 @@ export function AthletesTable() {
             </DialogBody>
 
             <DialogFooter p={0} gap={3} justifyContent="flex-end" mt={6}>
-              <Button variant="outline" onClick={closeEditAthleteModal} disabled={editAthleteLoading}>
+              <Button variant="solid" colorPalette="gray" onClick={closeEditAthleteModal} disabled={editAthleteLoading}>
                 {t('admin.buttons.cancel')}
               </Button>
-              <Button colorScheme="blue" onClick={handleUpdateAthlete} loading={editAthleteLoading}>
+              <Button colorScheme="blue" variant="solid" onClick={handleUpdateAthlete} loading={editAthleteLoading}>
                 {t('admin.buttons.save')}
               </Button>
             </DialogFooter>
@@ -724,11 +730,12 @@ export function AthletesTable() {
             </DialogBody>
 
             <DialogFooter p={0} gap={3} justifyContent="flex-end">
-              <Button variant="outline" onClick={closeStatusActionPrompt} disabled={statusActionLoadingId !== null}>
+              <Button variant="solid" colorPalette="gray" onClick={closeStatusActionPrompt} disabled={statusActionLoadingId !== null}>
                 {t('admin.buttons.cancel')}
               </Button>
               <Button
                 colorScheme={statusActionPrompt?.action === 'activate' ? 'green' : 'red'}
+                variant="solid"
                 onClick={confirmStatusAction}
                 loading={statusActionLoadingId !== null}
               >

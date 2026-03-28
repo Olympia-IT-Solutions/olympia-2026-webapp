@@ -50,14 +50,20 @@
       "country": "Country",
       "bronze": "Bronze",
       "silver": "Silver",
-      "gold": "Gold"
+      "gold": "Gold",
+      "total": "Total"
     },
     "noData": "No data available.",
     "loadMore": "Load more entries"
   },
   "sport": {
     "notFoundTitle": "Sport not found",
-    "notFoundText": "The sport \"{{sport}}\" you searched for does not exist or no data is available."
+    "notFoundText": "The sport \"{{sport}}\" you searched for does not exist or no data is available.",
+    "measurements": {
+      "time": "Time in s",
+      "points": "Points",
+      "score": "Score"
+    }
   },
   "status": {
     "pending": "Pending",
@@ -99,6 +105,7 @@
     "buttons": {
       "submit": "Submit",
       "cancel": "Cancel",
+      "edit": "Edit",
       "approve": "Approve",
       "reject": "Reject",
       "invalidate": "Invalidate",
@@ -125,9 +132,35 @@
       }
     },
     "confirmActionTitle": "Confirm action",
-    "confirmActionText": "Do you want to {{action}} the result for {{athlete}}?"
-    ,"createResultValidationError": "Please fill in all required fields",
-    "noActiveSports": "No active sports are available."
+    "confirmActionText": "Do you want to {{action}} the result for {{athlete}}?",
+    "editResultTitle": "Edit result",
+    "editResultSave": "Save changes",
+    "editResultContext": "Edited sport",
+    "editResultValidationError": "Please review the result values.",
+    "createResultValidationError": "Please fill in all required fields",
+    "noActiveSports": "No active sports are available.",
+    "resultTemplates": {
+      "title": "Result template",
+      "selected": "Template for {{sport}}",
+      "selectSportHint": "Select a sport first so the correct input validation is enabled."
+    },
+    "validation": {
+      "selectSport": "Please select a sport first.",
+      "templateMissing": "No form template is configured for this sport.",
+      "editLocked": "This result can no longer be edited because it has already been approved.",
+      "selectAthlete": "Please select an athlete.",
+      "valueRequired": "Please enter a result value.",
+      "timeFormat": "The time value must match the format mm:ss.hh.",
+      "scoreFormat": "The final score must match the format x:y.",
+      "scoreRange": "The entered values must be between 0 and 20.",
+      "pointsFormat": "The score must be a number with up to two decimal places.",
+      "pointsRange": "The score must be between 0 and 300.",
+      "rankRequired": "Please enter a rank.",
+      "rankInvalid": "The rank must be a positive whole number.",
+      "athleteMismatch": "The selected athlete does not belong to this sport.",
+      "duplicateAthlete": "A result already exists for this athlete in this sport.",
+      "duplicateRank": "This rank is already used in this sport."
+    }
   },
   "footer": {
     "cookiePolicy": "Cookie Policy",

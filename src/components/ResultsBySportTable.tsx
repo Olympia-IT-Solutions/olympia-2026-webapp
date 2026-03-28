@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Badge, Box, Button, Icon, Stack, Table, Text, Spinner } from '@chakra-ui/react'
-import { FaBan, FaCheck, FaTimes } from 'react-icons/fa'
+import { FaBan, FaCheck, FaEdit, FaTimes } from 'react-icons/fa'
 import type { RoleType } from '../logic/rights'
 import type { Result } from '../services/results'
 import { DataTableState, DataTableSurface, getDataTableRowStyles } from './ui'
@@ -11,6 +11,8 @@ interface ResultsBySportTableProps {
   loading?: boolean
   currentRole?: RoleType | null
   currentUserEmail?: string | null
+  sportName?: string
+  onEdit?: (result: Result, sportName?: string) => void
   onApprove?: (resultId: number) => void
   onReject?: (resultId: number) => void
   onInvalidate?: (resultId: number) => void
@@ -51,6 +53,8 @@ export const ResultsBySportTable: React.FC<ResultsBySportTableProps> = ({
   loading = false,
   currentRole,
   currentUserEmail,
+  sportName,
+  onEdit,
   onApprove,
   onReject,
   onInvalidate,
@@ -79,19 +83,20 @@ export const ResultsBySportTable: React.FC<ResultsBySportTableProps> = ({
         <Table.Root variant="outline" size="sm">
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('dashboard.table.columns.athlete')}</Table.ColumnHeader>
-              <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('dashboard.table.columns.submittedBy')}</Table.ColumnHeader>
-              <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('dashboard.table.columns.country')}</Table.ColumnHeader>
-              <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('dashboard.table.columns.result')}</Table.ColumnHeader>
-              <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('dashboard.table.columns.medal')}</Table.ColumnHeader>
-              <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('dashboard.table.columns.status')}</Table.ColumnHeader>
-              <Table.ColumnHeader py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('dashboard.table.columns.actions')}</Table.ColumnHeader>
+              <Table.ColumnHeader py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{t('dashboard.table.columns.athlete')}</Table.ColumnHeader>
+              <Table.ColumnHeader py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{t('dashboard.table.columns.submittedBy')}</Table.ColumnHeader>
+              <Table.ColumnHeader py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{t('dashboard.table.columns.country')}</Table.ColumnHeader>
+              <Table.ColumnHeader py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{t('dashboard.table.columns.result')}</Table.ColumnHeader>
+              <Table.ColumnHeader py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{t('dashboard.table.columns.medal')}</Table.ColumnHeader>
+              <Table.ColumnHeader py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{t('dashboard.table.columns.status')}</Table.ColumnHeader>
+              <Table.ColumnHeader py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{t('dashboard.table.columns.actions')}</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
             {data.map((result) => {
               const normalizedStatus = result.status.toUpperCase()
               const isPending = normalizedStatus === 'PENDING'
+              const canEdit = currentRole === 'admin' && Boolean(onEdit) && normalizedStatus !== 'APPROVED' && normalizedStatus !== 'PUBLISHED'
               const isOwnSubmission = Boolean(currentUserEmail && result.createdByUsername && currentUserEmail === result.createdByUsername)
               const canReviewPending = canReview && isPending && !isOwnSubmission
               const canInvalidate = currentRole === 'admin' && (normalizedStatus === 'APPROVED' || normalizedStatus === 'PUBLISHED')
@@ -128,14 +133,20 @@ export const ResultsBySportTable: React.FC<ResultsBySportTableProps> = ({
                   </Table.Cell>
                   <Table.Cell py={3}>
                     <Stack direction="row" gap={2} wrap="wrap">
+                      {canEdit && onEdit && (
+                        <Button size="sm" colorScheme="blue" variant="solid" onClick={() => onEdit(result, sportName)}>
+                          <Icon as={FaEdit} boxSize={3} mr={1} />
+                          {t('dashboard.buttons.edit')}
+                        </Button>
+                      )}
                       {canReviewPending && onApprove && (
-                        <Button size="sm" colorScheme="green" onClick={() => onApprove(result.id)}>
+                        <Button size="sm" colorScheme="green" variant="solid" onClick={() => onApprove(result.id)}>
                           <Icon as={FaCheck} boxSize={3} mr={1} />
                           {t('dashboard.buttons.approve')}
                         </Button>
                       )}
                       {canReviewPending && onReject && (
-                        <Button size="sm" colorScheme="red" variant="outline" onClick={() => onReject(result.id)}>
+                        <Button size="sm" colorScheme="red" variant="solid" onClick={() => onReject(result.id)}>
                           <Icon as={FaTimes} boxSize={3} mr={1} />
                           {t('dashboard.buttons.reject')}
                         </Button>
@@ -146,7 +157,7 @@ export const ResultsBySportTable: React.FC<ResultsBySportTableProps> = ({
                         </Text>
                       )}
                       {canInvalidate && onInvalidate && (
-                        <Button size="sm" colorScheme="orange" variant="outline" onClick={() => onInvalidate(result.id)}>
+                        <Button size="sm" colorScheme="orange" variant="solid" onClick={() => onInvalidate(result.id)}>
                           <Icon as={FaBan} boxSize={3} mr={1} />
                           {t('dashboard.buttons.invalidate')}
                         </Button>

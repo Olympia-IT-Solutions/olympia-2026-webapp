@@ -4,6 +4,7 @@ type CTAButtonVariant = 'solid' | 'outline' | 'subtle';
 
 interface CTAButtonProps extends ButtonProps {
   ctaVariant?: CTAButtonVariant;
+  href?: string;
 }
 
 const getCTAButtonStyles = (ctaVariant: CTAButtonVariant): ButtonProps => {

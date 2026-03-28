@@ -30,6 +30,11 @@ export interface CreateResultRequest {
   rank: number;
 }
 
+export interface UpdateResultRequest {
+  value: string;
+  rank: number;
+}
+
 const RESULTS_API_URL = 'https://olympia-2026-api.onrender.com/api/results/by-sport';
 const RESULTS_CREATE_API_URL = 'https://olympia-2026-api.onrender.com/api/results';
 const RESULTS_ACTIONS_API_URL = 'https://olympia-2026-api.onrender.com/api/results';
@@ -120,5 +125,29 @@ export const invalidateResult = async (resultId: number): Promise<void> => {
     await sendResultAction(resultId, 'invalidate')
   } catch (err) {
     throw err instanceof Error ? err : new Error('Failed to invalidate result')
+  }
+}
+
+export const updateResult = async (resultId: number, payload: UpdateResultRequest): Promise<void> => {
+  try {
+    const token = localStorage.getItem(AUTH_TOKEN_KEY)
+    if (!token) {
+      throw new Error('No auth token found')
+    }
+
+    const response = await fetch(`${RESULTS_ACTIONS_API_URL}/${resultId}`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`)
+    }
+  } catch (err) {
+    throw err instanceof Error ? err : new Error('Failed to update result')
   }
 }

@@ -70,24 +70,22 @@ export const Banner = () => {
           </Text>
           <HStack gap={3} flex="0 1 auto" flexWrap="wrap" justify="flex-start">
             <CTAButton
-              as="a"
-              href="https://tickets.milanocortina2026.org"
-              target="_blank"
-              rel="noopener noreferrer"
+              asChild
               ctaVariant="solid"
               size="sm"
             >
-              Tickets
+              <a href="https://tickets.milanocortina2026.org" target="_blank" rel="noopener noreferrer">
+                Tickets
+              </a>
             </CTAButton>
             <CTAButton
-              as="a"
-              href="https://shop.olympics.com/milano-cortina-2026"
-              target="_blank"
-              rel="noopener noreferrer"
+              asChild
               ctaVariant="solid"
               size="sm"
             >
-              Shop
+              <a href="https://shop.olympics.com/milano-cortina-2026" target="_blank" rel="noopener noreferrer">
+                Shop
+              </a>
             </CTAButton>
           </HStack>
         </ContentWrapper>
