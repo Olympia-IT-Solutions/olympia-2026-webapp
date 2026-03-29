@@ -270,7 +270,7 @@ Die App kommuniziert mit einer REST-API unter `https://olympia-2026-api.onrender
 | `/api/users` | `POST` | Neuen Benutzer anlegen (nur Admin) |
 | `/api/users/{id}/deactivate` | `POST` | Benutzer deaktivieren (nur Admin) |
 | `/api/sports` | `GET` | Liste aller Sportarten |
-| `/api/results/by-sport?sportId={id}` | `GET` | Ergebnisse einer Sportart |
+| `/api/results/by-sport/{sportId}` | `GET` | Ergebnisse einer Sportart |
 | `/api/results` | `POST` | Neues Ergebnis einreichen |
 | `/api/results/{id}` | `PUT` | Ergebnis bearbeiten (nur Admin) |
 | `/api/results/{id}/approve` | `POST` | Ergebnis genehmigen |
