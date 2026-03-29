@@ -52,6 +52,7 @@ export function SportPage() {
   const sports = useSportsStore((state) => state.sports);
   const results = useResultsStore((state) => state.results);
   const loading = useResultsStore((state) => state.loading);
+  const error = useResultsStore((state) => state.error);
   const fetchResults = useResultsStore((state) => state.fetchResults);
   const canSeePendingResults = currentUser?.role === 'admin' || currentUser?.role === 'referee';
 
@@ -121,6 +122,7 @@ export function SportPage() {
         <SportsTable
           data={sportResults}
           loading={loading}
+          error={error}
           resultLabel={t('dashboard.labels.result')}
           resultUnitLabel={sportMeasurementType ? t(`sport.measurements.${sportMeasurementType}`) : undefined}
         />

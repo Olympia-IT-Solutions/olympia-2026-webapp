@@ -5,11 +5,12 @@ import { useParams, useNavigate } from 'react-router';
 import { FaMedal } from 'react-icons/fa';
 import type { Medal } from '../services/medals';
 import { getSportTranslationKey } from '../services/sports';
-import { LoadingSpinner } from './ui';
+import { DataTableState, LoadingSpinner } from './ui';
 
 interface MedalDisplayProps {
   medals: Medal[];
   loading?: boolean;
+  error?: string | null;
   country?: string;
 }
 
@@ -119,7 +120,7 @@ const MedalCard: React.FC<{ medal: Medal; index: number }> = ({ medal, index }) 
   );
 };
 
-export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, loading = false, country }) => {
+export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, loading = false, error = null, country }) => {
   const { t } = useTranslation();
 
   if (loading) {
@@ -127,6 +128,16 @@ export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, loading = fa
       <Box display="flex" justifyContent="center" alignItems="center" minH="400px">
         <LoadingSpinner size="xl" />
       </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <DataTableState
+        tone="danger"
+        message={t('countryDetail.medalsLoadError')}
+        helperText={error}
+      />
     );
   }
 

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useMedalStore } from '../store/medals';
 import { MedalDisplay } from '../components/MedalDisplay';
+import { CountryFlag, DataTableState } from '../components/ui';
 import { fetchAllCountries } from '../services/countries';
 
 export function CountryDetail() {
@@ -13,9 +14,12 @@ export function CountryDetail() {
   const { t } = useTranslation();
   const [countryId, setCountryId] = useState<string | null>(null);
   const [countryName, setCountryName] = useState<string | null>(null);
+  const [countryCode, setCountryCode] = useState<string | null>(null);
+  const [countryLookupFailed, setCountryLookupFailed] = useState(false);
   
   const medals = useMedalStore((state) => state.medals);
   const loading = useMedalStore((state) => state.loading);
+  const error = useMedalStore((state) => state.error);
   const fetchMedals = useMedalStore((state) => state.fetchMedals);
 
   useEffect(() => {
@@ -25,8 +29,12 @@ export function CountryDetail() {
       if (!country) {
         setCountryId(null);
         setCountryName(null);
+        setCountryCode(null);
+        setCountryLookupFailed(false);
         return;
       }
+
+      setCountryLookupFailed(false);
 
       try {
         const countries = await fetchAllCountries();
@@ -40,6 +48,7 @@ export function CountryDetail() {
 
         const resolvedId = matchedCountry ? String(matchedCountry.id) : country;
         const resolvedName = matchedCountry?.name ?? country.toUpperCase();
+        const resolvedCode = matchedCountry?.code ?? country;
 
         if (!isActive) {
           return;
@@ -47,15 +56,17 @@ export function CountryDetail() {
 
         setCountryId(resolvedId);
         setCountryName(resolvedName);
+        setCountryCode(resolvedCode);
         fetchMedals(resolvedId);
       } catch {
         if (!isActive) {
           return;
         }
 
-        setCountryId(country);
-        setCountryName(country.toUpperCase());
-        fetchMedals(country);
+        setCountryId(null);
+        setCountryName(null);
+        setCountryCode(country);
+        setCountryLookupFailed(true);
       }
     };
 
@@ -72,7 +83,7 @@ export function CountryDetail() {
     <Box minH="100vh" bg="var(--bg)">
       <Container maxW="container.xl" py={10}>
         {/* Header with Back Button */}
-        <HStack mb={8} gap={4}>
+        <HStack mb={8} gap={4} align="center" wrap="wrap">
           <Button
             onClick={() => navigate(`/${lang}/countries`)}
             variant="outline"
@@ -81,14 +92,24 @@ export function CountryDetail() {
             <Icon as={FaArrowLeft} mr={2} />
             {t('countryDetail.back')}
           </Button>
-          <Heading as="h1" size="2xl" color="var(--card-text)">
-            {t('countryDetail.medalsTitle', { country: countryName ?? country?.toUpperCase() ?? '' })}
-          </Heading>
+          <HStack gap={3} align="center" wrap="wrap">
+            <CountryFlag countryCode={countryCode} w="1.75rem" />
+            <Heading as="h1" size="2xl" color="var(--card-text)">
+              {t('countryDetail.medalsTitle', { country: countryName ?? country?.toUpperCase() ?? '' })}
+            </Heading>
+          </HStack>
         </HStack>
 
         {/* Medal Display */}
         <Box bg="var(--card-bg)" borderRadius="xl" p={8} boxShadow="xl">
-          <MedalDisplay medals={countryMedals} loading={loading} country={countryName ?? country} />
+          {countryLookupFailed ? (
+            <DataTableState
+              tone="danger"
+              message={t('countryDetail.countryLookupError')}
+            />
+          ) : (
+            <MedalDisplay medals={countryMedals} loading={loading} error={error} country={countryName ?? country} />
+          )}
         </Box>
       </Container>
     </Box>

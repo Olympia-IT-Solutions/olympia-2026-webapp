@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import type { Result } from '../services/results';
 import { fetchResultsBySport } from '../services/results';
 
+let activeResultsRequestId = 0;
+
 interface ResultsStore {
   results: Record<number, Result[]>;
   loading: boolean;
@@ -24,14 +26,24 @@ export const useResultsStore = create<ResultsStore>((set) => ({
   setError: (error) => set({ error }),
   
   fetchResults: async (sportId: number) => {
+    const requestId = ++activeResultsRequestId;
     set({ loading: true, error: null });
     try {
       const data = await fetchResultsBySport(sportId);
+      if (requestId !== activeResultsRequestId) {
+        return;
+      }
+
       set((state) => ({
         results: { ...state.results, [sportId]: data },
-        loading: false
+        loading: false,
+        error: null
       }));
     } catch (err) {
+      if (requestId !== activeResultsRequestId) {
+        return;
+      }
+
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch results';
       set({ error: errorMessage, loading: false });
       console.error('Error fetching results:', err);

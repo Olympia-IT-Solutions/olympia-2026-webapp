@@ -5,7 +5,7 @@ import { FaBan, FaCheck, FaEdit, FaUserPlus, FaUsers } from 'react-icons/fa'
 import { useSportsStore } from '../store/sports'
 import { fetchAllCountries, type CountryOption } from '../services/countries'
 import { activateAthlete, createAthlete, deactivateAthlete, fetchAllAthletes, updateAthlete, type Athlete, type CreateAthleteRequest, type UpdateAthleteRequest } from '../services/athletes'
-import { DataTableState, DataTableSurface, getDataTableRowStyles, LoadingSpinner } from './ui'
+import { CountryFlag, DataTableState, DataTableSurface, getDataTableRowStyles, LoadingSpinner } from './ui'
 
 type AthleteSortField = 'id' | 'name' | 'countryCode' | 'countryName' | 'sportId' | 'sportName' | 'active'
 type SortDirection = 'asc' | 'desc'
@@ -446,80 +446,86 @@ export function AthletesTable() {
             </Stack>
           </Stack>
 
-          <DataTableSurface elevated={false}>
-            <Table.ScrollArea>
-              <Table.Root variant="outline" size="sm">
-                <Table.Header>
-                  <Table.Row>
-                    <Table.ColumnHeader whiteSpace="nowrap" w="90px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('id', t('admin.athletesTable.columns.id'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader minW="220px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('name', t('admin.athletesTable.columns.name'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader whiteSpace="nowrap" w="140px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('countryCode', t('admin.athletesTable.columns.countryCode'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader minW="180px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('countryName', t('admin.athletesTable.columns.countryName'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader whiteSpace="nowrap" w="100px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('sportId', t('admin.athletesTable.columns.sportId'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader minW="180px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('sportName', t('admin.athletesTable.columns.sportName'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader whiteSpace="nowrap" w="110px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('active', t('admin.athletesTable.columns.active'))}</Table.ColumnHeader>
-                    <Table.ColumnHeader whiteSpace="nowrap" w="120px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{t('admin.athletesTable.columns.edit')}</Table.ColumnHeader>
-                    <Table.ColumnHeader whiteSpace="nowrap" w="130px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{t('admin.athletesTable.columns.actions')}</Table.ColumnHeader>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {filteredAthletes.map((athlete) => (
-                    <Table.Row key={athlete.id} {...getDataTableRowStyles()}>
-                      <Table.Cell fontWeight="500" py={3}>{athlete.id}</Table.Cell>
-                      <Table.Cell py={3}>{athlete.name}</Table.Cell>
-                      <Table.Cell py={3}>{athlete.countryCode ?? '-'}</Table.Cell>
-                      <Table.Cell py={3}>{athlete.countryName ?? '-'}</Table.Cell>
-                      <Table.Cell py={3}>{athlete.sportId ?? '-'}</Table.Cell>
-                      <Table.Cell py={3}>{athlete.sportName ?? '-'}</Table.Cell>
-                      <Table.Cell py={3}>
-                        <Badge colorPalette={athlete.active ? 'green' : 'red'}>
-                          {athlete.active ? t('admin.active') : t('admin.inactive')}
-                        </Badge>
-                      </Table.Cell>
-                      <Table.Cell py={3}>
-                        <Button
-                          size="sm"
-                          colorScheme="blue"
-                          variant="solid"
-                          onClick={() => openEditAthleteModal(athlete)}
-                        >
-                          <Icon as={FaEdit} boxSize={3.5} mr={1.5} />
-                          {t('admin.athleteEdit')}
-                        </Button>
-                      </Table.Cell>
-                      <Table.Cell py={3}>
-                        {athlete.active ? (
-                          <Button
-                            size="sm"
-                            colorScheme="red"
-                            variant="solid"
-                            onClick={() => openStatusActionPrompt(athlete.id, athlete.name, 'deactivate')}
-                            loading={statusActionLoadingId === athlete.id}
-                          >
-                            <Icon as={FaBan} boxSize={3.5} mr={1.5} />
-                            {t('admin.athleteDeactivate')}
-                          </Button>
-                        ) : (
-                          <Button
-                            size="sm"
-                            colorScheme="green"
-                            variant="solid"
-                            onClick={() => openStatusActionPrompt(athlete.id, athlete.name, 'activate')}
-                            loading={statusActionLoadingId === athlete.id}
-                          >
-                            <Icon as={FaCheck} boxSize={3.5} mr={1.5} />
-                            {t('admin.athleteActivate')}
-                          </Button>
-                        )}
-                      </Table.Cell>
+          {filteredAthletes.length === 0 ? (
+            <DataTableState message={t('admin.noFilteredAthletes')} />
+          ) : (
+            <DataTableSurface elevated={false}>
+              <Table.ScrollArea>
+                <Table.Root variant="outline" size="sm">
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.ColumnHeader whiteSpace="nowrap" w="90px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('id', t('admin.athletesTable.columns.id'))}</Table.ColumnHeader>
+                      <Table.ColumnHeader minW="220px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('name', t('admin.athletesTable.columns.name'))}</Table.ColumnHeader>
+                      <Table.ColumnHeader whiteSpace="nowrap" w="140px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('countryCode', t('admin.athletesTable.columns.countryCode'))}</Table.ColumnHeader>
+                      <Table.ColumnHeader minW="180px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('countryName', t('admin.athletesTable.columns.countryName'))}</Table.ColumnHeader>
+                      <Table.ColumnHeader whiteSpace="nowrap" w="100px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('sportId', t('admin.athletesTable.columns.sportId'))}</Table.ColumnHeader>
+                      <Table.ColumnHeader minW="180px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('sportName', t('admin.athletesTable.columns.sportName'))}</Table.ColumnHeader>
+                      <Table.ColumnHeader whiteSpace="nowrap" w="110px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{renderAthleteSortHeader('active', t('admin.athletesTable.columns.active'))}</Table.ColumnHeader>
+                      <Table.ColumnHeader whiteSpace="nowrap" w="120px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{t('admin.athletesTable.columns.edit')}</Table.ColumnHeader>
+                      <Table.ColumnHeader whiteSpace="nowrap" w="130px" py={3} fontSize="xs" color="text" fontWeight="semibold" textTransform="uppercase" letterSpacing="0.06em">{t('admin.athletesTable.columns.actions')}</Table.ColumnHeader>
                     </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table.Root>
-            </Table.ScrollArea>
-          </DataTableSurface>
-          {filteredAthletes.length === 0 && (
-            <Text textAlign="center" color="text-muted" py={4}>{t('admin.noFilteredAthletes')}</Text>
+                  </Table.Header>
+                  <Table.Body>
+                    {filteredAthletes.map((athlete) => (
+                      <Table.Row key={athlete.id} {...getDataTableRowStyles()}>
+                        <Table.Cell fontWeight="500" py={3}>{athlete.id}</Table.Cell>
+                        <Table.Cell py={3}>{athlete.name}</Table.Cell>
+                        <Table.Cell py={3}>{athlete.countryCode ?? '-'}</Table.Cell>
+                        <Table.Cell py={3}>
+                          <Stack direction="row" align="center" gap={2}>
+                            <CountryFlag countryCode={athlete.countryCode} w="1.5rem" />
+                            <Text as="span">{athlete.countryName ?? athlete.countryCode ?? '-'}</Text>
+                          </Stack>
+                        </Table.Cell>
+                        <Table.Cell py={3}>{athlete.sportId ?? '-'}</Table.Cell>
+                        <Table.Cell py={3}>{athlete.sportName ?? '-'}</Table.Cell>
+                        <Table.Cell py={3}>
+                          <Badge colorPalette={athlete.active ? 'green' : 'red'}>
+                            {athlete.active ? t('admin.active') : t('admin.inactive')}
+                          </Badge>
+                        </Table.Cell>
+                        <Table.Cell py={3}>
+                          <Button
+                            size="sm"
+                            colorScheme="blue"
+                            variant="solid"
+                            onClick={() => openEditAthleteModal(athlete)}
+                          >
+                            <Icon as={FaEdit} boxSize={3.5} mr={1.5} />
+                            {t('admin.athleteEdit')}
+                          </Button>
+                        </Table.Cell>
+                        <Table.Cell py={3}>
+                          {athlete.active ? (
+                            <Button
+                              size="sm"
+                              colorScheme="red"
+                              variant="solid"
+                              onClick={() => openStatusActionPrompt(athlete.id, athlete.name, 'deactivate')}
+                              loading={statusActionLoadingId === athlete.id}
+                            >
+                              <Icon as={FaBan} boxSize={3.5} mr={1.5} />
+                              {t('admin.athleteDeactivate')}
+                            </Button>
+                          ) : (
+                            <Button
+                              size="sm"
+                              colorScheme="green"
+                              variant="solid"
+                              onClick={() => openStatusActionPrompt(athlete.id, athlete.name, 'activate')}
+                              loading={statusActionLoadingId === athlete.id}
+                            >
+                              <Icon as={FaCheck} boxSize={3.5} mr={1.5} />
+                              {t('admin.athleteActivate')}
+                            </Button>
+                          )}
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                  </Table.Body>
+                </Table.Root>
+              </Table.ScrollArea>
+            </DataTableSurface>
           )}
         </>
       )}

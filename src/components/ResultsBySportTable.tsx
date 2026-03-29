@@ -4,7 +4,7 @@ import { Badge, Box, Button, Icon, Stack, Table, Text } from '@chakra-ui/react'
 import { FaBan, FaCheck, FaEdit, FaTimes } from 'react-icons/fa'
 import type { RoleType } from '../logic/rights'
 import type { Result } from '../services/results'
-import { DataTableState, DataTableSurface, getDataTableRowStyles, LoadingSpinner } from './ui'
+import { CountryFlag, DataTableState, DataTableSurface, getDataTableRowStyles, LoadingSpinner } from './ui'
 
 interface ResultsBySportTableProps {
   data: Result[]
@@ -115,7 +115,12 @@ export const ResultsBySportTable: React.FC<ResultsBySportTableProps> = ({
                       </Text>
                     )}
                   </Table.Cell>
-                  <Table.Cell py={3}>{result.countryName ?? result.country ?? '-'}</Table.Cell>
+                  <Table.Cell py={3}>
+                    <Stack direction="row" align="center" gap={2}>
+                      <CountryFlag countryCode={result.countryCode ?? result.country ?? null} w="1.5rem" />
+                      <Text as="span">{result.countryName ?? result.country ?? '-'}</Text>
+                    </Stack>
+                  </Table.Cell>
                   <Table.Cell py={3} fontWeight="bold" fontFamily="mono">{result.value}</Table.Cell>
                   <Table.Cell py={3}>
                     {result.hasMedal && result.medalType ? (

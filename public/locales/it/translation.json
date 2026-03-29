@@ -64,9 +64,41 @@
       "gold": "Oro",
       "total": "Totale"
     },
+    "exportCsv": "Esporta CSV",
+    "csvHeaders": {
+      "countryName": "Nome paese",
+      "countryCode": "Codice paese"
+    },
     "error": "Errore durante il caricamento dei dati.",
     "noData": "Nessun dato disponibile.",
-    "loadMore": "Carica più voci"
+    "loadMore": "Carica più voci",
+    "searchLabel": "Cerca",
+    "searchPlaceholder": "Cerca per nome o codice del paese",
+    "filterLabel": "Filtra per medaglia",
+    "filters": {
+      "all": "Tutti i paesi",
+      "goldOnly": "Paesi con medaglia d'oro"
+    },
+    "filteredEmpty": "Nessun paese corrisponde alla tua ricerca o al filtro."
+  },
+  "sportsTable": {
+    "columns": {
+      "rank": "Posizione",
+      "athlete": "Atleta",
+      "country": "Paese",
+      "result": "Risultato",
+      "medal": "Medaglia"
+    },
+    "noResults": "Nessun risultato disponibile",
+    "searchLabel": "Cerca",
+    "searchPlaceholder": "Cerca atleta, paese o risultato",
+    "filterLabel": "Filtra per medaglia",
+    "filters": {
+      "all": "Tutti i risultati",
+      "medalOnly": "Solo risultati con medaglia"
+    },
+    "filteredEmpty": "Nessun risultato corrisponde alla tua ricerca o al filtro.",
+    "openCountryDetails": "Apri i dettagli del paese per {{country}}"
   },
   "sports": {
     "names": {
@@ -82,6 +114,7 @@
   "sport": {
     "notFoundTitle": "Sport non trovato",
     "notFoundText": "Lo sport \"{{sport}}\" che hai cercato non esiste o non sono disponibili dati.",
+    "resultsLoadError": "Impossibile caricare i risultati di questo sport.",
     "measurements": {
       "time": "Tempo in s",
       "points": "Punti",
@@ -355,6 +388,14 @@
       "medal": "Medaglia"
     },
     "noResults": "Nessun risultato disponibile.",
+    "searchLabel": "Cerca",
+    "searchPlaceholder": "Cerca atleta, paese o risultato",
+    "filterLabel": "Filtra per medaglia",
+    "filters": {
+      "all": "Tutti i risultati",
+      "medalOnly": "Solo risultati con medaglia"
+    },
+    "filteredEmpty": "Nessun risultato corrisponde alla tua ricerca o al filtro.",
     "openCountryDetails": "Apri i dettagli del paese {{country}}"
   },
   "medalDisplay": {
@@ -372,7 +413,9 @@
   },
   "countryDetail": {
     "back": "Indietro",
-    "medalsTitle": "{{country}} - Medaglie"
+    "medalsTitle": "{{country}} - Medaglie",
+    "medalsLoadError": "Impossibile caricare le medaglie di questo paese.",
+    "countryLookupError": "Impossibile caricare i dettagli del paese."
   },
   "banner": {
     "eventLine": "Giochi Olimpici Invernali - 6-22 febbraio 2026 | Giochi Paralimpici Invernali - 6-15 marzo 2026",
