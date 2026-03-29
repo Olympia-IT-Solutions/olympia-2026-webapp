@@ -265,19 +265,19 @@ Die App kommuniziert mit einer REST-API unter `https://olympia-2026-api.onrender
 
 | Endpunkt | Methode | Beschreibung |
 |---|---|---|
-| `/api/auth/login` | `POST` | Benutzer-Login (gibt JWT-Token zurück) |
-| `/api/users` | `GET` | Alle Benutzer abrufen (nur Admin) |
-| `/api/users` | `POST` | Neuen Benutzer anlegen (nur Admin) |
-| `/api/users/{id}/deactivate` | `POST` | Benutzer deaktivieren (nur Admin) |
-| `/api/sports` | `GET` | Liste aller Sportarten |
-| `/api/results/by-sport/{sportId}` | `GET` | Ergebnisse einer Sportart |
-| `/api/results` | `POST` | Neues Ergebnis einreichen |
-| `/api/results/{id}` | `PUT` | Ergebnis bearbeiten (nur Admin) |
-| `/api/results/{id}/approve` | `POST` | Ergebnis genehmigen |
-| `/api/results/{id}/reject` | `POST` | Ergebnis ablehnen |
-| `/api/results/{id}/invalidate` | `POST` | Ergebnis invalidieren (nur Admin) |
-| `/api/athletes` | `GET` | Alle Athleten abrufen |
-| `/api/athletes` | `POST` | Neuen Athleten anlegen (nur Admin) |
+| `/auth/login` | `POST` | Benutzer-Login (gibt JWT-Token zurück) |
+| `/users` | `GET` | Alle Benutzer abrufen (nur Admin) |
+| `/users` | `POST` | Neuen Benutzer anlegen (nur Admin) |
+| `/users/{id}/deactivate` | `POST` | Benutzer deaktivieren (nur Admin) |
+| `/sports` | `GET` | Liste aller Sportarten |
+| `/results/by-sport?sportId={id}` | `GET` | Ergebnisse einer Sportart |
+| `/results` | `POST` | Neues Ergebnis einreichen |
+| `/results/{id}` | `PUT` | Ergebnis bearbeiten (nur Admin) |
+| `/results/{id}/approve` | `POST` | Ergebnis genehmigen |
+| `/results/{id}/reject` | `POST` | Ergebnis ablehnen |
+| `/results/{id}/invalidate` | `POST` | Ergebnis invalidieren (nur Admin) |
+| `/athletes` | `GET` | Alle Athleten abrufen |
+| `/athletes` | `POST` | Neuen Athleten anlegen (nur Admin) |
 | `/api/athletes/{id}` | `PUT` | Athleten bearbeiten (nur Admin) |
 | `/api/athletes/{id}/activate` | `POST` | Athleten aktivieren (nur Admin) |
 | `/api/athletes/{id}/deactivate` | `POST` | Athleten deaktivieren (nur Admin) |
