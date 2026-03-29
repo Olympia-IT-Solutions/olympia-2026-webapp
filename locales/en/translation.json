@@ -1,12 +1,13 @@
 {
-  "welcome": "Welcome to Milano Cortina 2026 Olympics",
+  "welcome": "Welcome to Olympics Milano Cortina 2026 ",
   "description": "This is a React application with i18n support",
   "hero": {
     "disciplines": "Disciplines",
     "countries": "Countries"
   },
   "cookieBanner": {
-    "message": "We use cookies to improve your experience on our website. This is a dummy version as we currently don't use any real cookies.",
+    "message": "We use cookies to improve your experience on our website.",
+    "messageWithPolicy": "We use cookies to improve your experience on our website. Learn more in the <0>Cookie Policy</0>.",
     "accept": "Accept Everything",
     "decline": "Decline Optional"
   },
@@ -15,8 +16,15 @@
     "sports": "Sports",
     "dashboard": "Dashboard",
     "admin": "Admin",
-    "login": "Login",
-    "logout": "Logout"
+        "title": "Results Dashboard",
+        "demoNote": "Live data from the referee API.",
+    "logout": "Logout",
+        "infoTitle": "Live results overview",
+        "infoText": "This dashboard loads the current results for all active sports directly from the API.",
+    "menuTitle": "Menu",
+    "language": "Language",
+    "darkMode": "Dark mode",
+    "lightMode": "Light mode"
   },
   "login": {
     "title": "Welcome",
@@ -42,65 +50,144 @@
       "country": "Country",
       "bronze": "Bronze",
       "silver": "Silver",
-      "gold": "Gold"
+      "gold": "Gold",
+      "total": "Total"
     },
     "noData": "No data available.",
     "loadMore": "Load more entries"
   },
   "sport": {
     "notFoundTitle": "Sport not found",
-    "notFoundText": "The sport \"{{sport}}\" you searched for does not exist or no data is available."
+    "notFoundText": "The sport \"{{sport}}\" you searched for does not exist or no data is available.",
+    "measurements": {
+      "time": "Time in s",
+      "points": "Points",
+      "score": "Score"
+    }
   },
   "status": {
     "pending": "Pending",
     "approved": "Approved",
-    "published": "Published"
+    "published": "Published",
+    "rejected": "Rejected",
+    "invalidated": "Invalidated"
   },
   "dashboard": {
     "title": "Referee Dashboard",
-    "demoNote": "Demo version - results management with 4-eye principle",
     "loggedInAs": "Logged in as: {{email}} ({{role}})",
-    "infoTitle": "4-eye principle",
-    "infoText": "Results must be approved by another referee before they can be published. You cannot approve your own submissions.",
     "newResultTitle": "Submit a New Result",
     "addResult": "Add Result",
     "labels": {
       "sport": "Sport",
+      "athleteId": "Athlete ID",
       "event": "Event",
       "athlete": "Athlete",
       "country": "Country",
       "result": "Result",
+      "resultValue": "Result value",
+      "rank": "Rank",
       "notes": "Notes (optional)",
       "notesPlaceholder": "Additional comments..."
     },
     "placeholders": {
+      "selectSport": "Select a sport",
+      "selectAthlete": "Select an athlete",
+      "loadingAthletes": "Loading athletes...",
       "sportExample": "e.g. Ski Alpin",
+      "athleteIdExample": "e.g. 1",
       "eventExample": "e.g. Downhill Men",
       "athleteExample": "Athlete name",
       "countryExample": "e.g. Austria",
-      "resultExample": "e.g. 1:42.56"
+      "resultExample": "e.g. 1:42.56",
+      "resultValueExample": "e.g. 00:25:34.5",
+      "rankExample": "e.g. 1"
     },
     "buttons": {
       "submit": "Submit",
       "cancel": "Cancel",
+      "importResult": "Import Result",
+      "downloadExcel": "Download Excel",
+      "previewImport": "Review file",
+      "confirmImport": "Confirm import",
+      "edit": "Edit",
       "approve": "Approve",
+      "reject": "Reject",
+      "invalidate": "Invalidate",
+      "confirm": "Confirm",
       "publish": "Publish"
     },
+    "importResultTitle": "Import results",
+    "importResultDescription": "Download the Excel template with all sports and matching athletes. Then enter only the sport, player and result.",
+    "importResultDownloadError": "The Excel template could not be created.",
+    "importResultSelectedFile": "Excel file",
+    "importResultNoFileSelected": "No file selected.",
+    "importResultNoFile": "Please select an Excel file first.",
+    "importResultReadError": "The Excel file could not be processed.",
+    "importResultSummaryTitle": "Import summary",
+    "importResultSummary": "File rows: {{fileRows}}, valid rows: {{validRows}}, ready to import: {{readyRows}}, skipped: {{skippedRows}}.",
+    "importResultWarningsTitle": "Warnings and skipped rows",
+    "importResultWarningsMore": "{{count}} more warnings hidden.",
+    "importResultPreviewTitle": "Preview of results to import",
+    "importResultPreviewRow": "Excel row",
+    "importResultNoImportableRows": "No importable rows were found.",
+    "importResultRowIncomplete": "Row {{row}} is incomplete (sport, athlete, or result is missing).",
+    "importResultUnknownSport": "Row {{row}}: sport \"{{sport}}\" was not found.",
+    "importResultUnknownAthlete": "Row {{row}}: athlete \"{{athlete}}\" was not found in {{sport}}.",
+    "importResultInvalidValue": "Row {{row}} ({{athlete}}): invalid result value. {{reason}}",
+    "importResultDuplicateInFile": "Row {{row}}: {{athlete}} in {{sport}} appears multiple times in the file.",
+    "importResultDuplicateInDb": "{{athlete}} in {{sport}} already has a result in the database and was skipped.",
+    "importResultSuccess": "Import completed: {{count}} results were created.",
+    "importResultPartialError": "Import partially completed: {{imported}} created, {{failed}} failed.",
+    "importResultImportRowFailed": "Row {{row}} ({{athlete}}) could not be imported: {{reason}}",
     "table": {
       "title": "Submitted Results",
       "noResults": "No results available",
+      "noActions": "No actions available",
+      "ownSubmission": "Your submission",
+      "ownSubmissionBlocked": "4-eye approval required",
       "waiting": "Waiting for approval",
       "publishedCheck": "✓ Published",
       "approvedBy": "Approved by: {{person}}",
       "columns": {
-        "sportEvent": "Sport / Event",
         "athlete": "Athlete",
         "country": "Country",
         "result": "Result",
+        "medal": "Medal",
         "submittedBy": "Submitted by",
         "status": "Status",
         "actions": "Actions"
       }
+    },
+    "confirmActionTitle": "Confirm action",
+    "confirmActionText": "Do you want to {{action}} the result for {{athlete}}?",
+    "editResultTitle": "Edit result",
+    "editResultSave": "Save changes",
+    "editResultContext": "Edited sport",
+    "editResultValidationError": "Please review the result values.",
+    "createResultValidationError": "Please fill in all required fields",
+    "noActiveSports": "No active sports are available.",
+    "noSports": "No sports are available.",
+    "resultTemplates": {
+      "title": "Result template",
+      "selected": "Template for {{sport}}",
+      "selectSportHint": "Select a sport first so the correct input validation is enabled."
+    },
+    "validation": {
+      "selectSport": "Please select a sport first.",
+      "templateMissing": "No form template is configured for this sport.",
+      "editLocked": "This result can no longer be edited because it has already been approved.",
+      "selectAthlete": "Please select an athlete.",
+      "valueRequired": "Please enter a result value.",
+      "timeFormat": "The time value must match the format mm:ss.hh.",
+      "scoreFormat": "The final score must match the format x:y.",
+      "scoreRange": "The entered values must be between 0 and 20.",
+      "pointsFormat": "The score must be a number with up to two decimal places.",
+      "pointsRange": "The score must be between 0 and 300.",
+      "rankRequired": "Please enter a rank.",
+      "rankInvalid": "The rank must be a positive whole number.",
+      "athleteMismatch": "The selected athlete does not belong to this sport.",
+      "duplicateAthlete": "A result already exists for this athlete in this sport.",
+      "duplicateRank": "This rank is already used in this sport."
     }
   },
   "footer": {
@@ -111,33 +198,90 @@
   },
   "admin": {
     "title": "Admin Dashboard",
-    "demoNote": "Demo version - management of the Milano Cortina 2026 Winter Games",
     "accessDeniedTitle": "Access denied",
     "accessDeniedText": "You do not have permission to access this page.",
-    "refereesManage": "Manage referees",
-    "newReferee": "New Referee",
-    "placeholders": {
+    "usersManage": "Manage Users",
+    "athletesManage": "Manage Athletes",
+    "addUser": "Add User",
+    "addUserTitle": "Add New User",
+    "addUserValidationError": "Please fill in all required fields",
+    "deactivateUser": "Deactivate user",
+    "confirmDeactivateTitle": "Confirm user deactivation",
+    "confirmDeactivateUser": "Are you sure you want to deactivate this user?",
+    "loading": "Loading...",
+    "usersLoadError": "Error loading users",
+    "athletesLoadError": "Error loading athletes",
+    "countriesLoadError": "Error loading countries",
+    "noUsers": "No users found",
+    "noAthletes": "No athletes found",
+    "noSports": "No sports found",
+    "noCountries": "No countries found",
+    "searchUsersPlaceholder": "Search users...",
+    "searchAthletesPlaceholder": "Search athletes...",
+    "filters": {
+      "all": "All"
+    },
+    "resetFilters": "Reset filters",
+    "noFilteredUsers": "No users match the current filters",
+    "noFilteredAthletes": "No athletes match the current filters",
+    "addAthlete": "Add athlete",
+    "addAthleteTitle": "Add new athlete",
+    "addAthleteValidationError": "Please fill in all required fields",
+    "editAthleteTitle": "Edit athlete",
+    "editAthleteValidationError": "Please fill in all required fields",
+    "athletesStatusActionError": "Error updating athlete status",
+    "athleteActivate": "Activate",
+    "athleteDeactivate": "Deactivate",
+    "athleteEdit": "Edit",
+    "athleteStatusConfirmTitle": "Confirm athlete status change",
+    "athleteStatusConfirmText": "Do you really want to {{action}} {{athlete}}?",
+    "roleAdmin": "Admin",
+    "roleReferee": "Referee",
+    "active": "Active",
+    "inactive": "Inactive",
+    "athletesTitle": "Athletes overview",
+    "form": {
+      "name": "Full Name",
+      "namePlaceholder": "e.g. John Doe",
+      "username": "Username",
+      "usernamePlaceholder": "e.g. john.doe",
+      "password": "Password",
+      "passwordPlaceholder": "Enter password",
+      "role": "Role"
+    },
+    "athleteForm": {
       "name": "Name",
-      "email": "E-Mail",
-      "country": "Country",
-      "sports": "Sports (comma separated)"
+      "namePlaceholder": "e.g. Marco Odermatt",
+      "sportId": "Sport ID",
+      "sportIdPlaceholder": "Select a sport",
+      "countryId": "Country ID",
+      "countryIdPlaceholder": "Select a country"
     },
     "buttons": {
       "save": "Save",
       "cancel": "Cancel",
-      "deleteAll": "Delete all results"
+      "confirm": "Confirm"
     },
-    "noReferees": "No referees available",
-    "resultsTitle": "Results management",
     "table": {
       "columns": {
+        "username": "Username",
         "name": "Name",
-        "email": "E-Mail",
-        "country": "Country",
-        "sports": "Sports",
-        "createdAt": "Created at",
-        "actions": "Actions",
-        "status": "Status"
+        "role": "Role",
+        "status": "Status",
+        "actions": "Actions"
+      }
+    },
+    "athletesTable": {
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "countryCode": "Country code",
+        "countryName": "Country",
+        "sportId": "Sport ID",
+        "sportName": "Sport",
+        "active": "Active",
+        "edit": "Edit",
+        "actions": "Actions"
       }
     }
   }

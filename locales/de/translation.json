@@ -1,12 +1,13 @@
 {
-  "welcome": "Willkommen bei den Milano Cortina 2026 Olympischen Spielen",
+  "welcome": "Willkommen bei den Olympischen Spielen Milano Cortina 2026",
   "description": "Dies ist eine React-Anwendung mit i18n-Unterstützung",
   "hero": {
     "disciplines": "Die Disziplinen",
     "countries": "Die Länder"
   },
   "cookieBanner": {
-    "message": "Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern. Dies ist eine Demo-Version, da wir derzeit keine echten Cookies verwenden.",
+    "message": "Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern.",
+    "messageWithPolicy": "Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern. Mehr dazu in der <0>Cookie-Richtlinie</0>.",
     "accept": "Alle akzeptieren",
     "decline": "Optionale ablehnen"
   },
@@ -16,7 +17,14 @@
     "dashboard": "Dashboard",
     "admin": "Admin",
     "login": "Login",
-    "logout": "Logout"
+    "logout": "Logout",
+    "openMenu": "Menü öffnen",
+        "title": "Ergebnis-Dashboard",
+        "demoNote": "Live-Daten aus der Schiedsrichter-API.",
+    "menuTitle": "Menü",
+        "infoTitle": "Live-Ergebnisübersicht",
+        "infoText": "Dieses Dashboard lädt die aktuellen Ergebnisse aller aktiven Sportarten direkt aus der API.",
+    "lightMode": "Heller Modus"
   },
   "login": {
     "title": "Willkommen",
@@ -42,65 +50,144 @@
       "country": "Land",
       "bronze": "Bronze",
       "silver": "Silber",
-      "gold": "Gold"
+      "gold": "Gold",
+      "total": "Total"
     },
     "noData": "Keine Daten verfügbar.",
     "loadMore": "Weitere Einträge laden"
   },
   "sport": {
     "notFoundTitle": "Sportart nicht gefunden",
-    "notFoundText": "Die gesuchte Sportart \"{{sport}}\" existiert nicht oder es liegen keine Daten vor."
+    "notFoundText": "Die gesuchte Sportart \"{{sport}}\" existiert nicht oder es liegen keine Daten vor.",
+    "measurements": {
+      "time": "Zeit in s",
+      "points": "Punkte",
+      "score": "Endstand"
+    }
   },
   "status": {
     "pending": "Ausstehend",
     "approved": "Genehmigt",
-    "published": "Veröffentlicht"
+    "published": "Veröffentlicht",
+    "rejected": "Abgelehnt",
+    "invalidated": "Ungültig"
   },
   "dashboard": {
     "title": "Schiedsrichter Dashboard",
-    "demoNote": "Demo Version - Ergebnisverwaltung mit 4-Augen-Prinzip",
     "loggedInAs": "Angemeldet als: {{email}} ({{role}})",
-    "infoTitle": "4-Augen-Prinzip",
-    "infoText": "Ergebnisse müssen von einem anderen Schiedsrichter genehmigt werden, bevor sie veröffentlicht werden können. Sie können Ihre eigenen Einreichungen nicht genehmigen.",
     "newResultTitle": "Neues Ergebnis einreichen",
     "addResult": "Ergebnis hinzufügen",
     "labels": {
       "sport": "Sportart",
+      "athleteId": "Athleten-ID",
       "event": "Event",
       "athlete": "Athlet",
       "country": "Land",
       "result": "Ergebnis",
+      "resultValue": "Ergebniswert",
+      "rank": "Platz",
       "notes": "Notizen (optional)",
       "notesPlaceholder": "Zusätzliche Bemerkungen..."
     },
     "placeholders": {
+      "selectSport": "Sportart auswählen",
+      "selectAthlete": "Athleten auswählen",
+      "loadingAthletes": "Athleten werden geladen...",
       "sportExample": "z.B. Ski Alpin",
+      "athleteIdExample": "z.B. 1",
       "eventExample": "z.B. Downhill Men",
       "athleteExample": "Name des Athleten",
       "countryExample": "z.B. Austria",
-      "resultExample": "z.B. 1:42.56"
+      "resultExample": "z.B. 1:42.56",
+      "resultValueExample": "z.B. 00:25:34.5",
+      "rankExample": "z.B. 1"
     },
     "buttons": {
       "submit": "Einreichen",
       "cancel": "Abbrechen",
+      "importResult": "Ergebnis importieren",
+      "downloadExcel": "Excel herunterladen",
+      "previewImport": "Datei prüfen",
+      "confirmImport": "Import bestätigen",
+      "edit": "Bearbeiten",
       "approve": "Genehmigen",
+      "reject": "Ablehnen",
+      "invalidate": "Ungültig machen",
+      "confirm": "Bestätigen",
       "publish": "Veröffentlichen"
     },
+    "importResultTitle": "Ergebnisse importieren",
+    "importResultDescription": "Lade die Excel-Vorlage mit allen Sportarten und den passenden Spielern herunter. Danach musst du nur Sportart, Spieler und Ergebnis eintragen.",
+    "importResultDownloadError": "Die Excel-Vorlage konnte nicht erstellt werden.",
+    "importResultSelectedFile": "Excel-Datei",
+    "importResultNoFileSelected": "Keine Datei ausgewählt.",
+    "importResultNoFile": "Bitte wählen Sie zuerst eine Excel-Datei aus.",
+    "importResultReadError": "Die Excel-Datei konnte nicht verarbeitet werden.",
+    "importResultSummaryTitle": "Import-Zusammenfassung",
+    "importResultSummary": "Dateizeilen: {{fileRows}}, gültige Zeilen: {{validRows}}, bereit zum Import: {{readyRows}}, übersprungen: {{skippedRows}}.",
+    "importResultWarningsTitle": "Hinweise und übersprungene Zeilen",
+    "importResultWarningsMore": "Weitere {{count}} Hinweise ausgeblendet.",
+    "importResultPreviewTitle": "Vorschau der zu importierenden Ergebnisse",
+    "importResultPreviewRow": "Excel-Zeile",
+    "importResultNoImportableRows": "Es konnten keine importierbaren Zeilen gefunden werden.",
+    "importResultRowIncomplete": "Zeile {{row}} ist unvollständig (Sportart, Spieler oder Ergebnis fehlt).",
+    "importResultUnknownSport": "Zeile {{row}}: Sportart \"{{sport}}\" wurde nicht gefunden.",
+    "importResultUnknownAthlete": "Zeile {{row}}: Athlet \"{{athlete}}\" wurde in {{sport}} nicht gefunden.",
+    "importResultInvalidValue": "Zeile {{row}} ({{athlete}}): Ergebnis ungültig. {{reason}}",
+    "importResultDuplicateInFile": "Zeile {{row}}: {{athlete}} in {{sport}} ist in der Datei doppelt vorhanden.",
+    "importResultDuplicateInDb": "{{athlete}} in {{sport}} hat bereits ein Ergebnis in der Datenbank und wurde übersprungen.",
+    "importResultSuccess": "Import erfolgreich: {{count}} Ergebnisse wurden erstellt.",
+    "importResultPartialError": "Import teilweise abgeschlossen: {{imported}} erstellt, {{failed}} fehlgeschlagen.",
+    "importResultImportRowFailed": "Zeile {{row}} ({{athlete}}) konnte nicht importiert werden: {{reason}}",
     "table": {
       "title": "Eingereichte Ergebnisse",
       "noResults": "Keine Ergebnisse vorhanden",
+      "noActions": "Keine Aktionen verfügbar",
+      "ownSubmission": "Eigene Einreichung",
+      "ownSubmissionBlocked": "4-Augen-Freigabe erforderlich",
       "waiting": "Wartet auf Genehmigung",
       "publishedCheck": "✓ Veröffentlicht",
       "approvedBy": "Genehmigt von: {{person}}",
       "columns": {
-        "sportEvent": "Sportart / Event",
         "athlete": "Athlet",
         "country": "Land",
         "result": "Ergebnis",
+        "medal": "Medaille",
         "submittedBy": "Eingereicht von",
         "status": "Status",
         "actions": "Aktionen"
       }
+    },
+    "confirmActionTitle": "Aktion bestätigen",
+    "confirmActionText": "Möchten Sie das Ergebnis für {{athlete}} wirklich {{action}}?",
+    "editResultTitle": "Ergebnis bearbeiten",
+    "editResultSave": "Änderungen speichern",
+    "editResultContext": "Bearbeitete Sportart",
+    "editResultValidationError": "Bitte überprüfen Sie die Ergebnisangaben.",
+    "createResultValidationError": "Bitte füllen Sie alle erforderlichen Felder aus",
+    "noActiveSports": "Es sind keine aktiven Sportarten verfügbar.",
+    "noSports": "Es sind keine Sportarten verfügbar.",
+    "resultTemplates": {
+      "title": "Formvorlage",
+      "selected": "Vorlage für {{sport}}",
+      "selectSportHint": "Wählen Sie zuerst eine Sportart aus, damit die passende Eingabeprüfung aktiviert wird."
+    },
+    "validation": {
+      "selectSport": "Bitte wählen Sie zuerst eine Sportart aus.",
+      "templateMissing": "Für diese Sportart ist keine Formvorlage hinterlegt.",
+      "editLocked": "Diese Ergebnisse können nicht mehr bearbeitet werden, weil sie bereits genehmigt wurden.",
+      "selectAthlete": "Bitte wählen Sie einen Athleten aus.",
+      "valueRequired": "Bitte geben Sie einen Ergebniswert ein.",
+      "timeFormat": "Der Zeitwert muss dem Format mm:ss.hh entsprechen.",
+      "scoreFormat": "Der Endstand muss dem Format x:y entsprechen.",
+      "scoreRange": "Die eingegebenen Werte müssen zwischen 0 und 20 liegen.",
+      "pointsFormat": "Die Punktzahl muss eine Zahl mit bis zu zwei Nachkommastellen sein.",
+      "pointsRange": "Die Punktzahl muss zwischen 0 und 300 liegen.",
+      "rankRequired": "Bitte geben Sie einen Platz ein.",
+      "rankInvalid": "Der Platz muss eine positive ganze Zahl sein.",
+      "athleteMismatch": "Der ausgewählte Athlet gehört nicht zu dieser Sportart.",
+      "duplicateAthlete": "Für diesen Athleten existiert bereits ein Ergebnis in dieser Sportart.",
+      "duplicateRank": "Dieser Platz ist für diese Sportart bereits vergeben."
     }
   },
   "footer": {
@@ -111,33 +198,90 @@
   },
   "admin": {
     "title": "Admin Dashboard",
-    "demoNote": "Demo Version - Verwaltung der Olympischen Winterspiele 2026",
     "accessDeniedTitle": "Zugriff verweigert",
     "accessDeniedText": "Sie haben keine Berechtigung, diese Seite zu betreten.",
-    "refereesManage": "Schiedsrichter verwalten",
-    "newReferee": "Neuer Schiedsrichter",
-    "placeholders": {
+    "usersManage": "Benutzer verwalten",
+    "athletesManage": "Athleten verwalten",
+    "addUser": "Benutzer hinzufügen",
+    "addUserTitle": "Neuen Benutzer hinzufügen",
+    "addUserValidationError": "Bitte füllen Sie alle erforderlichen Felder aus",
+    "deactivateUser": "Benutzer deaktivieren",
+    "confirmDeactivateTitle": "Benutzerdeaktivierung bestätigen",
+    "confirmDeactivateUser": "Sind Sie sicher, dass Sie diesen Benutzer deaktivieren möchten?",
+    "loading": "Wird geladen...",
+    "usersLoadError": "Fehler beim Laden der Benutzer",
+    "athletesLoadError": "Fehler beim Laden der Athleten",
+    "countriesLoadError": "Fehler beim Laden der Länder",
+    "noUsers": "Keine Benutzer gefunden",
+    "noAthletes": "Keine Athleten gefunden",
+    "noSports": "Keine Sportarten gefunden",
+    "noCountries": "Keine Länder gefunden",
+    "searchUsersPlaceholder": "Benutzer suchen...",
+    "searchAthletesPlaceholder": "Athleten suchen...",
+    "filters": {
+      "all": "Alle"
+    },
+    "resetFilters": "Filter zurücksetzen",
+    "noFilteredUsers": "Keine Benutzer passen zu den aktuellen Filtern",
+    "noFilteredAthletes": "Keine Athleten passen zu den aktuellen Filtern",
+    "addAthlete": "Athleten hinzufügen",
+    "addAthleteTitle": "Neuen Athleten hinzufügen",
+    "addAthleteValidationError": "Bitte füllen Sie alle erforderlichen Felder aus",
+    "editAthleteTitle": "Athleten bearbeiten",
+    "editAthleteValidationError": "Bitte füllen Sie alle erforderlichen Felder aus",
+    "athletesStatusActionError": "Fehler beim Aktualisieren des Athletenstatus",
+    "athleteActivate": "Aktivieren",
+    "athleteDeactivate": "Deaktivieren",
+    "athleteEdit": "Bearbeiten",
+    "athleteStatusConfirmTitle": "Athletenstatus bestätigen",
+    "athleteStatusConfirmText": "Möchten Sie {{athlete}} wirklich {{action}}?",
+    "roleAdmin": "Admin",
+    "roleReferee": "Schiedsrichter",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "athletesTitle": "Athletenübersicht",
+    "form": {
+      "name": "Vollständiger Name",
+      "namePlaceholder": "z.B. Max Mustermann",
+      "username": "Benutzername",
+      "usernamePlaceholder": "z.B. max.mustermann",
+      "password": "Passwort",
+      "passwordPlaceholder": "Passwort eingeben",
+      "role": "Rolle"
+    },
+    "athleteForm": {
       "name": "Name",
-      "email": "E-Mail",
-      "country": "Land",
-      "sports": "Sportarten (kommagetrennt)"
+      "namePlaceholder": "z.B. Marco Odermatt",
+      "sportId": "Sport-ID",
+      "sportIdPlaceholder": "Sportart auswählen",
+      "countryId": "Länder-ID",
+      "countryIdPlaceholder": "Land auswählen"
     },
     "buttons": {
       "save": "Speichern",
       "cancel": "Abbrechen",
-      "deleteAll": "Alle Ergebnisse löschen"
+      "confirm": "Bestätigen"
     },
-    "noReferees": "Keine Schiedsrichter vorhanden",
-    "resultsTitle": "Ergebnisse verwalten",
     "table": {
       "columns": {
+        "username": "Benutzername",
         "name": "Name",
-        "email": "E-Mail",
-        "country": "Land",
-        "sports": "Sportarten",
-        "createdAt": "Erstellt am",
-        "actions": "Aktionen",
-        "status": "Status"
+        "role": "Rolle",
+        "status": "Status",
+        "actions": "Aktionen"
+      }
+    },
+    "athletesTable": {
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "countryCode": "Ländercode",
+        "countryName": "Land",
+        "sportId": "Sport-ID",
+        "sportName": "Sportart",
+        "active": "Aktiv",
+        "edit": "Bearbeiten",
+        "actions": "Aktionen"
       }
     }
   }
