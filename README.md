@@ -415,10 +415,14 @@ Das Dashboard unter `/de/dashboard` ist für **Schiedsrichter und Admins** zugä
 
 #### Ergebnisse per Excel importieren
 
+![Excel-Tabelle](docs/screenshots/11_excel_tabelle.png)
+
 - Klick auf **„Ergebnis importieren"** öffnet den Import-Dialog.
 - **Excel-Vorlage herunterladen**: Lädt eine vorbereitete `.xlsx`-Vorlage mit Dropdown-Validierung für Athleten, Sportarten und Ergebnisformate herunter.
 - **Datei hochladen**: Die ausgefüllte Vorlage wird analysiert und als Vorschau angezeigt.
 - **Vorschau & Validierung**: Fehlerhafte Zeilen werden hervorgehoben; korrekte Zeilen können gemeinsam eingereicht werden.
+
+![Import](docs/screenshots/11_excel_import.png)
 
 #### Ergebnisstatus-Workflow
 
