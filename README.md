@@ -282,7 +282,7 @@ Die App kommuniziert mit einer REST-API unter `https://olympia-2026-api.onrender
 | `/api/athletes/{id}/activate` | `POST` | Athleten aktivieren (nur Admin) |
 | `/api/athletes/{id}/deactivate` | `POST` | Athleten deaktivieren (nur Admin) |
 | `/api/countries` | `GET` | Alle Länder abrufen |
-| `/api/medals/country/{country}` | `GET` | Medaillen eines Landes |
+| `/api/medals/by-country/{country}` | `GET` | Medaillen eines Landes |
 | `/api/medals/table` | `GET` | Gesamter Medaillenspiegel |
 
 #### Dark Mode
