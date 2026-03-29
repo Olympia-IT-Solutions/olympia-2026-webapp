@@ -1,6 +1,9 @@
 {
   "welcome": "Welcome to Olympics Milano Cortina 2026 ",
   "description": "This is a React application with i18n support",
+  "common": {
+    "loading": "Loading"
+  },
   "hero": {
     "disciplines": "Disciplines",
     "countries": "Countries"
@@ -16,23 +19,31 @@
     "sports": "Sports",
     "dashboard": "Dashboard",
     "admin": "Admin",
-        "title": "Results Dashboard",
-        "demoNote": "Live data from the referee API.",
+    "login": "Login",
+    "title": "Results Dashboard",
+    "demoNote": "Live data from the referee API.",
     "logout": "Logout",
-        "infoTitle": "Live results overview",
-        "infoText": "This dashboard loads the current results for all active sports directly from the API.",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "infoTitle": "Live results overview",
+    "infoText": "This dashboard loads the current results for all active sports directly from the API.",
     "menuTitle": "Menu",
     "language": "Language",
     "darkMode": "Dark mode",
-    "lightMode": "Light mode"
+    "lightMode": "Light mode",
+    "homeAria": "Go to homepage",
+    "logoAlt": "Milano Cortina 2026 logo"
   },
   "login": {
     "title": "Welcome",
     "invalidCredentials": "Invalid credentials",
     "back": "Back",
+    "username": "Username *",
     "email": "Email *",
     "password": "Password *",
-    "submit": "Continue"
+    "loading": "Loading...",
+    "submit": "Continue",
+    "illustrationAlt": "Login illustration"
   },
   "notfound": {
     "title": "Page not found",
@@ -53,12 +64,57 @@
       "gold": "Gold",
       "total": "Total"
     },
+    "exportCsv": "Export CSV",
+    "csvHeaders": {
+      "countryName": "Country name",
+      "countryCode": "Country code"
+    },
+    "error": "Error loading data.",
     "noData": "No data available.",
-    "loadMore": "Load more entries"
+    "loadMore": "Load more entries",
+    "searchLabel": "Search",
+    "searchPlaceholder": "Search by country name or code",
+    "filterLabel": "Filter by medal",
+    "filters": {
+      "all": "All countries",
+      "goldOnly": "Gold medal countries"
+    },
+    "filteredEmpty": "No countries match your search or filter."
+  },
+  "sportsTable": {
+    "columns": {
+      "rank": "Rank",
+      "athlete": "Athlete",
+      "country": "Country",
+      "result": "Result",
+      "medal": "Medal"
+    },
+    "noResults": "No results available",
+    "searchLabel": "Search",
+    "searchPlaceholder": "Search athlete, country, or result",
+    "filterLabel": "Filter by medal",
+    "filters": {
+      "all": "All results",
+      "medalOnly": "Medal results only"
+    },
+    "filteredEmpty": "No results match your search or filter.",
+    "openCountryDetails": "Open country details for {{country}}"
+  },
+  "sports": {
+    "names": {
+      "biathlon": "Biathlon",
+      "bobsport": "Bobsleigh",
+      "curling": "Curling",
+      "eishockey": "Ice hockey",
+      "eiskunstlauf": "Figure skating",
+      "skilanglauf": "Cross-country skiing",
+      "skispringen": "Ski jumping"
+    }
   },
   "sport": {
     "notFoundTitle": "Sport not found",
     "notFoundText": "The sport \"{{sport}}\" you searched for does not exist or no data is available.",
+    "resultsLoadError": "Unable to load the results for this sport.",
     "measurements": {
       "time": "Time in s",
       "points": "Points",
@@ -170,7 +226,42 @@
     "resultTemplates": {
       "title": "Result template",
       "selected": "Template for {{sport}}",
-      "selectSportHint": "Select a sport first so the correct input validation is enabled."
+      "selectSportHint": "Select a sport first so the correct input validation is enabled.",
+      "labels": {
+        "time": "Time",
+        "score": "Final score",
+        "points": "Points"
+      },
+      "examples": {
+        "biathlon": {
+          "placeholder": "e.g. 25:34.50",
+          "helperText": "Expected time format is mm:ss.hh. Seconds must be between 00 and 59."
+        },
+        "bobsport": {
+          "placeholder": "e.g. 1:39.18",
+          "helperText": "Expected time format is m:ss.hh for run time."
+        },
+        "curling": {
+          "placeholder": "e.g. 6:4",
+          "helperText": "Expected final score format is x:y with whole numbers."
+        },
+        "eishockey": {
+          "placeholder": "e.g. 3:2",
+          "helperText": "Expected final score format is x:y with whole numbers."
+        },
+        "eiskunstlauf": {
+          "placeholder": "e.g. 184.72",
+          "helperText": "Expected points between 0 and 300 with up to two decimal places."
+        },
+        "skilanglauf": {
+          "placeholder": "e.g. 31:08.40",
+          "helperText": "Expected time format is mm:ss.hh for run time."
+        },
+        "skispringen": {
+          "placeholder": "e.g. 131.5",
+          "helperText": "Expected points between 0 and 300 with up to two decimal places."
+        }
+      }
     },
     "validation": {
       "selectSport": "Please select a sport first.",
@@ -194,7 +285,10 @@
     "cookiePolicy": "Cookie Policy",
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms Of Service",
-    "accessibility": "Accessibility"
+    "accessibility": "Accessibility",
+    "copyright": "Copyright 2026. All rights reserved.",
+    "milanoLogoAlt": "Milano Cortina 2026 logo",
+    "olympiaLogoAlt": "Olympia IT Solutions logo"
   },
   "admin": {
     "title": "Admin Dashboard",
@@ -284,5 +378,278 @@
         "actions": "Actions"
       }
     }
+  },
+  "sportsTable": {
+    "columns": {
+      "rank": "Rank",
+      "athlete": "Athlete",
+      "country": "Country",
+      "result": "Result",
+      "medal": "Medal"
+    },
+    "noResults": "No results available.",
+    "searchLabel": "Search",
+    "searchPlaceholder": "Search athlete, country, or result",
+    "filterLabel": "Filter by medal",
+    "filters": {
+      "all": "All results",
+      "medalOnly": "Medal results only"
+    },
+    "filteredEmpty": "No results match your search or filter.",
+    "openCountryDetails": "Open country details for {{country}}"
+  },
+  "medalDisplay": {
+    "medalTypes": {
+      "GOLD": "Gold",
+      "SILVER": "Silver",
+      "BRONZE": "Bronze"
+    },
+    "noMedals": "No medals available.",
+    "noMedalsForCountry": "No medals found for {{country}}.",
+    "entriesCount_one": "{{count}} entry",
+    "entriesCount_other": "{{count}} entries",
+    "sportLabel": "Sport",
+    "showSportDetails": "Show details for {{sport}}"
+  },
+  "countryDetail": {
+    "back": "Back",
+    "medalsTitle": "{{country}} - Medals",
+    "medalsLoadError": "Unable to load the medals for this country.",
+    "countryLookupError": "Unable to load the country details."
+  },
+  "banner": {
+    "eventLine": "Olympic Winter Games - 6 to 22 February 2026 | Paralympic Winter Games - 6 to 15 March 2026",
+    "tickets": "Tickets",
+    "shop": "Shop",
+    "headerImageAria": "Milano Cortina 2026 header image"
+  },
+  "footerBanner": {
+    "tagline": "IT's your vibe"
+  },
+  "slider": {
+    "previous": "Previous slide",
+    "next": "Next slide",
+    "slideLabel": "Slide {{index}}"
+  },
+  "legal": {
+    "accessibility": {
+      "introParagraphs": [
+        "This accessibility statement explains how we design and maintain olympia-2026-webapp for all users.",
+        "Our goal is to provide clear, navigable, and inclusive digital experiences across devices."
+      ],
+      "sections": [
+        {
+          "heading": "1. Scope of this statement",
+          "paragraphs": [
+            "This statement applies to the olympia-2026-webapp website and its public pages.",
+            "It covers essential user journeys such as navigation, language switching, country and sport results, and legal pages."
+          ]
+        },
+        {
+          "heading": "2. Accessibility standards",
+          "paragraphs": [
+            "The website is developed against WCAG 2.2 Level AA principles.",
+            "We also follow semantic HTML and ARIA best practices to support assistive technologies."
+          ],
+          "list": [
+            "Keyboard operability for interactive controls",
+            "Sufficient contrast and readable typography",
+            "Accessible names for buttons, links, and tables",
+            "Responsive layouts for desktop and mobile use"
+          ]
+        },
+        {
+          "heading": "3. Known limitations",
+          "paragraphs": [
+            "Some third-party content and externally embedded media may not fully meet the same accessibility level.",
+            "We continuously review and improve these areas where technically possible."
+          ],
+          "list": [
+            "Third-party widgets and embeds",
+            "External downloadable documents",
+            "Media provided by external partners"
+          ]
+        },
+        {
+          "heading": "4. Feedback and support",
+          "paragraphs": [
+            "If you encounter an accessibility barrier, please contact our support channel.",
+            "Include the page URL and a short description so we can investigate quickly."
+          ],
+          "links": [
+            {
+              "label": "Accessibility support portal",
+              "href": "https://support.olympics.com/hc/en-gb/"
+            }
+          ]
+        }
+      ],
+      "footerNotes": [
+        "Last updated: 29 March 2026"
+      ]
+    },
+    "cookiePolicy": {
+      "introParagraphs": [
+        "This Cookie Policy explains how cookies and similar technologies are used on this website.",
+        "It helps you understand which categories we use and how to manage your preferences."
+      ],
+      "sections": [
+        {
+          "heading": "1. What are cookies?",
+          "paragraphs": [
+            "Cookies are small text files stored on your device when you visit a website.",
+            "They can be session-based (deleted after your visit) or persistent (kept for a defined period)."
+          ]
+        },
+        {
+          "heading": "2. Cookie categories we use",
+          "list": [
+            "Strictly necessary cookies for core functionality",
+            "Functional cookies for preferences and usability",
+            "Performance cookies for analytics and quality improvements",
+            "Marketing cookies for personalised communication where applicable"
+          ]
+        },
+        {
+          "heading": "3. Managing cookies",
+          "paragraphs": [
+            "You can manage your preferences in browser settings and in our cookie controls where available.",
+            "Blocking some categories may affect parts of the website experience."
+          ],
+          "links": [
+            {
+              "label": "Microsoft Edge cookie settings",
+              "href": "https://support.microsoft.com/en-us/microsoft-edge/delete-cookies-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09"
+            },
+            {
+              "label": "Mozilla Firefox cookie settings",
+              "href": "https://support.mozilla.org/en-US/kb/enable-and-disable-cookies-website-preferences"
+            },
+            {
+              "label": "Google Chrome cookie settings",
+              "href": "https://support.google.com/chrome/answer/95647?hl=en"
+            },
+            {
+              "label": "Safari cookie settings",
+              "href": "https://support.apple.com/guide/safari/manage-cookies-and-website-data-sfri11471/mac"
+            }
+          ]
+        },
+        {
+          "heading": "4. More information",
+          "paragraphs": [
+            "For details on personal data processing, please also read our Privacy Policy.",
+            "For cookie background information, visit www.allaboutcookies.org."
+          ]
+        }
+      ],
+      "footerNotes": [
+        "Last updated: 29 March 2026"
+      ]
+    },
+    "privacyPolicy": {
+      "introParagraphs": [
+        "This Privacy Policy describes how personal data is processed when you use this website and related services.",
+        "It applies to account, navigation, and service interactions relevant to olympia-2026-webapp."
+      ],
+      "sections": [
+        {
+          "heading": "1. Who we are",
+          "paragraphs": [
+            "The service is provided in the context of Olympic digital information services.",
+            "Data responsibilities may involve trusted partners where indicated in specific notices."
+          ]
+        },
+        {
+          "heading": "2. Data we collect",
+          "list": [
+            "Information you provide directly (for example account data)",
+            "Technical data such as browser, device, and usage logs",
+            "Preference and language settings",
+            "Cookie-related identifiers where consent applies"
+          ]
+        },
+        {
+          "heading": "3. Why we process data",
+          "list": [
+            "Provide and secure the service",
+            "Improve quality and user experience",
+            "Support communication and user requests",
+            "Meet legal and compliance obligations"
+          ]
+        },
+        {
+          "heading": "4. Your rights",
+          "paragraphs": [
+            "Depending on applicable law, you may request access, correction, deletion, restriction, objection, or portability.",
+            "You may also withdraw consent where processing is based on consent."
+          ]
+        },
+        {
+          "heading": "5. Contact",
+          "paragraphs": [
+            "For privacy requests, use our official support and data protection channels."
+          ],
+          "links": [
+            {
+              "label": "Privacy support portal",
+              "href": "https://support.olympics.com/hc/en-gb/"
+            }
+          ]
+        }
+      ],
+      "footerNotes": [
+        "Last updated: 29 March 2026",
+        "International Olympic Committee, Maison Olympique (Olympic House), 1007 Lausanne, Switzerland"
+      ]
+    },
+    "termsOfService": {
+      "introParagraphs": [
+        "These Terms of Service govern your use of olympia-2026-webapp and related digital features.",
+        "By using the website, you agree to these terms and to applicable legal requirements."
+      ],
+      "sections": [
+        {
+          "heading": "1. Use of the service",
+          "paragraphs": [
+            "The website is provided for information and interactive Olympic-related content.",
+            "Certain features may require an account or may be restricted by role."
+          ]
+        },
+        {
+          "heading": "2. Acceptable behavior",
+          "list": [
+            "Use the service lawfully and respectfully",
+            "Do not misuse, disrupt, scrape, or reverse engineer the platform",
+            "Do not upload unlawful, harmful, or rights-infringing content",
+            "Do not attempt unauthorised access to systems or data"
+          ]
+        },
+        {
+          "heading": "3. Intellectual property",
+          "paragraphs": [
+            "Content, branding, and platform elements are protected by intellectual property laws.",
+            "No rights are granted beyond normal personal use unless explicitly stated."
+          ]
+        },
+        {
+          "heading": "4. Service availability and liability",
+          "paragraphs": [
+            "We aim for reliable operation but cannot guarantee uninterrupted availability.",
+            "To the extent allowed by law, liability is limited for indirect or consequential damages."
+          ]
+        },
+        {
+          "heading": "5. Changes and governing law",
+          "paragraphs": [
+            "We may update these terms and publish the latest version on this page.",
+            "Applicable law and jurisdiction are determined by the legal notices provided for this service."
+          ]
+        }
+      ],
+      "footerNotes": [
+        "Last updated: 29 March 2026"
+      ]
+    }
   }
-} 
+}

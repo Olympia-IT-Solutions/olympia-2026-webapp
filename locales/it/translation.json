@@ -1,6 +1,9 @@
 {
   "welcome": "Benvenuto ai Giochi Olimpici di Milano Cortina 2026",
   "description": "Questa è un'applicazione React con supporto i18n",
+  "common": {
+    "loading": "Caricamento"
+  },
   "hero": {
     "disciplines": "Le discipline",
     "countries": "I paesi"
@@ -19,20 +22,28 @@
     "login": "Login",
     "logout": "Logout",
     "openMenu": "Apri menu",
-        "title": "Dashboard risultati",
-        "demoNote": "Dati live dall'API dei giudici.",
+    "closeMenu": "Chiudi menu",
+    "language": "Lingua",
+    "darkMode": "Modalita scura",
+    "title": "Dashboard risultati",
+    "demoNote": "Dati live dall'API dei giudici.",
     "menuTitle": "Menu",
-        "infoTitle": "Panoramica risultati live",
-        "infoText": "Questa dashboard carica i risultati attuali di tutti gli sport attivi direttamente dall'API.",
-    "lightMode": "Modalità chiara"
+    "infoTitle": "Panoramica risultati live",
+    "infoText": "Questa dashboard carica i risultati attuali di tutti gli sport attivi direttamente dall'API.",
+    "lightMode": "Modalità chiara",
+    "homeAria": "Vai alla home page",
+    "logoAlt": "Logo Milano Cortina 2026"
   },
   "login": {
     "title": "Benvenuto",
     "invalidCredentials": "Credenziali non valide",
     "back": "Indietro",
+    "username": "Nome utente *",
     "email": "Email *",
     "password": "Password *",
-    "submit": "Continua"
+    "loading": "Caricamento...",
+    "submit": "Continua",
+    "illustrationAlt": "Illustrazione accesso"
   },
   "notfound": {
     "title": "Pagina non trovata",
@@ -53,12 +64,57 @@
       "gold": "Oro",
       "total": "Totale"
     },
+    "exportCsv": "Esporta CSV",
+    "csvHeaders": {
+      "countryName": "Nome paese",
+      "countryCode": "Codice paese"
+    },
+    "error": "Errore durante il caricamento dei dati.",
     "noData": "Nessun dato disponibile.",
-    "loadMore": "Carica più voci"
+    "loadMore": "Carica più voci",
+    "searchLabel": "Cerca",
+    "searchPlaceholder": "Cerca per nome o codice del paese",
+    "filterLabel": "Filtra per medaglia",
+    "filters": {
+      "all": "Tutti i paesi",
+      "goldOnly": "Paesi con medaglia d'oro"
+    },
+    "filteredEmpty": "Nessun paese corrisponde alla tua ricerca o al filtro."
+  },
+  "sportsTable": {
+    "columns": {
+      "rank": "Posizione",
+      "athlete": "Atleta",
+      "country": "Paese",
+      "result": "Risultato",
+      "medal": "Medaglia"
+    },
+    "noResults": "Nessun risultato disponibile",
+    "searchLabel": "Cerca",
+    "searchPlaceholder": "Cerca atleta, paese o risultato",
+    "filterLabel": "Filtra per medaglia",
+    "filters": {
+      "all": "Tutti i risultati",
+      "medalOnly": "Solo risultati con medaglia"
+    },
+    "filteredEmpty": "Nessun risultato corrisponde alla tua ricerca o al filtro.",
+    "openCountryDetails": "Apri i dettagli del paese per {{country}}"
+  },
+  "sports": {
+    "names": {
+      "biathlon": "Biathlon",
+      "bobsport": "Bob",
+      "curling": "Curling",
+      "eishockey": "Hockey su ghiaccio",
+      "eiskunstlauf": "Pattinaggio artistico",
+      "skilanglauf": "Sci di fondo",
+      "skispringen": "Salto con gli sci"
+    }
   },
   "sport": {
     "notFoundTitle": "Sport non trovato",
     "notFoundText": "Lo sport \"{{sport}}\" che hai cercato non esiste o non sono disponibili dati.",
+    "resultsLoadError": "Impossibile caricare i risultati di questo sport.",
     "measurements": {
       "time": "Tempo in s",
       "points": "Punti",
@@ -170,7 +226,42 @@
     "resultTemplates": {
       "title": "Modello risultato",
       "selected": "Modello per {{sport}}",
-      "selectSportHint": "Seleziona prima uno sport per attivare la validazione corretta."
+      "selectSportHint": "Seleziona prima uno sport per attivare la validazione corretta.",
+      "labels": {
+        "time": "Tempo",
+        "score": "Punteggio finale",
+        "points": "Punti"
+      },
+      "examples": {
+        "biathlon": {
+          "placeholder": "es: 25:34.50",
+          "helperText": "Il formato atteso è mm:ss.hh. I secondi devono essere compresi tra 00 e 59."
+        },
+        "bobsport": {
+          "placeholder": "es: 1:39.18",
+          "helperText": "Il formato atteso è m:ss.hh per il tempo di gara."
+        },
+        "curling": {
+          "placeholder": "es: 6:4",
+          "helperText": "Il formato atteso è x:y con numeri interi."
+        },
+        "eishockey": {
+          "placeholder": "es: 3:2",
+          "helperText": "Il formato atteso è x:y con numeri interi."
+        },
+        "eiskunstlauf": {
+          "placeholder": "es: 184.72",
+          "helperText": "I punti devono essere compresi tra 0 e 300, con fino a due decimali."
+        },
+        "skilanglauf": {
+          "placeholder": "es: 31:08.40",
+          "helperText": "Il formato atteso è mm:ss.hh per il tempo di gara."
+        },
+        "skispringen": {
+          "placeholder": "es: 131.5",
+          "helperText": "I punti devono essere compresi tra 0 e 300, con fino a due decimali."
+        }
+      }
     },
     "validation": {
       "selectSport": "Seleziona prima uno sport.",
@@ -194,7 +285,10 @@
     "cookiePolicy": "Cookie Policy",
     "privacyPolicy": "Informativa sulla privacy",
     "termsOfService": "Termini di servizio",
-    "accessibility": "Accessibilità"
+    "accessibility": "Accessibilità",
+    "copyright": "Copyright 2026. Tutti i diritti riservati.",
+    "milanoLogoAlt": "Logo Milano Cortina 2026",
+    "olympiaLogoAlt": "Logo Olympia IT Solutions"
   },
   "admin": {
     "title": "Pannello di amministrazione",
@@ -283,6 +377,279 @@
         "edit": "Modifica",
         "actions": "Azioni"
       }
+    }
+  },
+  "sportsTable": {
+    "columns": {
+      "rank": "Posizione",
+      "athlete": "Atleta",
+      "country": "Paese",
+      "result": "Risultato",
+      "medal": "Medaglia"
+    },
+    "noResults": "Nessun risultato disponibile.",
+    "searchLabel": "Cerca",
+    "searchPlaceholder": "Cerca atleta, paese o risultato",
+    "filterLabel": "Filtra per medaglia",
+    "filters": {
+      "all": "Tutti i risultati",
+      "medalOnly": "Solo risultati con medaglia"
+    },
+    "filteredEmpty": "Nessun risultato corrisponde alla tua ricerca o al filtro.",
+    "openCountryDetails": "Apri i dettagli del paese {{country}}"
+  },
+  "medalDisplay": {
+    "medalTypes": {
+      "GOLD": "Oro",
+      "SILVER": "Argento",
+      "BRONZE": "Bronzo"
+    },
+    "noMedals": "Nessuna medaglia disponibile.",
+    "noMedalsForCountry": "Nessuna medaglia trovata per {{country}}.",
+    "entriesCount_one": "{{count}} voce",
+    "entriesCount_other": "{{count}} voci",
+    "sportLabel": "Sport",
+    "showSportDetails": "Mostra dettagli di {{sport}}"
+  },
+  "countryDetail": {
+    "back": "Indietro",
+    "medalsTitle": "{{country}} - Medaglie",
+    "medalsLoadError": "Impossibile caricare le medaglie di questo paese.",
+    "countryLookupError": "Impossibile caricare i dettagli del paese."
+  },
+  "banner": {
+    "eventLine": "Giochi Olimpici Invernali - 6-22 febbraio 2026 | Giochi Paralimpici Invernali - 6-15 marzo 2026",
+    "tickets": "Biglietti",
+    "shop": "Shop",
+    "headerImageAria": "Immagine intestazione Milano Cortina 2026"
+  },
+  "footerBanner": {
+    "tagline": "IT's your vibe"
+  },
+  "slider": {
+    "previous": "Slide precedente",
+    "next": "Slide successiva",
+    "slideLabel": "Slide {{index}}"
+  },
+  "legal": {
+    "accessibility": {
+      "introParagraphs": [
+        "Questa dichiarazione di accessibilita spiega come progettiamo e manteniamo olympia-2026-webapp per tutti gli utenti.",
+        "Il nostro obiettivo e offrire un esperienza digitale chiara, navigabile e inclusiva su tutti i dispositivi."
+      ],
+      "sections": [
+        {
+          "heading": "1. Ambito di questa dichiarazione",
+          "paragraphs": [
+            "Questa dichiarazione si applica al sito olympia-2026-webapp e alle sue pagine pubbliche.",
+            "Copre i percorsi principali, inclusi navigazione, cambio lingua, risultati per paese e sport e pagine legali."
+          ]
+        },
+        {
+          "heading": "2. Standard di accessibilita",
+          "paragraphs": [
+            "Il sito e sviluppato seguendo i principi WCAG 2.2 livello AA.",
+            "Seguiamo inoltre le buone pratiche HTML semantico e ARIA per supportare le tecnologie assistive."
+          ],
+          "list": [
+            "Utilizzo da tastiera dei controlli interattivi",
+            "Contrasto sufficiente e tipografia leggibile",
+            "Nomi accessibili per pulsanti, link e tabelle",
+            "Layout responsive per desktop e mobile"
+          ]
+        },
+        {
+          "heading": "3. Limitazioni note",
+          "paragraphs": [
+            "Alcuni contenuti di terze parti e media incorporati esterni potrebbero non raggiungere lo stesso livello di accessibilita.",
+            "Li riesaminiamo e miglioriamo continuamente ove tecnicamente possibile."
+          ],
+          "list": [
+            "Widget e integrazioni di terze parti",
+            "Documenti scaricabili esterni",
+            "Contenuti media forniti da partner esterni"
+          ]
+        },
+        {
+          "heading": "4. Feedback e supporto",
+          "paragraphs": [
+            "Se riscontri una barriera di accessibilita, contatta il nostro canale di supporto.",
+            "Indica l URL della pagina e una breve descrizione per agevolare la verifica."
+          ],
+          "links": [
+            {
+              "label": "Portale supporto accessibilita",
+              "href": "https://support.olympics.com/hc/en-gb/"
+            }
+          ]
+        }
+      ],
+      "footerNotes": [
+        "Ultimo aggiornamento: 29 marzo 2026"
+      ]
+    },
+    "cookiePolicy": {
+      "introParagraphs": [
+        "Questa Cookie Policy spiega come vengono utilizzati cookie e tecnologie simili su questo sito.",
+        "Ti aiuta a capire quali categorie usiamo e come gestire le tue preferenze."
+      ],
+      "sections": [
+        {
+          "heading": "1. Cosa sono i cookie?",
+          "paragraphs": [
+            "I cookie sono piccoli file di testo salvati sul tuo dispositivo quando visiti un sito web.",
+            "Possono essere di sessione (eliminati dopo la visita) o persistenti (conservati per un periodo definito)."
+          ]
+        },
+        {
+          "heading": "2. Categorie di cookie utilizzate",
+          "list": [
+            "Cookie strettamente necessari per le funzioni essenziali",
+            "Cookie funzionali per preferenze e usabilita",
+            "Cookie di performance per analisi e miglioramenti",
+            "Cookie di marketing per comunicazioni personalizzate, ove applicabile"
+          ]
+        },
+        {
+          "heading": "3. Gestione dei cookie",
+          "paragraphs": [
+            "Puoi gestire le preferenze nelle impostazioni del browser e nei nostri controlli cookie, quando disponibili.",
+            "Il blocco di alcune categorie puo influire su parti dell esperienza del sito."
+          ],
+          "links": [
+            {
+              "label": "Impostazioni cookie Microsoft Edge",
+              "href": "https://support.microsoft.com/en-us/microsoft-edge/delete-cookies-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09"
+            },
+            {
+              "label": "Impostazioni cookie Mozilla Firefox",
+              "href": "https://support.mozilla.org/en-US/kb/enable-and-disable-cookies-website-preferences"
+            },
+            {
+              "label": "Impostazioni cookie Google Chrome",
+              "href": "https://support.google.com/chrome/answer/95647?hl=en"
+            },
+            {
+              "label": "Impostazioni cookie Safari",
+              "href": "https://support.apple.com/guide/safari/manage-cookies-and-website-data-sfri11471/mac"
+            }
+          ]
+        },
+        {
+          "heading": "4. Ulteriori informazioni",
+          "paragraphs": [
+            "Per il trattamento dei dati personali consulta anche la nostra Informativa sulla privacy.",
+            "Per informazioni generali sui cookie visita www.allaboutcookies.org."
+          ]
+        }
+      ],
+      "footerNotes": [
+        "Ultimo aggiornamento: 29 marzo 2026"
+      ]
+    },
+    "privacyPolicy": {
+      "introParagraphs": [
+        "Questa Informativa sulla privacy descrive come vengono trattati i dati personali quando usi questo sito e i servizi correlati.",
+        "Si applica alle interazioni di account, navigazione e servizio relative a olympia-2026-webapp."
+      ],
+      "sections": [
+        {
+          "heading": "1. Chi siamo",
+          "paragraphs": [
+            "Il servizio e fornito nel contesto di servizi informativi digitali legati all ecosistema olimpico.",
+            "Le responsabilita sul trattamento possono coinvolgere partner affidabili quando indicato in apposite informative."
+          ]
+        },
+        {
+          "heading": "2. Dati che raccogliamo",
+          "list": [
+            "Informazioni fornite direttamente (ad esempio dati account)",
+            "Dati tecnici come browser, dispositivo e log di utilizzo",
+            "Preferenze e impostazioni lingua",
+            "Identificatori legati ai cookie ove il consenso si applica"
+          ]
+        },
+        {
+          "heading": "3. Perche trattiamo i dati",
+          "list": [
+            "Fornire e proteggere il servizio",
+            "Migliorare qualita ed esperienza utente",
+            "Gestire comunicazioni e richieste degli utenti",
+            "Rispettare obblighi legali e di conformita"
+          ]
+        },
+        {
+          "heading": "4. I tuoi diritti",
+          "paragraphs": [
+            "In base alla normativa applicabile puoi richiedere accesso, rettifica, cancellazione, limitazione, opposizione o portabilita.",
+            "Puoi anche revocare il consenso quando il trattamento si basa sul consenso."
+          ]
+        },
+        {
+          "heading": "5. Contatti",
+          "paragraphs": [
+            "Per richieste privacy usa i nostri canali ufficiali di supporto e protezione dati."
+          ],
+          "links": [
+            {
+              "label": "Portale supporto privacy",
+              "href": "https://support.olympics.com/hc/en-gb/"
+            }
+          ]
+        }
+      ],
+      "footerNotes": [
+        "Ultimo aggiornamento: 29 marzo 2026",
+        "Comitato Olimpico Internazionale, Maison Olympique (Olympic House), 1007 Losanna, Svizzera"
+      ]
+    },
+    "termsOfService": {
+      "introParagraphs": [
+        "Questi Termini di servizio disciplinano l uso di olympia-2026-webapp e delle funzionalita digitali correlate.",
+        "Utilizzando il sito accetti questi termini e i requisiti legali applicabili."
+      ],
+      "sections": [
+        {
+          "heading": "1. Uso del servizio",
+          "paragraphs": [
+            "Il sito e fornito per contenuti informativi e interattivi legati al contesto olimpico.",
+            "Alcune funzionalita possono richiedere un account o essere limitate per ruolo."
+          ]
+        },
+        {
+          "heading": "2. Comportamento consentito",
+          "list": [
+            "Usa il servizio in modo lecito e rispettoso",
+            "Non abusare, interrompere, fare scraping o reverse engineering della piattaforma",
+            "Non caricare contenuti illeciti, dannosi o che violano diritti",
+            "Non tentare accessi non autorizzati a sistemi o dati"
+          ]
+        },
+        {
+          "heading": "3. Proprieta intellettuale",
+          "paragraphs": [
+            "Contenuti, marchi ed elementi della piattaforma sono protetti dalle norme di proprieta intellettuale.",
+            "Non sono concessi diritti ulteriori oltre al normale uso personale salvo diversa indicazione esplicita."
+          ]
+        },
+        {
+          "heading": "4. Disponibilita e responsabilita",
+          "paragraphs": [
+            "Puntiamo a un servizio affidabile ma non garantiamo disponibilita continua senza interruzioni.",
+            "Nei limiti di legge, la responsabilita e limitata per danni indiretti o consequenziali."
+          ]
+        },
+        {
+          "heading": "5. Modifiche e legge applicabile",
+          "paragraphs": [
+            "Possiamo aggiornare questi termini e pubblicare la versione piu recente in questa pagina.",
+            "La legge applicabile e la giurisdizione sono definite dalle note legali del servizio."
+          ]
+        }
+      ],
+      "footerNotes": [
+        "Ultimo aggiornamento: 29 marzo 2026"
+      ]
     }
   }
 }

@@ -1,6 +1,9 @@
 {
   "welcome": "Willkommen bei den Olympischen Spielen Milano Cortina 2026",
   "description": "Dies ist eine React-Anwendung mit i18n-Unterstützung",
+  "common": {
+    "loading": "Wird geladen"
+  },
   "hero": {
     "disciplines": "Die Disziplinen",
     "countries": "Die Länder"
@@ -19,20 +22,28 @@
     "login": "Login",
     "logout": "Logout",
     "openMenu": "Menü öffnen",
-        "title": "Ergebnis-Dashboard",
-        "demoNote": "Live-Daten aus der Schiedsrichter-API.",
+    "closeMenu": "Menü schließen",
+    "language": "Sprache",
+    "darkMode": "Dunkler Modus",
+    "title": "Ergebnis-Dashboard",
+    "demoNote": "Live-Daten aus der Schiedsrichter-API.",
     "menuTitle": "Menü",
-        "infoTitle": "Live-Ergebnisübersicht",
-        "infoText": "Dieses Dashboard lädt die aktuellen Ergebnisse aller aktiven Sportarten direkt aus der API.",
-    "lightMode": "Heller Modus"
+    "infoTitle": "Live-Ergebnisübersicht",
+    "infoText": "Dieses Dashboard lädt die aktuellen Ergebnisse aller aktiven Sportarten direkt aus der API.",
+    "lightMode": "Heller Modus",
+    "homeAria": "Zur Startseite",
+    "logoAlt": "Logo Milano Cortina 2026"
   },
   "login": {
     "title": "Willkommen",
     "invalidCredentials": "Ungültige Anmeldedaten",
     "back": "Zurück",
+    "username": "Benutzername *",
     "email": "E-Mail *",
     "password": "Passwort *",
-    "submit": "Weiter"
+    "loading": "Wird geladen...",
+    "submit": "Weiter",
+    "illustrationAlt": "Login-Illustration"
   },
   "notfound": {
     "title": "Seite nicht gefunden",
@@ -53,12 +64,57 @@
       "gold": "Gold",
       "total": "Total"
     },
+    "exportCsv": "CSV exportieren",
+    "csvHeaders": {
+      "countryName": "Land",
+      "countryCode": "Ländercode"
+    },
+    "error": "Fehler beim Laden der Daten.",
     "noData": "Keine Daten verfügbar.",
-    "loadMore": "Weitere Einträge laden"
+    "loadMore": "Weitere Einträge laden",
+    "searchLabel": "Suchen",
+    "searchPlaceholder": "Nach Ländernamen oder Code suchen",
+    "filterLabel": "Nach Medaille filtern",
+    "filters": {
+      "all": "Alle Länder",
+      "goldOnly": "Länder mit Goldmedaille"
+    },
+    "filteredEmpty": "Keine Länder entsprechen deiner Suche oder Filterauswahl."
+  },
+  "sportsTable": {
+    "columns": {
+      "rank": "Rang",
+      "athlete": "Athlet",
+      "country": "Land",
+      "result": "Ergebnis",
+      "medal": "Medaille"
+    },
+    "noResults": "Keine Ergebnisse verfügbar",
+    "searchLabel": "Suchen",
+    "searchPlaceholder": "Nach Athlet, Land oder Ergebnis suchen",
+    "filterLabel": "Nach Medaille filtern",
+    "filters": {
+      "all": "Alle Ergebnisse",
+      "medalOnly": "Nur Medaillenergebnisse"
+    },
+    "filteredEmpty": "Keine Ergebnisse entsprechen deiner Suche oder Filterauswahl.",
+    "openCountryDetails": "Länderdetails für {{country}} öffnen"
+  },
+  "sports": {
+    "names": {
+      "biathlon": "Biathlon",
+      "bobsport": "Bobsport",
+      "curling": "Curling",
+      "eishockey": "Eishockey",
+      "eiskunstlauf": "Eiskunstlauf",
+      "skilanglauf": "Skilanglauf",
+      "skispringen": "Skispringen"
+    }
   },
   "sport": {
     "notFoundTitle": "Sportart nicht gefunden",
     "notFoundText": "Die gesuchte Sportart \"{{sport}}\" existiert nicht oder es liegen keine Daten vor.",
+    "resultsLoadError": "Die Ergebnisse dieser Sportart konnten nicht geladen werden.",
     "measurements": {
       "time": "Zeit in s",
       "points": "Punkte",
@@ -170,7 +226,42 @@
     "resultTemplates": {
       "title": "Formvorlage",
       "selected": "Vorlage für {{sport}}",
-      "selectSportHint": "Wählen Sie zuerst eine Sportart aus, damit die passende Eingabeprüfung aktiviert wird."
+      "selectSportHint": "Wählen Sie zuerst eine Sportart aus, damit die passende Eingabeprüfung aktiviert wird.",
+      "labels": {
+        "time": "Zeit",
+        "score": "Endstand",
+        "points": "Punkte"
+      },
+      "examples": {
+        "biathlon": {
+          "placeholder": "z. B. 25:34.50",
+          "helperText": "Erwartet wird ein Zeitwert im Format mm:ss.hh. Sekunden müssen zwischen 00 und 59 liegen."
+        },
+        "bobsport": {
+          "placeholder": "z. B. 1:39.18",
+          "helperText": "Erwartet wird ein Zeitwert im Format m:ss.hh für die Laufzeit."
+        },
+        "curling": {
+          "placeholder": "z. B. 6:4",
+          "helperText": "Erwartet wird ein Endstand im Format x:y mit ganzen Zahlen."
+        },
+        "eishockey": {
+          "placeholder": "z. B. 3:2",
+          "helperText": "Erwartet wird ein Endstand im Format x:y mit ganzen Zahlen."
+        },
+        "eiskunstlauf": {
+          "placeholder": "z. B. 184.72",
+          "helperText": "Erwartet werden Punkte zwischen 0 und 300 mit bis zu zwei Nachkommastellen."
+        },
+        "skilanglauf": {
+          "placeholder": "z. B. 31:08.40",
+          "helperText": "Erwartet wird ein Zeitwert im Format mm:ss.hh für die Laufzeit."
+        },
+        "skispringen": {
+          "placeholder": "z. B. 131.5",
+          "helperText": "Erwartet werden Punkte zwischen 0 und 300 mit bis zu zwei Nachkommastellen."
+        }
+      }
     },
     "validation": {
       "selectSport": "Bitte wählen Sie zuerst eine Sportart aus.",
@@ -194,7 +285,10 @@
     "cookiePolicy": "Cookie-Richtlinie",
     "privacyPolicy": "Datenschutzbestimmungen",
     "termsOfService": "Nutzungsbedingungen",
-    "accessibility": "Barrierefreiheit"
+    "accessibility": "Barrierefreiheit",
+    "copyright": "Copyright 2026. Alle Rechte vorbehalten.",
+    "milanoLogoAlt": "Logo Milano Cortina 2026",
+    "olympiaLogoAlt": "Logo Olympia IT Solutions"
   },
   "admin": {
     "title": "Admin Dashboard",
@@ -284,5 +378,278 @@
         "actions": "Aktionen"
       }
     }
+  },
+  "sportsTable": {
+    "columns": {
+      "rank": "Platz",
+      "athlete": "Athlet",
+      "country": "Land",
+      "result": "Ergebnis",
+      "medal": "Medaille"
+    },
+    "noResults": "Keine Ergebnisse verfugbar.",
+    "searchLabel": "Suchen",
+    "searchPlaceholder": "Nach Athlet, Land oder Ergebnis suchen",
+    "filterLabel": "Nach Medaille filtern",
+    "filters": {
+      "all": "Alle Ergebnisse",
+      "medalOnly": "Nur Medaillenergebnisse"
+    },
+    "filteredEmpty": "Keine Ergebnisse entsprechen deiner Suche oder Filterauswahl.",
+    "openCountryDetails": "Landerdetails fur {{country}} offnen"
+  },
+  "medalDisplay": {
+    "medalTypes": {
+      "GOLD": "Gold",
+      "SILVER": "Silber",
+      "BRONZE": "Bronze"
+    },
+    "noMedals": "Keine Medaillen verfugbar.",
+    "noMedalsForCountry": "Keine Medaillen fur {{country}} gefunden.",
+    "entriesCount_one": "{{count}} Eintrag",
+    "entriesCount_other": "{{count}} Eintrage",
+    "sportLabel": "Sport",
+    "showSportDetails": "Details fur {{sport}} anzeigen"
+  },
+  "countryDetail": {
+    "back": "Zuruck",
+    "medalsTitle": "{{country}} - Medaillen",
+    "medalsLoadError": "Die Medaillen dieses Landes konnten nicht geladen werden.",
+    "countryLookupError": "Die Landerdetails konnten nicht geladen werden."
+  },
+  "banner": {
+    "eventLine": "Olympische Winterspiele - 6. bis 22. Februar 2026 | Paralympische Winterspiele - 6. bis 15. Marz 2026",
+    "tickets": "Tickets",
+    "shop": "Shop",
+    "headerImageAria": "Milano Cortina 2026 Headerbild"
+  },
+  "footerBanner": {
+    "tagline": "IT's your vibe"
+  },
+  "slider": {
+    "previous": "Vorherige Folie",
+    "next": "Nachste Folie",
+    "slideLabel": "Folie {{index}}"
+  },
+  "legal": {
+    "accessibility": {
+      "introParagraphs": [
+        "Diese Erklarung zur Barrierefreiheit beschreibt, wie wir olympia-2026-webapp fur alle Nutzerinnen und Nutzer gestalten und pflegen.",
+        "Unser Ziel ist eine klare, navigierbare und inklusive digitale Nutzung auf allen Geraten."
+      ],
+      "sections": [
+        {
+          "heading": "1. Geltungsbereich dieser Erklarung",
+          "paragraphs": [
+            "Diese Erklarung gilt fur die Website olympia-2026-webapp und deren offentliche Seiten.",
+            "Sie umfasst zentrale Nutzungspfade wie Navigation, Sprachwechsel, Lander- und Sportergebnisse sowie Rechtsseiten."
+          ]
+        },
+        {
+          "heading": "2. Standards zur Barrierefreiheit",
+          "paragraphs": [
+            "Die Website wird an den Prinzipien der WCAG 2.2 auf Stufe AA ausgerichtet entwickelt.",
+            "Zusatzlich folgen wir Best Practices fur semantisches HTML und ARIA zur Unterstutzung assistiver Technologien."
+          ],
+          "list": [
+            "Tastaturbedienbarkeit fur interaktive Elemente",
+            "Ausreichende Kontraste und gut lesbare Typografie",
+            "Verstandliche accessible names fur Buttons, Links und Tabellen",
+            "Responsive Layouts fur Desktop und Mobilgerate"
+          ]
+        },
+        {
+          "heading": "3. Bekannte Einschrankungen",
+          "paragraphs": [
+            "Einige Inhalte von Drittanbietern und extern eingebettete Medien erreichen moglicherweise nicht durchgehend das gleiche Barrierefreiheitsniveau.",
+            "Wir prufen und verbessern diese Bereiche fortlaufend, soweit technisch moglich."
+          ],
+          "list": [
+            "Widgets und Einbettungen von Drittanbietern",
+            "Externe Download-Dokumente",
+            "Medieninhalte externer Partner"
+          ]
+        },
+        {
+          "heading": "4. Feedback und Support",
+          "paragraphs": [
+            "Wenn Sie auf eine Barriere stossen, kontaktieren Sie bitte unseren Support-Kanal.",
+            "Bitte geben Sie die Seiten-URL und eine kurze Beschreibung an, damit wir schnell prufen konnen."
+          ],
+          "links": [
+            {
+              "label": "Supportportal Barrierefreiheit",
+              "href": "https://support.olympics.com/hc/en-gb/"
+            }
+          ]
+        }
+      ],
+      "footerNotes": [
+        "Letzte Aktualisierung: 29. Marz 2026"
+      ]
+    },
+    "cookiePolicy": {
+      "introParagraphs": [
+        "Diese Cookie-Richtlinie erklart, wie Cookies und ahnliche Technologien auf dieser Website verwendet werden.",
+        "Sie hilft Ihnen zu verstehen, welche Kategorien wir einsetzen und wie Sie Einstellungen verwalten konnen."
+      ],
+      "sections": [
+        {
+          "heading": "1. Was sind Cookies?",
+          "paragraphs": [
+            "Cookies sind kleine Textdateien, die beim Besuch einer Website auf Ihrem Gerat gespeichert werden.",
+            "Sie konnen sitzungsbasiert sein (nach dem Besuch geloscht) oder persistent (fur einen definierten Zeitraum gespeichert)."
+          ]
+        },
+        {
+          "heading": "2. Von uns verwendete Cookie-Kategorien",
+          "list": [
+            "Unbedingt erforderliche Cookies fur Kernfunktionen",
+            "Funktionale Cookies fur Einstellungen und Benutzerfreundlichkeit",
+            "Performance-Cookies fur Analysen und Qualitatsverbesserung",
+            "Marketing-Cookies fur personalisierte Kommunikation, sofern anwendbar"
+          ]
+        },
+        {
+          "heading": "3. Cookies verwalten",
+          "paragraphs": [
+            "Sie konnen Ihre Einstellungen in den Browseroptionen und in unseren Cookie-Steuerelementen verwalten, soweit verfugbar.",
+            "Das Blockieren einzelner Kategorien kann Teile der Website-Erfahrung beeintrachtigen."
+          ],
+          "links": [
+            {
+              "label": "Microsoft Edge Cookie-Einstellungen",
+              "href": "https://support.microsoft.com/en-us/microsoft-edge/delete-cookies-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09"
+            },
+            {
+              "label": "Mozilla Firefox Cookie-Einstellungen",
+              "href": "https://support.mozilla.org/en-US/kb/enable-and-disable-cookies-website-preferences"
+            },
+            {
+              "label": "Google Chrome Cookie-Einstellungen",
+              "href": "https://support.google.com/chrome/answer/95647?hl=en"
+            },
+            {
+              "label": "Safari Cookie-Einstellungen",
+              "href": "https://support.apple.com/guide/safari/manage-cookies-and-website-data-sfri11471/mac"
+            }
+          ]
+        },
+        {
+          "heading": "4. Weitere Informationen",
+          "paragraphs": [
+            "Details zur Verarbeitung personenbezogener Daten finden Sie in unserer Datenschutzerklarung.",
+            "Allgemeine Informationen zu Cookies finden Sie auf www.allaboutcookies.org."
+          ]
+        }
+      ],
+      "footerNotes": [
+        "Letzte Aktualisierung: 29. Marz 2026"
+      ]
+    },
+    "privacyPolicy": {
+      "introParagraphs": [
+        "Diese Datenschutzerklarung beschreibt, wie personenbezogene Daten verarbeitet werden, wenn Sie diese Website und zugehorige Dienste nutzen.",
+        "Sie gilt fur Konto-, Navigations- und Service-Interaktionen im Kontext von olympia-2026-webapp."
+      ],
+      "sections": [
+        {
+          "heading": "1. Wer wir sind",
+          "paragraphs": [
+            "Der Dienst wird im Rahmen digitaler Informationsangebote mit olympischem Bezug bereitgestellt.",
+            "Datenverantwortlichkeiten konnen, sofern ausgewiesen, vertrauenswurdige Partner einbeziehen."
+          ]
+        },
+        {
+          "heading": "2. Welche Daten wir erheben",
+          "list": [
+            "Direkt bereitgestellte Informationen (z. B. Kontodaten)",
+            "Technische Daten wie Browser, Gerat und Nutzungsprotokolle",
+            "Praferenz- und Spracheinstellungen",
+            "Cookie-bezogene Kennungen, sofern eine Einwilligung vorliegt"
+          ]
+        },
+        {
+          "heading": "3. Warum wir Daten verarbeiten",
+          "list": [
+            "Bereitstellung und Absicherung des Dienstes",
+            "Verbesserung von Qualitat und Nutzererlebnis",
+            "Unterstutzung von Kommunikation und Nutzeranfragen",
+            "Erfullung rechtlicher und regulatorischer Pflichten"
+          ]
+        },
+        {
+          "heading": "4. Ihre Rechte",
+          "paragraphs": [
+            "Je nach anwendbarem Recht konnen Sie Auskunft, Berichtigung, Loschung, Einschrankung, Widerspruch oder Datenubertragbarkeit verlangen.",
+            "Sie konnen eine erteilte Einwilligung jederzeit widerrufen, sofern die Verarbeitung darauf beruht."
+          ]
+        },
+        {
+          "heading": "5. Kontakt",
+          "paragraphs": [
+            "Fur Datenschutzanfragen nutzen Sie bitte unsere offiziellen Support- und Datenschutzkanale."
+          ],
+          "links": [
+            {
+              "label": "Datenschutz-Supportportal",
+              "href": "https://support.olympics.com/hc/en-gb/"
+            }
+          ]
+        }
+      ],
+      "footerNotes": [
+        "Letzte Aktualisierung: 29. Marz 2026",
+        "Internationales Olympisches Komitee, Maison Olympique (Olympic House), 1007 Lausanne, Schweiz"
+      ]
+    },
+    "termsOfService": {
+      "introParagraphs": [
+        "Diese Nutzungsbedingungen regeln die Nutzung von olympia-2026-webapp und zugehorigen digitalen Funktionen.",
+        "Mit der Nutzung der Website stimmen Sie diesen Bedingungen und den geltenden rechtlichen Vorgaben zu."
+      ],
+      "sections": [
+        {
+          "heading": "1. Nutzung des Dienstes",
+          "paragraphs": [
+            "Die Website dient Informationszwecken und interaktiven Inhalten mit olympischem Bezug.",
+            "Einige Funktionen konnen ein Konto erfordern oder rollenbasiert eingeschrankt sein."
+          ]
+        },
+        {
+          "heading": "2. Zulassiges Verhalten",
+          "list": [
+            "Nutzen Sie den Dienst rechtmassig und respektvoll",
+            "Kein Missbrauch, keine Storung, kein Scraping und kein Reverse Engineering",
+            "Keine rechtswidrigen, schadlichen oder rechtsverletzenden Inhalte hochladen",
+            "Kein unbefugter Zugriff auf Systeme oder Daten"
+          ]
+        },
+        {
+          "heading": "3. Geistiges Eigentum",
+          "paragraphs": [
+            "Inhalte, Marken und Plattformelemente sind durch Rechte des geistigen Eigentums geschutzt.",
+            "Uber die ublichen personlichen Nutzungsrechte hinaus werden keine weiteren Rechte eingeraumt, sofern nicht ausdrucklich angegeben."
+          ]
+        },
+        {
+          "heading": "4. Verfugbarkeit und Haftung",
+          "paragraphs": [
+            "Wir streben einen zuverlassigen Betrieb an, konnen aber keine unterbrechungsfreie Verfugbarkeit garantieren.",
+            "Soweit gesetzlich zulassig, ist die Haftung fur mittelbare oder Folgeschaden ausgeschlossen oder begrenzt."
+          ]
+        },
+        {
+          "heading": "5. Anderungen und anwendbares Recht",
+          "paragraphs": [
+            "Wir konnen diese Bedingungen aktualisieren und die aktuelle Fassung auf dieser Seite veroffentlichen.",
+            "Anwendbares Recht und Gerichtsstand ergeben sich aus den fur diesen Dienst geltenden Rechtshinweisen."
+          ]
+        }
+      ],
+      "footerNotes": [
+        "Letzte Aktualisierung: 29. Marz 2026"
+      ]
+    }
   }
-} 
+}
