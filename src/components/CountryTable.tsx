@@ -3,14 +3,13 @@ import {
   Table,
   Button,
   Box,
-  Spinner,
   Badge
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import type { CountryMedalData } from '../services/medals';
 import { fetchMedalsTable } from '../services/medals';
 import { fetchAllCountries } from '../services/countries';
-import { DataTableState, DataTableSurface, getDataTableRowStyles } from './ui';
+import { DataTableState, DataTableSurface, getDataTableRowStyles, LoadingSpinner } from './ui';
 
 interface CountryTableProps {
   data?: CountryMedalData[];
@@ -157,7 +156,7 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
   if (loading) {
     return (
       <Box p={4} display="flex" justifyContent="center" alignItems="center" minH="200px">
-        <Spinner size="lg" colorPalette="teal" />
+        <LoadingSpinner size="lg" />
       </Box>
     );
   }

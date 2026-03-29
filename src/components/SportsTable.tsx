@@ -4,13 +4,12 @@ import {
   Box,
   Text,
   Button,
-  Icon,
-  Spinner
+  Icon
 } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router';
 import { FaMedal } from 'react-icons/fa';
 import type { Result } from '../services/results';
-import { DataTableState, DataTableSurface, getDataTableRowStyles } from './ui';
+import { DataTableState, DataTableSurface, getDataTableRowStyles, LoadingSpinner } from './ui';
 
 interface SportsTableProps {
   data: Result[];
@@ -58,7 +57,7 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false,
   if (loading) {
     return (
       <Box p={4} display="flex" justifyContent="center" alignItems="center" minH="200px">
-        <Spinner size="lg" colorPalette="teal" />
+        <LoadingSpinner size="lg" />
       </Box>
     );
   }

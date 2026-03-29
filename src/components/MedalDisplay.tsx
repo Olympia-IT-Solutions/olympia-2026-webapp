@@ -1,8 +1,9 @@
 import React from 'react';
-import { Box, Text, VStack, HStack, Icon, Spinner, SimpleGrid, Button } from '@chakra-ui/react';
+import { Box, Text, VStack, HStack, Icon, SimpleGrid, Button } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router';
 import { FaMedal } from 'react-icons/fa';
 import type { Medal } from '../services/medals';
+import { LoadingSpinner } from './ui';
 
 interface MedalDisplayProps {
   medals: Medal[];
@@ -15,6 +16,8 @@ const medalVisuals: Record<Medal['medalType'], { accentColor: string; label: str
   SILVER: { accentColor: 'medal-silver', label: 'Silber' },
   BRONZE: { accentColor: 'medal-bronze', label: 'Bronze' },
 };
+
+const medalTypeOrder: Medal['medalType'][] = ['GOLD', 'SILVER', 'BRONZE'];
 
 const interactiveTextButtonProps = {
   variant: 'ghost' as const,
@@ -116,7 +119,7 @@ export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, loading = fa
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minH="400px">
-        <Spinner size="xl" colorPalette="teal" />
+        <LoadingSpinner size="xl" />
       </Box>
     );
   }
@@ -141,10 +144,13 @@ export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, loading = fa
     );
   }
 
-  const medalTypeOrder: Medal['medalType'][] = ['GOLD', 'SILVER', 'BRONZE'];
   const medalCounts = medalTypeOrder.map((medalType) => ({
     medalType,
     count: medals.filter((medal) => medal.medalType === medalType).length,
+  }));
+  const medalsByType = medalTypeOrder.map((medalType) => ({
+    medalType,
+    medals: medals.filter((medal) => medal.medalType === medalType),
   }));
 
   return (
@@ -191,11 +197,43 @@ export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, loading = fa
           })}
       </HStack>
 
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
-        {medals.map((medal, index) => (
-          <MedalCard key={`${medal.athleteId}-${medal.sportName}`} medal={medal} index={index} />
-        ))}
-      </SimpleGrid>
+      <VStack gap={8} align="stretch">
+        {medalsByType
+          .filter(({ medals: groupedMedals }) => groupedMedals.length > 0)
+          .map(({ medalType, medals: groupedMedals }) => {
+            const medalVisual = medalVisuals[medalType]
+
+            return (
+              <Box
+                key={medalType}
+                bg="surface"
+                borderWidth="1px"
+                borderColor="border"
+                borderRadius="2xl"
+                p={5}
+                boxShadow="ring-soft"
+              >
+                <HStack gap={3} mb={4} align="center">
+                  <Icon as={FaMedal} color={medalVisual.accentColor} boxSize={7} />
+                  <Box>
+                    <Text fontWeight="bold" fontSize="sm" color={medalVisual.accentColor} textTransform="uppercase" letterSpacing="0.08em">
+                      {medalVisual.label}
+                    </Text>
+                    <Text fontSize="sm" color="text-muted">
+                      {groupedMedals.length} {groupedMedals.length === 1 ? 'Eintrag' : 'Einträge'}
+                    </Text>
+                  </Box>
+                </HStack>
+
+                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
+                  {groupedMedals.map((medal, index) => (
+                    <MedalCard key={`${medal.athleteId}-${medal.sportName}`} medal={medal} index={index} />
+                  ))}
+                </SimpleGrid>
+              </Box>
+            )
+          })}
+      </VStack>
     </VStack>
   );
 };

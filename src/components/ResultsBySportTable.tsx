@@ -1,10 +1,10 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Badge, Box, Button, Icon, Stack, Table, Text, Spinner } from '@chakra-ui/react'
+import { Badge, Box, Button, Icon, Stack, Table, Text } from '@chakra-ui/react'
 import { FaBan, FaCheck, FaEdit, FaTimes } from 'react-icons/fa'
 import type { RoleType } from '../logic/rights'
 import type { Result } from '../services/results'
-import { DataTableState, DataTableSurface, getDataTableRowStyles } from './ui'
+import { DataTableState, DataTableSurface, getDataTableRowStyles, LoadingSpinner } from './ui'
 
 interface ResultsBySportTableProps {
   data: Result[]
@@ -64,7 +64,7 @@ export const ResultsBySportTable: React.FC<ResultsBySportTableProps> = ({
   if (loading) {
     return (
       <Box p={4} display="flex" justifyContent="center" alignItems="center" minH="180px">
-        <Spinner size="lg" colorPalette="teal" />
+        <LoadingSpinner size="lg" />
       </Box>
     )
   }

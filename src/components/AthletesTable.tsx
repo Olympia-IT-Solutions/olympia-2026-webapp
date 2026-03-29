@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Badge, Box, Button, DialogBackdrop, DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogPositioner, DialogRoot, DialogTitle, Heading, Icon, Input, Spinner, Stack, Table, Text } from '@chakra-ui/react'
+import { Badge, Box, Button, DialogBackdrop, DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogPositioner, DialogRoot, DialogTitle, Heading, Icon, Input, Stack, Table, Text } from '@chakra-ui/react'
 import { FaBan, FaCheck, FaEdit, FaUserPlus, FaUsers } from 'react-icons/fa'
 import { useSportsStore } from '../store/sports'
 import { fetchAllCountries, type CountryOption } from '../services/countries'
 import { activateAthlete, createAthlete, deactivateAthlete, fetchAllAthletes, updateAthlete, type Athlete, type CreateAthleteRequest, type UpdateAthleteRequest } from '../services/athletes'
-import { DataTableState, DataTableSurface, getDataTableRowStyles } from './ui'
+import { DataTableState, DataTableSurface, getDataTableRowStyles, LoadingSpinner } from './ui'
 
 type AthleteSortField = 'id' | 'name' | 'countryCode' | 'countryName' | 'sportId' | 'sportName' | 'active'
 type SortDirection = 'asc' | 'desc'
@@ -348,7 +348,7 @@ export function AthletesTable() {
       )}
       {loading ? (
         <Box p={4} display="flex" justifyContent="center" alignItems="center" minH="200px">
-          <Spinner size="lg" colorPalette="teal" />
+          <LoadingSpinner size="lg" />
         </Box>
       ) : error ? (
         <DataTableState

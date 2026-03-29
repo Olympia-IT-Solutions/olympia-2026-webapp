@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo, type ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box, Heading, Text, Button, Stack, Table, Badge, Container, Spinner, VStack, Input, DialogRoot, DialogPositioner, DialogBackdrop, DialogContent, DialogHeader, DialogBody, DialogFooter, DialogTitle, DialogCloseTrigger, Icon } from '@chakra-ui/react'
+import { Box, Heading, Text, Button, Stack, Table, Badge, Container, VStack, Input, DialogRoot, DialogPositioner, DialogBackdrop, DialogContent, DialogHeader, DialogBody, DialogFooter, DialogTitle, DialogCloseTrigger, Icon } from '@chakra-ui/react'
 import { AthletesTable } from '../components/AthletesTable'
-import { DataTableSurface, DataTableState, getDataTableRowStyles } from '../components/ui'
+import { DataTableSurface, DataTableState, getDataTableRowStyles, LoadingSpinner } from '../components/ui'
 import { isAdmin } from '../logic/rights'
 import { fetchAllUsers, createUser, deactivateUser, type ApiUser, type CreateUserRequest } from '../services/auth'
 import { FaUserPlus, FaUsers, FaBan } from 'react-icons/fa'
@@ -224,7 +224,7 @@ export function Admin() {
 
           {usersLoading ? (
             <VStack justify="center" py={8}>
-              <Spinner size="lg" />
+              <LoadingSpinner size="lg" />
               <Text>{t('admin.loading')}</Text>
             </VStack>
           ) : usersError ? (
