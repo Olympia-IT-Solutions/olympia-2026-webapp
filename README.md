@@ -1,8 +1,8 @@
 # Milano Cortina 2026 – Olympia Webapp
 
-![Home](https://github.com/user-attachments/assets/8dbee974-8a8c-4ae9-8e79-fd202091cd04)
+![Startseite](docs/screenshots/01_homepage.png)
 
-Offizielle Demo-Webanwendung für die **Olympischen Winterspiele Milano Cortina 2026**, entwickelt von **Olympia IT Solutions**. Die App stellt Informationen zu Sportarten, Ländern und Medaillen bereit und bietet ein internes Ergebnisverwaltungssystem mit 4-Augen-Prinzip.
+Offizielle Demo-Webanwendung für die **Olympischen Winterspiele Milano Cortina 2026**, entwickelt von **Olympia IT Solutions**. Die App stellt Informationen zu Sportarten, Ländern und Medaillen bereit und bietet ein internes Ergebnisverwaltungssystem mit 4-Augen-Prinzip, Excel-Import sowie Athleten- und Benutzerverwaltung.
 
 🔗 **Live-Demo:** [https://olympia-it-solutions.github.io/olympia-2026-webapp/](https://olympia-it-solutions.github.io/olympia-2026-webapp/)
 
@@ -29,6 +29,7 @@ Offizielle Demo-Webanwendung für die **Olympischen Winterspiele Milano Cortina 
    - [Admin-Dashboard](#8-admin-dashboard)
    - [Cookie-Banner & Rechtliches](#9-cookie-banner--rechtliches)
    - [Dark Mode & Sprache](#10-dark-mode--sprache)
+   - [404-Seite](#11-404-seite)
 
 ---
 
@@ -46,6 +47,7 @@ Offizielle Demo-Webanwendung für die **Olympischen Winterspiele Milano Cortina 
 | [Zustand](https://zustand-demo.pmnd.rs/) | 5.x | Globales State-Management |
 | [i18next](https://www.i18next.com/) | 25.x | Internationalisierung (de, en, fr, it) |
 | [Framer Motion](https://www.framer.com/motion/) | 12.x | Animationen |
+| [ExcelJS](https://github.com/exceljs/exceljs) | 4.x | Excel-Import & Vorlagen-Export |
 | [styled-components](https://styled-components.com/) | 6.x | CSS-in-JS Styling |
 | [react-icons](https://react-icons.github.io/react-icons/) | 5.x | Icon-Bibliothek |
 
@@ -120,6 +122,8 @@ Dieses Skript baut die Anwendung und veröffentlicht den `dist/`-Ordner auf dem 
 
 ```
 olympia-2026-webapp/
+├── docs/
+│   └── screenshots/            # README-Screenshots
 ├── public/
 │   ├── locales/                # Übersetzungsdateien
 │   │   ├── de/translation.json # Deutsch
@@ -131,6 +135,14 @@ olympia-2026-webapp/
 ├── src/
 │   ├── assets/                 # Statische Assets (Logos, Bilder)
 │   ├── components/             # Wiederverwendbare UI-Komponenten
+│   │   ├── ui/                 # Gemeinsame UI-Primitiven
+│   │   │   ├── CTAButton.tsx   # Call-to-Action Schaltfläche
+│   │   │   ├── DataTable.tsx   # Tabellen-Hilfskomponenten
+│   │   │   ├── LoadingSpinner.tsx # Ladeindikator
+│   │   │   ├── SectionHeading.tsx # Abschnittsüberschrift
+│   │   │   ├── Surface.tsx     # Karten-/Oberflächen-Wrapper
+│   │   │   └── index.ts        # Re-Exporte
+│   │   ├── AthletesTable.tsx   # Athleten-Verwaltungstabelle (CRUD + Filter)
 │   │   ├── Banner.tsx          # Oberes Informationsbanner (Datum, Tickets, Shop)
 │   │   ├── CookieMenu.tsx      # Cookie-Einwilligungsbanner
 │   │   ├── CountriesFeature.tsx# Teaser-Bereich für die Länderübersicht
@@ -142,8 +154,9 @@ olympia-2026-webapp/
 │   │   ├── HeroVideo.tsx       # Hero-Bereich der Startseite
 │   │   ├── MedalDisplay.tsx    # Medaillenanzeige für Länder
 │   │   ├── NavBar.tsx          # Hauptnavigation
+│   │   ├── ResultsBySportTable.tsx # Ergebnistabelle je Sportart (Dashboard)
 │   │   ├── Slider.tsx          # Bildkarussell
-│   │   └── SportsTable.tsx     # Ergebnistabelle für Sportarten
+│   │   └── SportsTable.tsx     # Ergebnistabelle für Sportarten (öffentlich)
 │   ├── debug/
 │   │   └── index.ts            # DebugManager (Testmodus-Steuerung)
 │   ├── i18n/
@@ -153,20 +166,22 @@ olympia-2026-webapp/
 │   │   └── theme.tsx           # Dark/Light Mode (ThemeProvider)
 │   ├── pages/                  # Seitenkomponenten (Routen)
 │   │   ├── Accessibility.tsx   # Barrierefreiheitsseite
-│   │   ├── Admin.tsx           # Admin-Dashboard
+│   │   ├── Admin.tsx           # Admin-Dashboard (Benutzer- & Athletenverwaltung)
 │   │   ├── CookiePolicy.tsx    # Cookie-Richtlinie
 │   │   ├── Countries.tsx       # Länderübersicht
 │   │   ├── CountryDetail.tsx   # Länderdetails & Medaillen
-│   │   ├── Dashboard.tsx       # Schiedsrichter-Dashboard
+│   │   ├── Dashboard.tsx       # Schiedsrichter-Dashboard (Ergebnisse, Excel-Import)
 │   │   ├── Login.tsx           # Login-Seite
 │   │   ├── NotFound.tsx        # 404-Seite
 │   │   ├── PrivacyPolicy.tsx   # Datenschutzbestimmungen
 │   │   ├── SportPage.tsx       # Sportart-Detailseite
 │   │   └── TermsOfService.tsx  # Nutzungsbedingungen
 │   ├── services/               # API-Dienste
-│   │   ├── auth.ts             # Authentifizierungs-API
+│   │   ├── athletes.ts         # Athleten-API (CRUD, Aktivierung)
+│   │   ├── auth.ts             # Authentifizierungs- & Benutzer-API
+│   │   ├── countries.ts        # Länder-API
 │   │   ├── medals.ts           # Medaillen-API
-│   │   ├── results.ts          # Ergebnis-API
+│   │   ├── results.ts          # Ergebnis-API (inkl. Genehmigung, Ablehnung, Invalidierung)
 │   │   └── sports.ts           # Sportarten-API
 │   ├── store/                  # Zustand-Stores (Zustand)
 │   │   ├── medals.ts           # Medaillen-Store
@@ -191,8 +206,8 @@ olympia-2026-webapp/
 Die App nutzt **React Router v7** mit sprachbasiertem URL-Präfix:
 
 ```
-/de          → Startseite (Deutsch)
-/en          → Startseite (Englisch)
+/de                    → Startseite (Deutsch)
+/en                    → Startseite (Englisch)
 /de/countries          → Länderübersicht
 /de/country/:country   → Länderdetail
 /de/sports/:sportId    → Sportart-Detail
@@ -222,8 +237,8 @@ Das Rechte-System (`src/logic/rights.ts`) kennt zwei Rollen:
 
 | Rolle | Beschreibung | Zugang |
 |---|---|---|
-| `admin` | Administrator | Dashboard + Admin-Bereich |
-| `referee` | Schiedsrichter | Nur Dashboard |
+| `admin` | Administrator | Dashboard + Admin-Bereich (Benutzer- & Athletenverwaltung) |
+| `referee` | Schiedsrichter | Nur Dashboard (Ergebnisse einreichen & genehmigen) |
 
 **Login-Ablauf:** Die App versucht zunächst die REST-API (`https://olympia-2026-api.onrender.com/api/auth/login`). Schlägt dies fehl, greift im Debug-Modus ein Fallback auf lokale Testaccounts:
 
@@ -232,7 +247,9 @@ Das Rechte-System (`src/logic/rights.ts`) kennt zwei Rollen:
 | `admin@test.com` | `admin` | Admin |
 | `referee@test.com` | `referee` | Schiedsrichter |
 
-Nach erfolgreichem Login wird die Session im `localStorage` gespeichert.
+Nach erfolgreichem Login werden Session-Daten und JWT-Token im `localStorage` gespeichert.
+
+> **Sicherheitshinweis:** Die Speicherung von JWT-Tokens in `localStorage` ist anfällig für XSS-Angriffe. Für Produktionsumgebungen mit erhöhten Sicherheitsanforderungen empfiehlt sich der Einsatz von `httpOnly`-Cookies. Diese Demo-App nutzt `localStorage` aus Gründen der Einfachheit und da kein Server-seitiges Session-Management vorhanden ist.
 
 #### State Management (Zustand)
 
@@ -246,13 +263,27 @@ Drei Zustand-Stores verwalten den globalen Zustand:
 
 Die App kommuniziert mit einer REST-API unter `https://olympia-2026-api.onrender.com/api/`. Folgende Endpunkte werden genutzt:
 
-| Endpunkt | Beschreibung |
-|---|---|
-| `POST /api/auth/login` | Benutzer-Login |
-| `GET /api/sports` | Liste aller Sportarten |
-| `GET /api/results?sportId={id}` | Ergebnisse einer Sportart |
-| `GET /api/medals/country/{country}` | Medaillen eines Landes |
-| `GET /api/medals/table` | Gesamter Medaillenspiegel |
+| Endpunkt | Methode | Beschreibung |
+|---|---|---|
+| `/api/auth/login` | `POST` | Benutzer-Login (gibt JWT-Token zurück) |
+| `/api/users` | `GET` | Alle Benutzer abrufen (nur Admin) |
+| `/api/users` | `POST` | Neuen Benutzer anlegen (nur Admin) |
+| `/api/users/{id}/deactivate` | `POST` | Benutzer deaktivieren (nur Admin) |
+| `/api/sports` | `GET` | Liste aller Sportarten |
+| `/api/results/by-sport?sportId={id}` | `GET` | Ergebnisse einer Sportart |
+| `/api/results` | `POST` | Neues Ergebnis einreichen |
+| `/api/results/{id}` | `PUT` | Ergebnis bearbeiten (nur Admin) |
+| `/api/results/{id}/approve` | `POST` | Ergebnis genehmigen |
+| `/api/results/{id}/reject` | `POST` | Ergebnis ablehnen |
+| `/api/results/{id}/invalidate` | `POST` | Ergebnis invalidieren (nur Admin) |
+| `/api/athletes` | `GET` | Alle Athleten abrufen |
+| `/api/athletes` | `POST` | Neuen Athleten anlegen (nur Admin) |
+| `/api/athletes/{id}` | `PUT` | Athleten bearbeiten (nur Admin) |
+| `/api/athletes/{id}/activate` | `POST` | Athleten aktivieren (nur Admin) |
+| `/api/athletes/{id}/deactivate` | `POST` | Athleten deaktivieren (nur Admin) |
+| `/api/countries` | `GET` | Alle Länder abrufen |
+| `/api/medals/country/{country}` | `GET` | Medaillen eines Landes |
+| `/api/medals/table` | `GET` | Gesamter Medaillenspiegel |
 
 #### Dark Mode
 
@@ -264,7 +295,7 @@ Der Dark/Light Mode wird über einen `ThemeProvider` (`src/logic/theme.tsx`) und
 
 ### 1. Startseite
 
-![Startseite](https://github.com/user-attachments/assets/8dbee974-8a8c-4ae9-8e79-fd202091cd04)
+![Startseite](docs/screenshots/01_homepage.png)
 
 Die Startseite bietet einen Überblick über die Olympischen Winterspiele Milano Cortina 2026:
 
@@ -278,6 +309,8 @@ Die Startseite bietet einen Überblick über die Olympischen Winterspiele Milano
 ---
 
 ### 2. Navigation
+
+![Navigation mit Sportarten-Dropdown](docs/screenshots/02_nav_dropdown.png)
 
 Die **Navigationsleiste** ist auf jeder Seite sichtbar und enthält:
 
@@ -298,7 +331,7 @@ Auf Mobilgeräten wird die Navigation über ein **Burger-Menü** (☰) zugängli
 
 ### 3. Länderübersicht
 
-![Länderübersicht](https://github.com/user-attachments/assets/437f79d7-896d-4038-893f-1cfe8ccc456f)
+![Länderübersicht](docs/screenshots/03_countries.png)
 
 Unter `/de/countries` ist der vollständige **Medaillenspiegel** aller teilnehmenden Nationen zu finden.
 
@@ -322,6 +355,8 @@ Unter `/de/country/:country` werden die **Medaillendetails eines bestimmten Land
 
 ### 5. Sportarten
 
+![Sportart-Seite](docs/screenshots/05_sportpage.png)
+
 Unter `/de/sports/:sportId` wird die **Detailseite einer Sportart** angezeigt.
 
 Verfügbare Sportarten:
@@ -344,7 +379,7 @@ Jede Seite zeigt:
 
 ### 6. Login
 
-![Login](https://github.com/user-attachments/assets/4cc0b0e5-0535-4cdd-9da3-a9370df6bdf0)
+![Login-Seite](docs/screenshots/06_login.png)
 
 Die Login-Seite unter `/de/login` ermöglicht die Anmeldung für autorisierte Nutzer (Schiedsrichter & Admins):
 
@@ -355,6 +390,8 @@ Die Login-Seite unter `/de/login` ermöglicht die Anmeldung für autorisierte Nu
 - Die Schaltfläche **„Zurück"** führt zur vorherigen Seite.
 - Nach erfolgreicher Anmeldung wird automatisch zum **Dashboard** weitergeleitet.
 
+![Login ausgefüllt](docs/screenshots/06_login_filled.png)
+
 > **Testaccounts (nur im Debug-Modus, falls API nicht erreichbar):**
 > - Admin: `admin@test.com` / `admin`
 > - Schiedsrichter: `referee@test.com` / `referee`
@@ -363,50 +400,76 @@ Die Login-Seite unter `/de/login` ermöglicht die Anmeldung für autorisierte Nu
 
 ### 7. Schiedsrichter-Dashboard
 
-![Dashboard](https://github.com/user-attachments/assets/7a593e6c-6316-4dcf-90f4-36ba443e0108)
+![Dashboard](docs/screenshots/07_dashboard.png)
 
-Das Dashboard unter `/de/dashboard` ist für **Schiedsrichter und Admins** zugänglich und implementiert das **4-Augen-Prinzip**:
+Das Dashboard unter `/de/dashboard` ist für **Schiedsrichter und Admins** zugänglich und implementiert das **4-Augen-Prinzip**.
 
-#### Ergebnis einreichen
+#### Ergebnis manuell einreichen
+
+![Ergebnis hinzufügen Dialog](docs/screenshots/07_dashboard_add_result.png)
+
 - Klick auf **„Ergebnis hinzufügen"** öffnet ein Formular.
-- Eingabe von: Sportart, Event, Athlet, Land, Ergebnis und optionalen Notizen.
-- Nach dem Absenden erhält das Ergebnis den Status **„Ausstehend"**.
+- Auswahl von: Sportart und Athlet (aus API-Daten).
+- Eingabe von: Ergebniswert (Format abhängig von Sportart) und Rang.
+- Nach dem Absenden erhält das Ergebnis den Status **„Ausstehend"** (PENDING).
+
+#### Ergebnisse per Excel importieren
+
+- Klick auf **„Ergebnis importieren"** öffnet den Import-Dialog.
+- **Excel-Vorlage herunterladen**: Lädt eine vorbereitete `.xlsx`-Vorlage mit Dropdown-Validierung für Athleten, Sportarten und Ergebnisformate herunter.
+- **Datei hochladen**: Die ausgefüllte Vorlage wird analysiert und als Vorschau angezeigt.
+- **Vorschau & Validierung**: Fehlerhafte Zeilen werden hervorgehoben; korrekte Zeilen können gemeinsam eingereicht werden.
 
 #### Ergebnisstatus-Workflow
+
 | Status | Bedeutung | Farbe |
 |---|---|---|
-| **Ausstehend** | Eingereicht, wartet auf Genehmigung | 🟡 Gelb |
-| **Genehmigt** | Von einem anderen Benutzer freigegeben | 🔵 Blau |
-| **Veröffentlicht** | Öffentlich sichtbar | 🟢 Grün |
+| **PENDING** | Eingereicht, wartet auf Genehmigung | 🟡 Gelb |
+| **APPROVED** | Von einem anderen Benutzer freigegeben | 🔵 Blau |
+| **PUBLISHED** | Öffentlich sichtbar | 🟢 Grün |
+| **REJECTED** | Abgelehnt (z. B. fehlerhafter Eintrag) | 🔴 Rot |
+| **INVALIDATED** | Nachträglich als ungültig markiert | ⚫ Grau |
 
 #### 4-Augen-Prinzip
-- Ein Schiedsrichter **kann seine eigenen Einreichungen nicht genehmigen**.
+
+- Ein Schiedsrichter **kann seine eigenen Einreichungen nicht genehmigen** – eigene Einreichungen werden als „Eigene Einreichung" markiert.
 - Erst nach Genehmigung durch eine andere Person kann das Ergebnis **veröffentlicht** werden.
+- Admins können genehmigte und veröffentlichte Ergebnisse nachträglich **invalidieren**.
 
 #### Tabelle der eingereichten Ergebnisse
-Zeigt alle Ergebnisse mit: Sportart/Event, Athlet, Land, Ergebnis, Einreicher, Status und Aktionsbuttons.
+
+Zeigt alle Ergebnisse der ausgewählten Sportart mit: Athlet, Einreicher, Land, Ergebniswert, Medaille, Status und Aktionsbuttons.
 
 ---
 
 ### 8. Admin-Dashboard
 
-![Admin](https://github.com/user-attachments/assets/1a98ec56-daa8-49af-95a5-b779bd5903e6)
+![Admin-Dashboard](docs/screenshots/08_admin.png)
 
-Das Admin-Dashboard unter `/de/admin` ist ausschließlich für **Administratoren** zugänglich.
+Das Admin-Dashboard unter `/de/admin` ist ausschließlich für **Administratoren** zugänglich und besteht aus zwei Bereichen: **Benutzerverwaltung** und **Athletenverwaltung**.
 
-#### Schiedsrichter verwalten
-- Übersicht aller registrierten Schiedsrichter mit: Name, E-Mail, Land, Sportarten, Erstellungsdatum.
-- **„Neuer Schiedsrichter"**: Formular zum Hinzufügen eines neuen Schiedsrichters (Name, E-Mail, Land, Sportarten kommagetrennt).
-- **Löschen**: Einzelne Schiedsrichter können per Schaltfläche entfernt werden.
+#### Benutzerverwaltung
 
-#### Ergebnisse verwalten
-- Vollständige Übersicht aller eingereichten Ergebnisse mit Statusanzeige.
-- **„Alle Ergebnisse löschen"**: Löscht alle Einträge auf einmal.
-- Einzelne Ergebnisse können ebenfalls gelöscht werden.
+- Übersicht aller registrierten Benutzer mit: Benutzername, Name, Rolle (ADMIN / REFEREE) und Status (aktiv / inaktiv).
+- **Filter & Suche**: Benutzer nach Name, Rolle oder Status filtern.
+- **Sortierung**: Klick auf Spaltenköpfe sortiert die Tabelle.
+- **„Neuer Benutzer"**: Formular zum Anlegen eines Benutzers (Name, Benutzername, Passwort, Rolle).
+- **Deaktivieren**: Einzelne Benutzer können deaktiviert werden (statt gelöscht).
+
+#### Athletenverwaltung
+
+- Vollständige Übersicht aller Athleten mit: Name, Land, Sportart und Status.
+- **Filter & Suche**: Athleten nach Name, Sportart, Land oder Status filtern.
+- **Sortierung**: Klick auf Spaltenköpfe sortiert die Liste.
+- **„Neuer Athlet"**: Formular zum Anlegen eines Athleten (Name, Sportart, Land).
+- **Bearbeiten**: Athletendaten können direkt aktualisiert werden.
+- **Aktivieren / Deaktivieren**: Status eines Athleten kann umgeschaltet werden.
 
 ---
 
 ### 9. Cookie-Banner & Rechtliches
+
+![Cookie-Richtlinie](docs/screenshots/09_cookie_policy.png)
 
 Beim ersten Besuch erscheint am unteren Bildschirmrand ein **Cookie-Banner**:
 
@@ -427,14 +490,28 @@ Im **Footer** sind folgende rechtliche Seiten verlinkt:
 
 ### 10. Dark Mode & Sprache
 
+![Dark Mode](docs/screenshots/10_dark_mode.png)
+
 #### Dark Mode
 - Der Dark/Light Mode wird über das **Mond-/Sonnen-Symbol** (🌙/☀️) in der Navigation umgeschaltet.
 - Die Einstellung wird im Browser (`localStorage`) gespeichert und beim nächsten Besuch wiederhergestellt.
+- Alle Seiten und Komponenten unterstützen beide Modi vollständig.
 
 #### Sprachauswahl
 - Die Sprache kann über das **Sprachdropdown** in der Navigation gewechselt werden.
 - Die URL-Sprache wird dabei aktualisiert (z.B. `/de` → `/en`).
 - Unterstützte Sprachen: **Deutsch, Englisch, Französisch, Italienisch**.
+
+---
+
+### 11. 404-Seite
+
+![404-Seite](docs/screenshots/notfound.png)
+
+Bei Aufruf einer nicht vorhandenen URL wird die **404-Seite** angezeigt:
+
+- Klare Fehlermeldung: „Seite nicht gefunden".
+- Schaltflächen **„Startseite"** und **„Länderübersicht"** ermöglichen eine schnelle Navigation zurück.
 
 ---
 
