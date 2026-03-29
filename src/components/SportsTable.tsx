@@ -6,6 +6,7 @@ import {
   Button,
   Icon
 } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router';
 import { FaMedal } from 'react-icons/fa';
 import type { Result } from '../services/results';
@@ -32,10 +33,12 @@ const MedalIcon = ({ medalType }: { medalType: Result['medalType'] }) => {
   );
 };
 
-export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false, resultLabel = 'Ergebnis', resultUnitLabel }) => {
+export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false, resultLabel, resultUnitLabel }) => {
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
+  const { t } = useTranslation();
   const currentLang = lang ?? 'de';
+  const localizedResultLabel = resultLabel ?? t('sportsTable.columns.result');
 
   const rowLinkButtonProps = {
     variant: 'ghost' as const,
@@ -64,7 +67,7 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false,
 
   if (!data || data.length === 0) {
     return (
-      <DataTableState message="Keine Ergebnisse verfügbar." />
+      <DataTableState message={t('sportsTable.noResults')} />
     );
   }
 
@@ -84,18 +87,18 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false,
         <Table.Root variant='outline' size="sm" className="responsive-sports-table">
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader whiteSpace="nowrap" w="88px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">Platz</Table.ColumnHeader>
-              <Table.ColumnHeader minW="240px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">Athlet</Table.ColumnHeader>
-              <Table.ColumnHeader whiteSpace="nowrap" w="140px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">Land</Table.ColumnHeader>
+              <Table.ColumnHeader whiteSpace="nowrap" w="88px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('sportsTable.columns.rank')}</Table.ColumnHeader>
+              <Table.ColumnHeader minW="240px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('sportsTable.columns.athlete')}</Table.ColumnHeader>
+              <Table.ColumnHeader whiteSpace="nowrap" w="140px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('sportsTable.columns.country')}</Table.ColumnHeader>
               <Table.ColumnHeader textAlign="right" whiteSpace="nowrap" w="140px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">
-                <Box as="span" display="block">{resultLabel}</Box>
+                <Box as="span" display="block">{localizedResultLabel}</Box>
                 {resultUnitLabel && (
                   <Text as="span" display="block" fontSize="2xs" color="text-muted" textTransform="none" letterSpacing="0">
                     {resultUnitLabel}
                   </Text>
                 )}
               </Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="center" whiteSpace="nowrap" w="110px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">Medaille</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="center" whiteSpace="nowrap" w="110px" py={3} fontSize="xs" color="text-muted" textTransform="uppercase" letterSpacing="0.06em">{t('sportsTable.columns.medal')}</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -116,7 +119,7 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false,
                       color="text"
                       fontWeight="semibold"
                       onClick={() => goToCountry(countryTarget)}
-                      aria-label={`Open country details for ${countryLabel}`}
+                      aria-label={t('sportsTable.openCountryDetails', { country: countryLabel })}
                     >
                       {row.athleteName}
                     </Button>
@@ -132,7 +135,7 @@ export const SportsTable: React.FC<SportsTableProps> = ({ data, loading = false,
                       {...rowLinkButtonProps}
                       color="text"
                       onClick={() => goToCountry(countryTarget)}
-                      aria-label={`Open country details for ${countryLabel}`}
+                      aria-label={t('sportsTable.openCountryDetails', { country: countryLabel })}
                     >
                       {countryLabel}
                     </Button>

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
 import footerImg from '../assets/mc2026_footer.png';
 import { SectionHeading } from './ui';
 
@@ -16,6 +17,8 @@ const FooterBannerContainer = styled.div`
 `;
 
 export const FooterBanner = () => {
+  const { t } = useTranslation();
+
   return (
     <FooterBannerContainer>
       <SectionHeading
@@ -24,7 +27,7 @@ export const FooterBanner = () => {
         textAlign="center"
         textShadow="0 2px 6px var(--chakra-colors-scrollbar-thumb)"
       >
-        IT's your vibe
+        {t('footerBanner.tagline')}
       </SectionHeading>
     </FooterBannerContainer>
   );

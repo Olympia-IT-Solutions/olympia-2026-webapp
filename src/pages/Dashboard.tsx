@@ -5,7 +5,7 @@ import { Workbook } from 'exceljs'
 import { getCurrentUser } from '../logic/rights'
 import { ResultsBySportTable } from '../components/ResultsBySportTable'
 import { LoadingSpinner } from '../components/ui'
-import { type Sport } from '../services/sports'
+import { getSportTranslationKey, type Sport } from '../services/sports'
 import { approveResult, createResult, fetchResultsBySport, invalidateResult, rejectResult, updateResult, type Result as ApiResult } from '../services/results'
 import { fetchAllAthletes, type Athlete } from '../services/athletes'
 import { useSportsStore } from '../store/sports'
@@ -41,8 +41,8 @@ const createSafeRangeName = (sport: Sport) => {
   return `sport_${sport.id}_${normalizedName}`
 }
 
-const getSportResultValidationType = (sportName: string) => {
-  const templateKey = sportName.toLowerCase().replace(/\s+/g, '')
+const getSportResultValidationType = (sport: Pick<Partial<Sport>, 'id' | 'name'> | string) => {
+  const templateKey = getSportTemplateKey(sport)
 
   if (templateKey === 'biathlon' || templateKey === 'bobsport' || templateKey === 'skilanglauf') {
     return 'time'
@@ -120,9 +120,9 @@ type ImportPreviewSummary = {
 }
 
 type SportResultTemplate = {
-  label: string
-  placeholder: string
-  helperText: string
+  labelKey: string
+  placeholderKey: string
+  helperTextKey: string
   inputMode: 'text' | 'numeric' | 'decimal'
   normalize: (value: string) => string
   validate: (value: string) => string | null
@@ -136,19 +136,19 @@ const normalizeTrimmedValue = (value: string) => value.trim()
 
 const normalizeDecimalValue = (value: string) => value.trim().replace(',', '.')
 
-const createTimeTemplate = (placeholder: string, helperText: string): SportResultTemplate => ({
-  label: 'Zeit',
-  placeholder,
-  helperText,
+const createTimeTemplate = (placeholderKey: string, helperTextKey: string): SportResultTemplate => ({
+  labelKey: 'dashboard.resultTemplates.labels.time',
+  placeholderKey,
+  helperTextKey,
   inputMode: 'text',
   normalize: normalizeDecimalValue,
   validate: (value) => (TIME_RESULT_REGEX.test(normalizeDecimalValue(value)) ? null : 'dashboard.validation.timeFormat'),
 })
 
-const createScoreTemplate = (placeholder: string, helperText: string, maxScore: number): SportResultTemplate => ({
-  label: 'Endstand',
-  placeholder,
-  helperText,
+const createScoreTemplate = (placeholderKey: string, helperTextKey: string, maxScore: number): SportResultTemplate => ({
+  labelKey: 'dashboard.resultTemplates.labels.score',
+  placeholderKey,
+  helperTextKey,
   inputMode: 'numeric',
   normalize: normalizeTrimmedValue,
   validate: (value) => {
@@ -168,10 +168,10 @@ const createScoreTemplate = (placeholder: string, helperText: string, maxScore: 
   },
 })
 
-const createPointsTemplate = (placeholder: string, helperText: string, maxPoints: number): SportResultTemplate => ({
-  label: 'Punkte',
-  placeholder,
-  helperText,
+const createPointsTemplate = (placeholderKey: string, helperTextKey: string, maxPoints: number): SportResultTemplate => ({
+  labelKey: 'dashboard.resultTemplates.labels.points',
+  placeholderKey,
+  helperTextKey,
   inputMode: 'decimal',
   normalize: normalizeDecimalValue,
   validate: (value) => {
@@ -192,16 +192,17 @@ const createPointsTemplate = (placeholder: string, helperText: string, maxPoints
 })
 
 const sportResultTemplates: Record<string, SportResultTemplate> = {
-  biathlon: createTimeTemplate('z. B. 25:34.50', 'Erwartet wird ein Zeitwert im Format mm:ss.hh. Sekunden müssen zwischen 00 und 59 liegen.'),
-  bobsport: createTimeTemplate('z. B. 1:39.18', 'Erwartet wird ein Zeitwert im Format m:ss.hh für die Laufzeit.'),
-  curling: createScoreTemplate('z. B. 6:4', 'Erwartet wird ein Endstand im Format x:y mit ganzen Zahlen.', 20),
-  eishockey: createScoreTemplate('z. B. 3:2', 'Erwartet wird ein Endstand im Format x:y mit ganzen Zahlen.', 20),
-  eiskunstlauf: createPointsTemplate('z. B. 184.72', 'Erwartet werden Punkte zwischen 0 und 300 mit bis zu zwei Nachkommastellen.', 300),
-  skilanglauf: createTimeTemplate('z. B. 31:08.40', 'Erwartet wird ein Zeitwert im Format mm:ss.hh für die Laufzeit.'),
-  skispringen: createPointsTemplate('z. B. 131.5', 'Erwartet werden Punkte zwischen 0 und 300 mit bis zu zwei Nachkommastellen.', 300),
+  biathlon: createTimeTemplate('dashboard.resultTemplates.examples.biathlon.placeholder', 'dashboard.resultTemplates.examples.biathlon.helperText'),
+  bobsport: createTimeTemplate('dashboard.resultTemplates.examples.bobsport.placeholder', 'dashboard.resultTemplates.examples.bobsport.helperText'),
+  curling: createScoreTemplate('dashboard.resultTemplates.examples.curling.placeholder', 'dashboard.resultTemplates.examples.curling.helperText', 20),
+  eishockey: createScoreTemplate('dashboard.resultTemplates.examples.eishockey.placeholder', 'dashboard.resultTemplates.examples.eishockey.helperText', 20),
+  eiskunstlauf: createPointsTemplate('dashboard.resultTemplates.examples.eiskunstlauf.placeholder', 'dashboard.resultTemplates.examples.eiskunstlauf.helperText', 300),
+  skilanglauf: createTimeTemplate('dashboard.resultTemplates.examples.skilanglauf.placeholder', 'dashboard.resultTemplates.examples.skilanglauf.helperText'),
+  skispringen: createPointsTemplate('dashboard.resultTemplates.examples.skispringen.placeholder', 'dashboard.resultTemplates.examples.skispringen.helperText', 300),
 }
 
-const getSportTemplateKey = (sportName?: string | null) => sportName?.toLowerCase().replace(/\s+/g, '') ?? ''
+const getSportTemplateKey = (sport?: Pick<Partial<Sport>, 'id' | 'name'> | string | null) =>
+  getSportTranslationKey(sport ?? null) ?? ''
 const getResultValueString = (value: unknown) => (value == null ? '' : String(value))
 const normalizeLookupValue = (value: string) => value.trim().toLowerCase().replace(/\s+/g, ' ')
 
@@ -439,6 +440,24 @@ export function Dashboard() {
   const selectedSportResults = selectedSportId !== null ? resultsBySport[selectedSportId] || [] : []
   const selectedSportAthletes = selectedSportId !== null ? athletesBySport[selectedSportId] || [] : []
 
+  const getLocalizedSportName = useCallback((sport: Pick<Partial<Sport>, 'id' | 'name'> | null | undefined) => {
+    if (!sport) {
+      return ''
+    }
+
+    const sportKey = getSportTranslationKey(sport)
+    if (sportKey) {
+      return t(`sports.names.${sportKey}`)
+    }
+
+    return sport.name ?? ''
+  }, [t])
+
+  const getLocalizedSportNameById = useCallback((sportId: number, fallbackName?: string) => {
+    const sportById = sports.find((sport) => sport.id === sportId)
+    return getLocalizedSportName({ id: sportId, name: sportById?.name ?? fallbackName ?? '' })
+  }, [getLocalizedSportName, sports])
+
   const updateSportResultStatus = (sportId: number, resultId: number, nextStatus: ApiResult['status']) => {
     setResultsBySport((previousResults) => ({
       ...previousResults,
@@ -460,11 +479,12 @@ export function Dashboard() {
   const openEditResultModal = (result: ApiResult, fallbackSportName?: string) => {
     const numericSportId = Number(result.sportId)
     const resolvedSportName = fallbackSportName ?? result.sportName ?? sports.find((sport) => sport.id === numericSportId)?.name ?? ''
+    const localizedSportName = getLocalizedSportName({ id: numericSportId, name: resolvedSportName })
     setEditResultError(null)
     setEditResult({
       resultId: result.id,
       sportId: Number.isFinite(numericSportId) ? numericSportId : 0,
-      sportName: resolvedSportName,
+      sportName: localizedSportName || resolvedSportName,
       athleteName: result.athleteName,
       value: getResultValueString(result.value),
       rank: getResultValueString(result.rank),
@@ -724,6 +744,10 @@ export function Dashboard() {
       const sportsByName = new Map<string, Sport>()
       sports.forEach((sport) => {
         sportsByName.set(normalizeLookupValue(sport.name), sport)
+        const localizedSportName = getLocalizedSportName(sport)
+        if (localizedSportName) {
+          sportsByName.set(normalizeLookupValue(localizedSportName), sport)
+        }
       })
 
       const athletesBySportAndName = new Map<string, Athlete>()
@@ -772,8 +796,9 @@ export function Dashboard() {
         }
 
         const athlete = athletesBySportAndName.get(`${sport.id}:${normalizeLookupValue(athleteNameValue)}`)
+        const localizedSportName = getLocalizedSportName(sport)
         if (!athlete) {
-          warningMessages.push(t('dashboard.importResultUnknownAthlete', { row: rowNumber, athlete: athleteNameValue, sport: sport.name }))
+          warningMessages.push(t('dashboard.importResultUnknownAthlete', { row: rowNumber, athlete: athleteNameValue, sport: localizedSportName || sport.name }))
           continue
         }
 
@@ -787,7 +812,7 @@ export function Dashboard() {
         const importAthleteKey = `${sport.id}:${athlete.id}`
 
         if (importedAthletesInFile.has(importAthleteKey)) {
-          warningMessages.push(t('dashboard.importResultDuplicateInFile', { row: rowNumber, athlete: athlete.name, sport: sport.name }))
+          warningMessages.push(t('dashboard.importResultDuplicateInFile', { row: rowNumber, athlete: athlete.name, sport: localizedSportName || sport.name }))
           continue
         }
 
@@ -795,7 +820,7 @@ export function Dashboard() {
         parsedRows.push({
           sourceRow: rowNumber,
           sportId: sport.id,
-          sportName: sport.name,
+          sportName: localizedSportName || sport.name,
           athleteId: athlete.id,
           athleteName: athlete.name,
           value: normalizedValue,
@@ -1016,7 +1041,9 @@ export function Dashboard() {
       headerRow.alignment = { vertical: 'middle', horizontal: 'center' }
       templateSheet.autoFilter = 'A1:C1'
 
-      const sortedSports = [...sports].sort((leftSport, rightSport) => leftSport.name.localeCompare(rightSport.name, undefined, { sensitivity: 'base' }))
+      const sortedSports = [...sports].sort((leftSport, rightSport) =>
+        getLocalizedSportName(leftSport).localeCompare(getLocalizedSportName(rightSport), undefined, { sensitivity: 'base' })
+      )
       const sportRowsStart = 2
       const sportRowsEnd = sortedSports.length + 1
 
@@ -1032,9 +1059,9 @@ export function Dashboard() {
       sortedSports.forEach((sport, index) => {
         const rowNumber = index + 2
         const safeRangeName = createSafeRangeName(sport)
-        templateSheet.getCell(`${helperLookupSportColumn}${rowNumber}`).value = sport.name
+        templateSheet.getCell(`${helperLookupSportColumn}${rowNumber}`).value = getLocalizedSportName(sport)
         templateSheet.getCell(`${helperLookupKeyColumn}${rowNumber}`).value = safeRangeName
-        templateSheet.getCell(`${helperLookupTypeColumn}${rowNumber}`).value = getSportResultValidationType(sport.name)
+        templateSheet.getCell(`${helperLookupTypeColumn}${rowNumber}`).value = getSportResultValidationType(sport)
       })
 
       const sportsListRange = `'Import'!$${helperLookupSportColumn}$${sportRowsStart}:$${helperLookupSportColumn}$${sportRowsEnd}`
@@ -1051,7 +1078,7 @@ export function Dashboard() {
         const athletesColumnNumber = helperAthleteStartColumnNumber + index
         const athletesColumnLetter = toExcelColumnName(athletesColumnNumber)
 
-        templateSheet.getCell(`${athletesColumnLetter}1`).value = sport.name
+        templateSheet.getCell(`${athletesColumnLetter}1`).value = getLocalizedSportName(sport)
 
         const values = athletesForSport.length > 0 ? athletesForSport : ['']
         values.forEach((athleteName, athleteIndex) => {
@@ -1265,42 +1292,47 @@ export function Dashboard() {
 
         {activeSports.map((sport) => {
           const sportResults = resultsBySport[sport.id] || []
+          const localizedSportName = getLocalizedSportName(sport)
+          const localizedSportResults = sportResults.map((result) => ({
+            ...result,
+            sportName: getLocalizedSportNameById(sport.id, result.sportName ?? sport.name),
+          }))
 
           return (
             <Card.Root key={sport.id} mb={8} p={6} bg="var(--card-bg)" boxShadow="md" borderRadius="lg">
               <Stack direction="row" justify="space-between" align="center" mb={4}>
-                <Heading size="lg" color="text" fontWeight="semibold">{sport.name}</Heading>
+                <Heading size="lg" color="text" fontWeight="semibold">{localizedSportName}</Heading>
               </Stack>
 
-              {resultsLoading && sportResults.length === 0 ? (
+              {resultsLoading && localizedSportResults.length === 0 ? (
                 <Box p={4} display="flex" justifyContent="center" alignItems="center" minH="160px">
                   <LoadingSpinner size="md" />
                 </Box>
-              ) : sportResults.length === 0 ? (
+              ) : localizedSportResults.length === 0 ? (
                 <Text textAlign="center" color="text-muted" py={4}>
                   {t('dashboard.table.noResults')}
                 </Text>
               ) : (
                 <ResultsBySportTable
-                  data={sportResults}
+                  data={localizedSportResults}
                   currentRole={currentRole}
                   currentUserEmail={currentUser?.email ?? null}
-                  sportName={sport.name}
+                  sportName={localizedSportName}
                   onEdit={currentRole === 'admin' ? openEditResultModal : undefined}
                   onApprove={(resultId) => {
-                    const result = sportResults.find((entry) => entry.id === resultId)
+                    const result = localizedSportResults.find((entry) => entry.id === resultId)
                     if (result) {
                       openActionConfirmation('approve', sport.id, resultId, result.athleteName)
                     }
                   }}
                   onReject={(resultId) => {
-                    const result = sportResults.find((entry) => entry.id === resultId)
+                    const result = localizedSportResults.find((entry) => entry.id === resultId)
                     if (result) {
                       openActionConfirmation('reject', sport.id, resultId, result.athleteName)
                     }
                   }}
                   onInvalidate={(resultId) => {
-                    const result = sportResults.find((entry) => entry.id === resultId)
+                    const result = localizedSportResults.find((entry) => entry.id === resultId)
                     if (result) {
                       openActionConfirmation('invalidate', sport.id, resultId, result.athleteName)
                     }
@@ -1351,7 +1383,7 @@ export function Dashboard() {
                     >
                       <option value="">{t('dashboard.placeholders.selectSport')}</option>
                       {activeSports.map((sport) => (
-                        <option key={sport.id} value={sport.id}>{sport.name}</option>
+                        <option key={sport.id} value={sport.id}>{getLocalizedSportName(sport)}</option>
                       ))}
                     </select>
                   </Box>
@@ -1363,10 +1395,10 @@ export function Dashboard() {
                     {selectedSportTemplate ? (
                       <Stack gap={1} mt={2}>
                         <Text fontWeight="600" color="text">
-                          {t('dashboard.resultTemplates.selected', { sport: selectedSport?.name ?? '' })}
+                          {t('dashboard.resultTemplates.selected', { sport: getLocalizedSportName(selectedSport) })}
                         </Text>
                         <Text fontSize="sm" color="text-muted">
-                          {selectedSportTemplate.helperText}
+                          {t(selectedSportTemplate.helperTextKey)}
                         </Text>
                       </Stack>
                     ) : (
@@ -1398,11 +1430,11 @@ export function Dashboard() {
                   </Box>
 
                   <Box>
-                    <Text mb={2} fontWeight="500">{selectedSportTemplate ? selectedSportTemplate.label : t('dashboard.labels.resultValue')} *</Text>
+                    <Text mb={2} fontWeight="500">{selectedSportTemplate ? t(selectedSportTemplate.labelKey) : t('dashboard.labels.resultValue')} *</Text>
                     <Input
                       value={newResult.value}
                       onChange={(e) => setNewResult({ ...newResult, value: e.target.value })}
-                      placeholder={selectedSportTemplate ? selectedSportTemplate.placeholder : t('dashboard.placeholders.resultValueExample')}
+                      placeholder={selectedSportTemplate ? t(selectedSportTemplate.placeholderKey) : t('dashboard.placeholders.resultValueExample')}
                       inputMode={selectedSportTemplate?.inputMode ?? 'text'}
                       disabled={!selectedSportTemplate}
                     />
@@ -1610,22 +1642,22 @@ export function Dashboard() {
                   <Stack gap={4}>
                     <Box bg="surface-muted" p={4} borderRadius="lg" borderWidth="1px" borderColor="border">
                       <Text fontSize="xs" fontWeight="700" letterSpacing="0.08em" textTransform="uppercase" color="text-muted">
-                        {t('dashboard.editResultContext', { defaultValue: 'Bearbeitete Sportart' })}
+                        {t('dashboard.editResultContext')}
                       </Text>
-                      <Text mt={2} fontWeight="600" color="text">{editSport?.name ?? editResult.sportName ?? t('dashboard.labels.sport')}</Text>
+                      <Text mt={2} fontWeight="600" color="text">{getLocalizedSportName(editSport) || editResult.sportName || t('dashboard.labels.sport')}</Text>
                       <Text fontSize="sm" color="text-muted">{editResult.athleteName}</Text>
                     </Box>
 
                     <Box>
-                      <Text mb={2} fontWeight="500">{editSportTemplate ? editSportTemplate.label : t('dashboard.labels.resultValue')} *</Text>
+                      <Text mb={2} fontWeight="500">{editSportTemplate ? t(editSportTemplate.labelKey) : t('dashboard.labels.resultValue')} *</Text>
                       <Input
                         value={editResult.value}
                         onChange={(event) => setEditResult({ ...editResult, value: event.target.value })}
-                        placeholder={editSportTemplate ? editSportTemplate.placeholder : t('dashboard.placeholders.resultValueExample')}
+                        placeholder={editSportTemplate ? t(editSportTemplate.placeholderKey) : t('dashboard.placeholders.resultValueExample')}
                       />
                       {editSportTemplate && (
                         <Text mt={2} fontSize="sm" color="text-muted">
-                          {editSportTemplate.helperText}
+                          {t(editSportTemplate.helperTextKey)}
                         </Text>
                       )}
                     </Box>

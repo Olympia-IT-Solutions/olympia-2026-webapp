@@ -165,7 +165,7 @@ export const CountryTable: React.FC<CountryTableProps> = ({ data = [], onCountry
     return (
       <DataTableState
         tone="danger"
-        message={t('countryTable.error', { defaultValue: 'Error loading data' })}
+        message={t('countryTable.error')}
         helperText={error}
       />
     );

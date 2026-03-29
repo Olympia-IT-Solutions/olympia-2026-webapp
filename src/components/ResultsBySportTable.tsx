@@ -120,7 +120,7 @@ export const ResultsBySportTable: React.FC<ResultsBySportTableProps> = ({
                   <Table.Cell py={3}>
                     {result.hasMedal && result.medalType ? (
                       <Badge colorPalette={getMedalColor(result.medalType)}>
-                        {result.medalType}
+                        {t(`medalDisplay.medalTypes.${result.medalType}`)}
                       </Badge>
                     ) : (
                       <Text color="text-muted">-</Text>

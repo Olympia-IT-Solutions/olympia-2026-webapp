@@ -160,7 +160,7 @@ export function Login() {
 
       <ImageSection>
         <img
-          alt="Login Illustration"
+          alt={t('login.illustrationAlt')}
           src="https://img.olympics.com/images/image/private/t_s_w960/primary/lhn24fjdqgglv3wlvxbw"
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
@@ -172,7 +172,7 @@ export function Login() {
           
           <form onSubmit={handleLogin}>
             <InputGroup>
-              <Label>{t('login.username', { defaultValue: 'Benutzername' })}</Label>
+              <Label>{t('login.username')}</Label>
               <Input 
                 type="text" 
                 value={username} 
@@ -194,7 +194,7 @@ export function Login() {
             </InputGroup>
 
             <Button type="submit" disabled={loading || !isFormValid}>
-              {loading ? t('login.loading', { defaultValue: 'Wird geladen...' }) : t('login.submit')}
+              {loading ? t('login.loading') : t('login.submit')}
             </Button>
           </form>
           {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}

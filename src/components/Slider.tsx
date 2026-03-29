@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Box, Flex, Text, IconButton } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import { FaChevronLeft, FaChevronRight, FaCircle } from 'react-icons/fa';
 
 export const Slider = () => {
+  const { t } = useTranslation();
+
   const slides = [
     {
       img: 'https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w1460/f_auto/primary/qtsazotmahptlkashww7',
@@ -149,7 +152,7 @@ export const Slider = () => {
 
       {/* Left Arrow */}
       <IconButton
-        aria-label="Previous Slide"
+        aria-label={t('slider.previous')}
         position="absolute"
         left="2"
         top="50%"
@@ -168,7 +171,7 @@ export const Slider = () => {
 
       {/* Right Arrow */}
       <IconButton
-        aria-label="Next Slide"
+        aria-label={t('slider.next')}
         position="absolute"
         right="2"
         top="50%"

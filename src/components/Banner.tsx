@@ -1,5 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { Text, HStack } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import headerImg from '../assets/mc2026_header.png';
 import { NavBar } from './NavBar';
 import { CTAButton } from './ui';
@@ -61,12 +62,14 @@ const ContentWrapper = styled.div`
 `;
 
 export const Banner = () => {
+  const { t } = useTranslation();
+
   return (
     <>
       <BannerContainer>
         <ContentWrapper>
           <Text fontSize="sm" lineHeight="1.35" flex="1 1 520px" minW={0}>
-            Olympische Winterspiele™ · 6. bis 22. Februar 2026 | Paralympische Winterspiele™ · 6. bis 15. März 2026
+            {t('banner.eventLine')}
           </Text>
           <HStack gap={3} flex="0 1 auto" flexWrap="wrap" justify="flex-start">
             <CTAButton
@@ -75,7 +78,7 @@ export const Banner = () => {
               size="sm"
             >
               <a href="https://tickets.milanocortina2026.org" target="_blank" rel="noopener noreferrer">
-                Tickets
+                {t('banner.tickets')}
               </a>
             </CTAButton>
             <CTAButton
@@ -84,7 +87,7 @@ export const Banner = () => {
               size="sm"
             >
               <a href="https://shop.olympics.com/milano-cortina-2026" target="_blank" rel="noopener noreferrer">
-                Shop
+                {t('banner.shop')}
               </a>
             </CTAButton>
           </HStack>
@@ -92,7 +95,7 @@ export const Banner = () => {
       </BannerContainer>
 
       <HeaderWrapper>
-        <HeaderImage role="img" aria-label="MC2026 header image" />
+        <HeaderImage role="img" aria-label={t('banner.headerImageAria')} />
         <NavOverlay>
           <NavBar />
         </NavOverlay>

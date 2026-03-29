@@ -1,6 +1,9 @@
 {
   "welcome": "Bienvenue aux Jeux Olympiques de Milano Cortina 2026",
   "description": "Ceci est une application React avec support i18n",
+  "common": {
+    "loading": "Chargement"
+  },
   "hero": {
     "disciplines": "Les disciplines",
     "countries": "Les pays"
@@ -15,24 +18,32 @@
     "countries": "Pays",
     "sports": "Sports",
     "dashboard": "Tableau de bord",
-        "title": "Tableau des résultats",
-        "demoNote": "Données en direct depuis l'API des arbitres.",
+    "admin": "Admin",
+    "title": "Tableau des résultats",
+    "demoNote": "Données en direct depuis l'API des arbitres.",
     "login": "Connexion",
-        "infoTitle": "Aperçu des résultats en direct",
-        "infoText": "Ce tableau de bord charge les résultats actuels de tous les sports actifs directement depuis l'API.",
+    "logout": "Déconnexion",
+    "openMenu": "Ouvrir le menu",
+    "infoTitle": "Aperçu des résultats en direct",
+    "infoText": "Ce tableau de bord charge les résultats actuels de tous les sports actifs directement depuis l'API.",
     "closeMenu": "Fermer le menu",
     "menuTitle": "Menu",
     "language": "Langue",
     "darkMode": "Mode sombre",
-    "lightMode": "Mode clair"
+    "lightMode": "Mode clair",
+    "homeAria": "Aller a la page d accueil",
+    "logoAlt": "Logo Milano Cortina 2026"
   },
   "login": {
     "title": "Bienvenue",
     "invalidCredentials": "Identifiants invalides",
     "back": "Retour",
+    "username": "Nom d'utilisateur *",
     "email": "E-mail *",
     "password": "Mot de passe *",
-    "submit": "Continuer"
+    "loading": "Chargement...",
+    "submit": "Continuer",
+    "illustrationAlt": "Illustration de connexion"
   },
   "notfound": {
     "title": "Page non trouvée",
@@ -53,8 +64,20 @@
       "gold": "Or",
       "total": "Total"
     },
+    "error": "Erreur lors du chargement des données.",
     "noData": "Aucune donnée disponible.",
     "loadMore": "Charger plus d'entrées"
+  },
+  "sports": {
+    "names": {
+      "biathlon": "Biathlon",
+      "bobsport": "Bobsleigh",
+      "curling": "Curling",
+      "eishockey": "Hockey sur glace",
+      "eiskunstlauf": "Patinage artistique",
+      "skilanglauf": "Ski de fond",
+      "skispringen": "Saut a ski"
+    }
   },
   "sport": {
     "notFoundTitle": "Sport non trouvé",
@@ -170,7 +193,42 @@
     "resultTemplates": {
       "title": "Modèle de résultat",
       "selected": "Modèle pour {{sport}}",
-      "selectSportHint": "Sélectionnez d'abord un sport pour activer la validation appropriée."
+      "selectSportHint": "Sélectionnez d'abord un sport pour activer la validation appropriée.",
+      "labels": {
+        "time": "Temps",
+        "score": "Score final",
+        "points": "Points"
+      },
+      "examples": {
+        "biathlon": {
+          "placeholder": "ex: 25:34.50",
+          "helperText": "Le format attendu est mm:ss.hh. Les secondes doivent être comprises entre 00 et 59."
+        },
+        "bobsport": {
+          "placeholder": "ex: 1:39.18",
+          "helperText": "Le format attendu est m:ss.hh pour le temps de course."
+        },
+        "curling": {
+          "placeholder": "ex: 6:4",
+          "helperText": "Le format attendu est x:y avec des nombres entiers."
+        },
+        "eishockey": {
+          "placeholder": "ex: 3:2",
+          "helperText": "Le format attendu est x:y avec des nombres entiers."
+        },
+        "eiskunstlauf": {
+          "placeholder": "ex: 184.72",
+          "helperText": "Les points attendus doivent être compris entre 0 et 300, avec jusqu'à deux décimales."
+        },
+        "skilanglauf": {
+          "placeholder": "ex: 31:08.40",
+          "helperText": "Le format attendu est mm:ss.hh pour le temps de course."
+        },
+        "skispringen": {
+          "placeholder": "ex: 131.5",
+          "helperText": "Les points attendus doivent être compris entre 0 et 300, avec jusqu'à deux décimales."
+        }
+      }
     },
     "validation": {
       "selectSport": "Veuillez d'abord sélectionner un sport.",
@@ -194,7 +252,10 @@
     "cookiePolicy": "Politique de cookies",
     "privacyPolicy": "Politique de confidentialité",
     "termsOfService": "Conditions d'utilisation",
-    "accessibility": "Accessibilité"
+    "accessibility": "Accessibilité",
+    "copyright": "Copyright 2026. Tous droits reserves.",
+    "milanoLogoAlt": "Logo Milano Cortina 2026",
+    "olympiaLogoAlt": "Logo Olympia IT Solutions"
   },
   "admin": {
     "title": "Tableau de bord administrateur",
@@ -284,5 +345,268 @@
         "actions": "Actions"
       }
     }
+  },
+  "sportsTable": {
+    "columns": {
+      "rank": "Classement",
+      "athlete": "Athlete",
+      "country": "Pays",
+      "result": "Resultat",
+      "medal": "Medaille"
+    },
+    "noResults": "Aucun resultat disponible.",
+    "openCountryDetails": "Ouvrir les details du pays {{country}}"
+  },
+  "medalDisplay": {
+    "medalTypes": {
+      "GOLD": "Or",
+      "SILVER": "Argent",
+      "BRONZE": "Bronze"
+    },
+    "noMedals": "Aucune medaille disponible.",
+    "noMedalsForCountry": "Aucune medaille trouvee pour {{country}}.",
+    "entriesCount_one": "{{count}} entree",
+    "entriesCount_other": "{{count}} entrees",
+    "sportLabel": "Sport",
+    "showSportDetails": "Afficher les details de {{sport}}"
+  },
+  "countryDetail": {
+    "back": "Retour",
+    "medalsTitle": "{{country}} - Medailles"
+  },
+  "banner": {
+    "eventLine": "Jeux Olympiques d hiver - 6 au 22 fevrier 2026 | Jeux Paralympiques d hiver - 6 au 15 mars 2026",
+    "tickets": "Billets",
+    "shop": "Boutique",
+    "headerImageAria": "Image d en-tete Milano Cortina 2026"
+  },
+  "footerBanner": {
+    "tagline": "IT's your vibe"
+  },
+  "slider": {
+    "previous": "Diapositive precedente",
+    "next": "Diapositive suivante",
+    "slideLabel": "Diapositive {{index}}"
+  },
+  "legal": {
+    "accessibility": {
+      "introParagraphs": [
+        "Cette declaration d accessibilite explique comment nous concevons et maintenons olympia-2026-webapp pour tous les utilisateurs.",
+        "Notre objectif est une experience numerique claire, navigable et inclusive sur tous les appareils."
+      ],
+      "sections": [
+        {
+          "heading": "1. Champ d application de cette declaration",
+          "paragraphs": [
+            "Cette declaration s applique au site olympia-2026-webapp et a ses pages publiques.",
+            "Elle couvre les parcours essentiels, notamment la navigation, le changement de langue, les resultats par pays et sport, ainsi que les pages legales."
+          ]
+        },
+        {
+          "heading": "2. Normes d accessibilite",
+          "paragraphs": [
+            "Le site est developpe selon les principes WCAG 2.2 niveau AA.",
+            "Nous appliquons aussi les bonnes pratiques HTML semantique et ARIA pour les technologies d assistance."
+          ],
+          "list": [
+            "Navigation clavier des controles interactifs",
+            "Contrastes suffisants et typographie lisible",
+            "Noms accessibles pour boutons, liens et tableaux",
+            "Mises en page adaptatives pour mobile et ordinateur"
+          ]
+        },
+        {
+          "heading": "3. Limitations connues",
+          "paragraphs": [
+            "Certains contenus tiers et medias externes integres peuvent ne pas atteindre le meme niveau d accessibilite.",
+            "Nous les reevaluons et les ameliorons en continu lorsque cela est techniquement possible."
+          ],
+          "list": [
+            "Widgets et integrations tiers",
+            "Documents telechargeables externes",
+            "Medias fournis par des partenaires externes"
+          ]
+        },
+        {
+          "heading": "4. Retour et assistance",
+          "paragraphs": [
+            "Si vous rencontrez une barriere d accessibilite, contactez notre support.",
+            "Merci d indiquer l URL de la page et une breve description pour faciliter l analyse."
+          ],
+          "links": [
+            {
+              "label": "Portail support accessibilite",
+              "href": "https://support.olympics.com/hc/en-gb/"
+            }
+          ]
+        }
+      ],
+      "footerNotes": [
+        "Derniere mise a jour : 29 mars 2026"
+      ]
+    },
+    "cookiePolicy": {
+      "introParagraphs": [
+        "Cette politique de cookies explique comment les cookies et technologies similaires sont utilises sur ce site.",
+        "Elle vous aide a comprendre les categories utilisees et la gestion de vos preferences."
+      ],
+      "sections": [
+        {
+          "heading": "1. Que sont les cookies ?",
+          "paragraphs": [
+            "Les cookies sont de petits fichiers texte enregistres sur votre appareil lors de la visite d un site web.",
+            "Ils peuvent etre de session (supprimes apres la visite) ou persistants (conserves pendant une duree definie)."
+          ]
+        },
+        {
+          "heading": "2. Categories de cookies utilisees",
+          "list": [
+            "Cookies strictement necessaires au fonctionnement",
+            "Cookies fonctionnels pour les preferences et l ergonomie",
+            "Cookies de performance pour l analyse et l amelioration",
+            "Cookies marketing pour une communication personnalisee, le cas echeant"
+          ]
+        },
+        {
+          "heading": "3. Gestion des cookies",
+          "paragraphs": [
+            "Vous pouvez gerer vos preferences dans les parametres du navigateur et dans nos controles cookies lorsque disponibles.",
+            "Le blocage de certaines categories peut affecter l experience du site."
+          ],
+          "links": [
+            {
+              "label": "Parametres cookies Microsoft Edge",
+              "href": "https://support.microsoft.com/en-us/microsoft-edge/delete-cookies-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09"
+            },
+            {
+              "label": "Parametres cookies Mozilla Firefox",
+              "href": "https://support.mozilla.org/en-US/kb/enable-and-disable-cookies-website-preferences"
+            },
+            {
+              "label": "Parametres cookies Google Chrome",
+              "href": "https://support.google.com/chrome/answer/95647?hl=en"
+            },
+            {
+              "label": "Parametres cookies Safari",
+              "href": "https://support.apple.com/guide/safari/manage-cookies-and-website-data-sfri11471/mac"
+            }
+          ]
+        },
+        {
+          "heading": "4. Informations complementaires",
+          "paragraphs": [
+            "Pour le traitement des donnees personnelles, veuillez aussi consulter notre Politique de confidentialite.",
+            "Pour des informations generales sur les cookies, consultez www.allaboutcookies.org."
+          ]
+        }
+      ],
+      "footerNotes": [
+        "Derniere mise a jour : 29 mars 2026"
+      ]
+    },
+    "privacyPolicy": {
+      "introParagraphs": [
+        "Cette Politique de confidentialite decrit le traitement des donnees personnelles lors de l utilisation de ce site et des services associes.",
+        "Elle couvre les interactions de compte, de navigation et de service liees a olympia-2026-webapp."
+      ],
+      "sections": [
+        {
+          "heading": "1. Qui sommes-nous",
+          "paragraphs": [
+            "Le service est fourni dans le cadre de services d information numeriques lies a l ecosysteme olympique.",
+            "Les responsabilites de traitement peuvent impliquer des partenaires de confiance lorsque cela est indique."
+          ]
+        },
+        {
+          "heading": "2. Donnees que nous collectons",
+          "list": [
+            "Informations fournies directement (ex. donnees de compte)",
+            "Donnees techniques comme navigateur, appareil et journaux d usage",
+            "Preferences et parametres de langue",
+            "Identifiants lies aux cookies lorsque le consentement s applique"
+          ]
+        },
+        {
+          "heading": "3. Finalites du traitement",
+          "list": [
+            "Fournir et securiser le service",
+            "Ameliorer la qualite et l experience utilisateur",
+            "Traiter les demandes et communications",
+            "Respecter les obligations legales et de conformite"
+          ]
+        },
+        {
+          "heading": "4. Vos droits",
+          "paragraphs": [
+            "Selon la loi applicable, vous pouvez demander l acces, la rectification, la suppression, la limitation, l opposition ou la portabilite.",
+            "Vous pouvez aussi retirer votre consentement lorsque le traitement repose sur ce fondement."
+          ]
+        },
+        {
+          "heading": "5. Contact",
+          "paragraphs": [
+            "Pour toute demande liee a la confidentialite, utilisez nos canaux officiels de support et de protection des donnees."
+          ],
+          "links": [
+            {
+              "label": "Portail support confidentialite",
+              "href": "https://support.olympics.com/hc/en-gb/"
+            }
+          ]
+        }
+      ],
+      "footerNotes": [
+        "Derniere mise a jour : 29 mars 2026",
+        "Comite International Olympique, Maison Olympique (Olympic House), 1007 Lausanne, Suisse"
+      ]
+    },
+    "termsOfService": {
+      "introParagraphs": [
+        "Ces Conditions d utilisation regissent l usage de olympia-2026-webapp et des fonctionnalites numeriques associees.",
+        "En utilisant le site, vous acceptez ces conditions ainsi que les exigences legales applicables."
+      ],
+      "sections": [
+        {
+          "heading": "1. Utilisation du service",
+          "paragraphs": [
+            "Le site est fourni a des fins d information et de contenus interactifs lies aux Jeux.",
+            "Certaines fonctionnalites peuvent necessiter un compte ou etre limitees selon le role."
+          ]
+        },
+        {
+          "heading": "2. Comportement autorise",
+          "list": [
+            "Utiliser le service de maniere legale et respectueuse",
+            "Ne pas detourner, perturber, extraire massivement ou retroconcevoir la plateforme",
+            "Ne pas publier de contenu illegal, nuisible ou portant atteinte aux droits",
+            "Ne pas tenter d acces non autorise aux systemes ou donnees"
+          ]
+        },
+        {
+          "heading": "3. Propriete intellectuelle",
+          "paragraphs": [
+            "Les contenus, marques et elements de la plateforme sont proteges par les lois de propriete intellectuelle.",
+            "Aucun droit supplementaire n est accorde au dela de l usage personnel normal sauf indication explicite."
+          ]
+        },
+        {
+          "heading": "4. Disponibilite et responsabilite",
+          "paragraphs": [
+            "Nous visons une exploitation fiable mais ne garantissons pas une disponibilite ininterrompue.",
+            "Dans la limite autorisee par la loi, la responsabilite est limitee pour les dommages indirects ou consecutifs."
+          ]
+        },
+        {
+          "heading": "5. Modifications et droit applicable",
+          "paragraphs": [
+            "Nous pouvons mettre a jour ces conditions et publier la version la plus recente sur cette page.",
+            "Le droit applicable et la juridiction sont definis par les mentions legales de ce service."
+          ]
+        }
+      ],
+      "footerNotes": [
+        "Derniere mise a jour : 29 mars 2026"
+      ]
+    }
   }
-} 
+}

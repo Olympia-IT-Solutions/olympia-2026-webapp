@@ -1,15 +1,21 @@
 import { Box, SimpleGrid, Text, Image, Flex, Heading } from '@chakra-ui/react';
 import { Link, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import type { SportTranslationKey } from '../services/sports';
 
-const disciplines = [
-  { id: 'biathlon', name: 'Biathlon', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/BTH.svg' },
-  { id: 'bobsport', name: 'Bob', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/BOB.svg' },
-  { id: 'curling', name: 'Curling', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/CUR.svg' },
-  { id: 'eishockey', name: 'Eishockey', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/IHO.svg' },
-  { id: 'eiskunstlauf', name: 'Eiskunstlauf', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/FSK.svg' },
-  { id: 'skilanglauf', name: 'Skilanglauf', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/CCS.svg' },
-  { id: 'skispringen', name: 'Skispringen', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/SJP.svg' },
+type DisciplineEntry = {
+  id: SportTranslationKey;
+  img: string;
+};
+
+const disciplineEntries: DisciplineEntry[] = [
+  { id: 'biathlon', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/BTH.svg' },
+  { id: 'bobsport', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/BOB.svg' },
+  { id: 'curling', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/CUR.svg' },
+  { id: 'eishockey', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/IHO.svg' },
+  { id: 'eiskunstlauf', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/FSK.svg' },
+  { id: 'skilanglauf', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/CCS.svg' },
+  { id: 'skispringen', img: 'https://gstatic.olympics.com/s3/mc2026/pictograms/oly/light/big/SJP.svg' },
 ];
 
 export const DisciplinesSection = () => {
@@ -36,7 +42,7 @@ export const DisciplinesSection = () => {
       </Heading>
       
       <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} gap={6}>
-        {disciplines.map((sport, index) => (
+        {disciplineEntries.map((sport, index) => (
           <Link key={sport.id} to={`/${currentLang}/sports/${sport.id}`} style={{ textDecoration: 'none' }}>
             <Box 
               role="group"
@@ -60,7 +66,7 @@ export const DisciplinesSection = () => {
               >
                 <Image
                   src={sport.img}
-                  alt={sport.name}
+                  alt={t(`sports.names.${sport.id}`)}
                   objectFit="contain"
                   width="100%"
                   height="100%"
@@ -72,7 +78,7 @@ export const DisciplinesSection = () => {
 
               <Flex align="center" p={4}>
                 <Text fontWeight="bold" fontSize="lg" color="var(--card-text)">
-                  {sport.name}
+                  {t(`sports.names.${sport.id}`)}
                 </Text>
               </Flex>
             </Box>

@@ -7,52 +7,41 @@ import { useTranslation } from 'react-i18next';
 import { getCurrentUser } from '../logic/rights';
 import { useSportsStore } from '../store/sports';
 import { useResultsStore } from '../store/results';
+import { getSportTranslationKey, type SportTranslationKey } from '../services/sports';
 
 // Dummy data store - in a real app this would come from an API
-const sportsData: Record<string, { title: string; imageUrl: string }> = {
+const sportsData: Record<SportTranslationKey, { imageUrl: string }> = {
   biathlon: {
-    title: 'Biathlon',
     imageUrl: 'https://img.olympics.com/images/image/private/t_16-9_760/f_auto/primary/li2dbi5btvf36tlxfxxl',
   },
   bobsport: {
-    title: 'Bobsport',
     imageUrl: 'https://img.olympics.com/images/image/private/t_16-9_760/f_auto/primary/vsczhylqdcucby3b6fa7',
   },
   curling: {
-    title: 'Curling',
     imageUrl: 'https://img.olympics.com/images/image/private/t_16-9_760/f_auto/primary/e8v1pgmj4awck8lbjm66',
   },
   eishockey: {
-    title: 'Eishockey',
     imageUrl: 'https://img.olympics.com/images/image/private/t_16-9_760/f_auto/primary/hfkjz7khdzopldgfr1p9',
   },
   eiskunstlauf: {
-    title: 'Eiskunstlauf',
     imageUrl: 'https://img.olympics.com/images/image/private/t_16-9_760/f_auto/primary/lpmywgwi56i6c1ltnf1o',
   },
   skilanglauf: {
-    title: 'Skilanglauf',
     imageUrl: 'https://img.olympics.com/images/image/private/t_16-9_760/f_auto/primary/avjcz7wgesxj1wi77oej',
   },
   skispringen: {
-    title: 'Skispringen',
     imageUrl: 'https://img.olympics.com/images/image/private/t_16-9_760/f_auto/primary/sunaotnj4ykrmdcagmdi',
   }
 };
 
-type SportMeasurement = {
-  resultLabel: string
-  resultUnitLabel: string
-}
-
-const sportMeasurements: Record<string, SportMeasurement> = {
-  biathlon: { resultLabel: 'Ergebnis', resultUnitLabel: 'Zeit in s' },
-  bobsport: { resultLabel: 'Ergebnis', resultUnitLabel: 'Zeit in s' },
-  curling: { resultLabel: 'Ergebnis', resultUnitLabel: 'Endstand' },
-  eishockey: { resultLabel: 'Ergebnis', resultUnitLabel: 'Endstand' },
-  eiskunstlauf: { resultLabel: 'Ergebnis', resultUnitLabel: 'Punkte' },
-  skilanglauf: { resultLabel: 'Ergebnis', resultUnitLabel: 'Zeit in s' },
-  skispringen: { resultLabel: 'Ergebnis', resultUnitLabel: 'Punkte' },
+const sportMeasurementTypes: Record<SportTranslationKey, 'time' | 'score' | 'points'> = {
+  biathlon: 'time',
+  bobsport: 'time',
+  curling: 'score',
+  eishockey: 'score',
+  eiskunstlauf: 'points',
+  skilanglauf: 'time',
+  skispringen: 'points',
 };
 
 export function SportPage() {
@@ -66,27 +55,32 @@ export function SportPage() {
   const fetchResults = useResultsStore((state) => state.fetchResults);
   const canSeePendingResults = currentUser?.role === 'admin' || currentUser?.role === 'referee';
 
-  // Helper function to convert sport name to ID
-  const getSportIdFromParam = (param: string | undefined): number | null => {
-    if (!param) return null;
-    
-    // If param is a number, use it directly
-    if (/^\d+$/.test(param)) {
-      return parseInt(param);
+  const normalizeLegacySportName = (value: string) => value.toLowerCase().replace(/\s+/g, '');
+
+  const resolveSportFromParam = (param: string | undefined) => {
+    if (!param) {
+      return null;
     }
-    
-    // If param is a string name, find the sport by name
-    const foundSport = sports.find(s => 
-      s.name.toLowerCase().replace(/\s+/g, '') === param.toLowerCase().replace(/\s+/g, '')
-    );
-    
-    return foundSport ? foundSport.id : null;
+
+    const canonicalParamKey = getSportTranslationKey(param);
+    if (canonicalParamKey) {
+      const sportByCanonicalKey = sports.find((entry) => getSportTranslationKey({ id: entry.id, name: entry.name }) === canonicalParamKey);
+      if (sportByCanonicalKey) {
+        return sportByCanonicalKey;
+      }
+    }
+
+    if (/^\d+$/.test(param)) {
+      const numericId = Number(param);
+      return sports.find((entry) => entry.id === numericId) ?? null;
+    }
+
+    const normalizedParam = normalizeLegacySportName(param);
+    return sports.find((entry) => normalizeLegacySportName(entry.name) === normalizedParam) ?? null;
   };
 
-  const numericSportId = getSportIdFromParam(sportId);
-  
-  // Find the sport by ID from the store
-  const sport = numericSportId !== null ? sports.find(s => s.id === numericSportId) : null;
+  const sport = resolveSportFromParam(sportId);
+  const numericSportId = sport?.id ?? null;
 
   // Fetch results when sportId changes
   useEffect(() => {
@@ -95,8 +89,10 @@ export function SportPage() {
     }
   }, [numericSportId, fetchResults]);
   
-  const sportData = sport && sportsData[sport.name.toLowerCase()];
-  const sportMeasurement = sport ? sportMeasurements[sport.name.toLowerCase()] ?? null : null;
+  const sportKey = sport ? getSportTranslationKey({ id: sport.id, name: sport.name }) : null;
+  const sportData = sportKey ? sportsData[sportKey] : null;
+  const sportMeasurementType = sportKey ? sportMeasurementTypes[sportKey] : null;
+  const sportTitle = sportKey ? t(`sports.names.${sportKey}`) : sport?.name ?? String(sportId ?? '');
   
   // Get results for this sport from the store
   const sportResults = useMemo(() => {
@@ -120,13 +116,13 @@ export function SportPage() {
 
   return (
     <Container maxW="container.xl" py={{ base: 4, md: 10 }} className="responsive-page-shell">
-      <HeaderWithImage imageUrl={sportData.imageUrl} title={sportData.title} />
+      <HeaderWithImage imageUrl={sportData.imageUrl} title={sportTitle} />
       <Box bg="whiteAlpha.200" p={{ base: 3, md: 6 }} borderRadius="lg" boxShadow="lg" className="responsive-card-shell">
         <SportsTable
           data={sportResults}
           loading={loading}
-          resultLabel={sportMeasurement?.resultLabel}
-          resultUnitLabel={sportMeasurement?.resultUnitLabel}
+          resultLabel={t('dashboard.labels.result')}
+          resultUnitLabel={sportMeasurementType ? t(`sport.measurements.${sportMeasurementType}`) : undefined}
         />
       </Box>
     </Container>

@@ -1,4 +1,5 @@
 import { Image, type ImageProps } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 
 type SpinnerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | number | string
 
@@ -22,11 +23,14 @@ const resolveSpinnerSize = (size: SpinnerSize) => {
   return spinnerSizeMap[size] ?? size
 }
 
-export function LoadingSpinner({ size = 'md', alt = 'Loading', ...imageProps }: LoadingSpinnerProps) {
+export function LoadingSpinner({ size = 'md', alt, ...imageProps }: LoadingSpinnerProps) {
+  const { t } = useTranslation()
+  const resolvedAlt = alt ?? t('common.loading', { defaultValue: 'Loading' })
+
   return (
     <Image
       src={`${import.meta.env.BASE_URL}spinner.svg`}
-      alt={alt}
+      alt={resolvedAlt}
       boxSize={resolveSpinnerSize(size)}
       objectFit="contain"
       draggable={false}

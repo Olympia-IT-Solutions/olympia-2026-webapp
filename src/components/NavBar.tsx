@@ -29,6 +29,7 @@ import { useNavigate, useParams, useLocation } from 'react-router';
 import { getCurrentUser, logout, Role } from '../logic/rights';
 import { useTheme } from '../logic/theme';
 import { CTAButton } from './ui';
+import type { SportTranslationKey } from '../services/sports';
 
 const navIn = keyframes`
   from {
@@ -144,15 +145,15 @@ export const NavBar = () => {
 
   const currentLang = safeLang;
 
-  const sports: Record<string, string> = {
-    biathlon: 'Biathlon',
-    bobsport: 'Bobsport',
-    curling: 'Curling',
-    eishockey: 'Eishockey',
-    eiskunstlauf: 'Eiskunstlauf',
-    skilanglauf: 'Skilanglauf',
-    skispringen: 'Skispringen',
-  };
+  const sports: SportTranslationKey[] = [
+    'biathlon',
+    'bobsport',
+    'curling',
+    'eishockey',
+    'eiskunstlauf',
+    'skilanglauf',
+    'skispringen',
+  ];
 
   const handleLanguageChange = (newLang: string) => {
     i18n.changeLanguage(newLang);
@@ -198,7 +199,7 @@ export const NavBar = () => {
         <Button
           variant="ghost"
           onClick={() => navigate(`/${currentLang}`)}
-          aria-label="Go to homepage"
+          aria-label={t('nav.homeAria')}
           p={0}
           minW="unset"
           h="auto"
@@ -210,7 +211,7 @@ export const NavBar = () => {
         >
           <Image
             src={logo}
-            alt="Milano Cortina 2026"
+            alt={t('nav.logoAlt')}
             height="60px"
             objectFit="contain"
           />
@@ -276,19 +277,19 @@ export const NavBar = () => {
                 borderColor="border"
                 style={{ animation: 'fadeUpIn var(--motion-enter) var(--motion-ease-interactive)' }}
               >
-                {Object.entries(sports).map(([key, label]) => (
+                {sports.map((sportKey) => (
                   <Button
-                    key={key}
+                    key={sportKey}
                     {...listItemButtonProps}
                     minH="40px"
                     borderRadius="none"
                     onClick={() => {
-                      navigate(`/${currentLang}/sports/${key}`);
+                      navigate(`/${currentLang}/sports/${sportKey}`);
                       setIsSportsOpen(false);
                     }}
                   >
                     <Text fontSize="sm" fontWeight="medium">
-                      {label}
+                      {t(`sports.names.${sportKey}`)}
                     </Text>
                   </Button>
                 ))}
@@ -449,7 +450,7 @@ export const NavBar = () => {
             py={2}
           >
             <HStack>
-              <Image src={logo} alt="logo" height="40px" objectFit="contain" />
+              <Image src={logo} alt={t('nav.logoAlt')} height="40px" objectFit="contain" />
               <Text id="mobile-nav-title" fontWeight="bold" fontSize="lg" color="text">
                 {t('nav.menuTitle')}
               </Text>
@@ -492,18 +493,18 @@ export const NavBar = () => {
               {t('nav.sports')}
             </Text>
             <Box>
-              {Object.entries(sports).map(([key, label]) => (
+              {sports.map((sportKey) => (
                 <Button
-                  key={key}
+                  key={sportKey}
                   {...listItemButtonProps}
                   onClick={() => {
-                    navigate(`/${currentLang}/sports/${key}`);
+                    navigate(`/${currentLang}/sports/${sportKey}`);
                     onMobileClose();
                   }}
                 >
                   <HStack gap={3}>
                     <Icon as={FaSnowflake} boxSize={4} />
-                    <Text>{label}</Text>
+                    <Text>{t(`sports.names.${sportKey}`)}</Text>
                   </HStack>
                 </Button>
               ))}

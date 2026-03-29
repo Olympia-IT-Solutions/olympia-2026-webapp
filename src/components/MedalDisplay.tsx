@@ -1,8 +1,10 @@
 import React from 'react';
 import { Box, Text, VStack, HStack, Icon, SimpleGrid, Button } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router';
 import { FaMedal } from 'react-icons/fa';
 import type { Medal } from '../services/medals';
+import { getSportTranslationKey } from '../services/sports';
 import { LoadingSpinner } from './ui';
 
 interface MedalDisplayProps {
@@ -11,10 +13,10 @@ interface MedalDisplayProps {
   country?: string;
 }
 
-const medalVisuals: Record<Medal['medalType'], { accentColor: string; label: string }> = {
-  GOLD: { accentColor: 'medal-gold', label: 'Gold' },
-  SILVER: { accentColor: 'medal-silver', label: 'Silber' },
-  BRONZE: { accentColor: 'medal-bronze', label: 'Bronze' },
+const medalVisuals: Record<Medal['medalType'], { accentColor: string }> = {
+  GOLD: { accentColor: 'medal-gold' },
+  SILVER: { accentColor: 'medal-silver' },
+  BRONZE: { accentColor: 'medal-bronze' },
 };
 
 const medalTypeOrder: Medal['medalType'][] = ['GOLD', 'SILVER', 'BRONZE'];
@@ -41,14 +43,16 @@ const MedalCard: React.FC<{ medal: Medal; index: number }> = ({ medal, index }) 
   const medalVisual = medalVisuals[medal.medalType];
   const { lang } = useParams<{ lang: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const sportKey = getSportTranslationKey(medal.sportName);
+  const localizedSportName = sportKey ? t(`sports.names.${sportKey}`) : medal.sportName;
 
-  // helper to generate path to sport page using either name or id-like slug
-  const sportPath = `/${lang || 'de'}/sports/${medal.sportName
-    .toLowerCase()
-    .replace(/\s+/g, '')}`;
+  const sportPath = sportKey ? `/${lang || 'de'}/sports/${sportKey}` : null;
 
   const handleClick = () => {
-    navigate(sportPath);
+    if (sportPath) {
+      navigate(sportPath);
+    }
   };
 
   return (
@@ -79,7 +83,7 @@ const MedalCard: React.FC<{ medal: Medal; index: number }> = ({ medal, index }) 
           <Icon as={FaMedal} color={medalVisual.accentColor} boxSize={8} />
           <Box>
             <Text fontWeight="bold" fontSize="sm" color={medalVisual.accentColor} textTransform="uppercase" letterSpacing="0.06em">
-              {medal.medalType}
+              {t(`medalDisplay.medalTypes.${medal.medalType}`)}
             </Text>
           </Box>
         </HStack>
@@ -90,7 +94,7 @@ const MedalCard: React.FC<{ medal: Medal; index: number }> = ({ medal, index }) 
             onClick={handleClick}
             fontWeight="bold"
             fontSize="lg"
-            aria-label={`Show ${medal.sportName} details`}
+            aria-label={t('medalDisplay.showSportDetails', { sport: localizedSportName })}
           >
             {medal.athleteName}
           </Button>
@@ -98,16 +102,16 @@ const MedalCard: React.FC<{ medal: Medal; index: number }> = ({ medal, index }) 
 
         <Box w="100%">
           <Text fontSize="sm" color="text-muted">
-            Sport
+            {t('medalDisplay.sportLabel')}
           </Text>
           <Button
             {...interactiveTextButtonProps}
             onClick={handleClick}
             fontWeight="600"
             fontSize="md"
-            aria-label={`Show ${medal.sportName} details`}
+            aria-label={t('medalDisplay.showSportDetails', { sport: localizedSportName })}
           >
-            {medal.sportName}
+            {localizedSportName}
           </Button>
         </Box>
       </VStack>
@@ -116,6 +120,8 @@ const MedalCard: React.FC<{ medal: Medal; index: number }> = ({ medal, index }) 
 };
 
 export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, loading = false, country }) => {
+  const { t } = useTranslation();
+
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minH="400px">
@@ -138,7 +144,9 @@ export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, loading = fa
       >
         <Icon as={FaMedal} boxSize={12} color="text-muted" mb={4} />
         <Text fontSize="lg" fontWeight="600">
-          {country ? `Keine Medaillen für ${country} gefunden.` : 'Keine Medaillen verfügbar.'}
+          {country
+            ? t('medalDisplay.noMedalsForCountry', { country })
+            : t('medalDisplay.noMedals')}
         </Text>
       </Box>
     );
@@ -190,7 +198,7 @@ export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, loading = fa
                   {count}
                 </Text>
                 <Text fontSize="sm" color="text-muted">
-                  {medalVisual.label}
+                  {t(`medalDisplay.medalTypes.${medalType}`)}
                 </Text>
               </Box>
             );
@@ -217,17 +225,17 @@ export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, loading = fa
                   <Icon as={FaMedal} color={medalVisual.accentColor} boxSize={7} />
                   <Box>
                     <Text fontWeight="bold" fontSize="sm" color={medalVisual.accentColor} textTransform="uppercase" letterSpacing="0.08em">
-                      {medalVisual.label}
+                      {t(`medalDisplay.medalTypes.${medalType}`)}
                     </Text>
                     <Text fontSize="sm" color="text-muted">
-                      {groupedMedals.length} {groupedMedals.length === 1 ? 'Eintrag' : 'Einträge'}
+                      {t('medalDisplay.entriesCount', { count: groupedMedals.length })}
                     </Text>
                   </Box>
                 </HStack>
 
                 <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
                   {groupedMedals.map((medal, index) => (
-                    <MedalCard key={`${medal.athleteId}-${medal.sportName}`} medal={medal} index={index} />
+                    <MedalCard key={`${medal.athleteId}-${getSportTranslationKey(medal.sportName) ?? medal.sportName}`} medal={medal} index={index} />
                   ))}
                 </SimpleGrid>
               </Box>

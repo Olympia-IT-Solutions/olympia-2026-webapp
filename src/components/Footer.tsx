@@ -47,8 +47,8 @@ export const Footer = () => {
 
           {/* Logos */}
           <Flex align="center" gap={4}>
-            <Image src={logo} alt="Milano Cortina 2026" maxW="120px" filter="brightness(0) invert(1)" />
-            <Image src={olympiaLogo} alt="Olympia IT Solutions" maxW="120px" filter="brightness(0) invert(1)" />
+            <Image src={logo} alt={t('footer.milanoLogoAlt')} maxW="120px" filter="brightness(0) invert(1)" />
+            <Image src={olympiaLogo} alt={t('footer.olympiaLogoAlt')} maxW="120px" filter="brightness(0) invert(1)" />
           </Flex>
 
           {/* Links */}
@@ -80,7 +80,7 @@ export const Footer = () => {
           </Flex>
 
           {/* Copyright */}
-          <Text fontSize="sm" color="text-muted">Copyright 2026. All rights reserved</Text>
+          <Text fontSize="sm" color="text-muted">{t('footer.copyright')}</Text>
 
         </Flex>
       </Container>

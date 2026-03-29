@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { Box, Container, Heading, Button, HStack, Icon } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useMedalStore } from '../store/medals';
 import { MedalDisplay } from '../components/MedalDisplay';
@@ -9,6 +10,7 @@ import { fetchAllCountries } from '../services/countries';
 export function CountryDetail() {
   const { country, lang } = useParams<{ country: string; lang: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [countryId, setCountryId] = useState<string | null>(null);
   const [countryName, setCountryName] = useState<string | null>(null);
   
@@ -77,10 +79,10 @@ export function CountryDetail() {
             colorPalette="teal"
           >
             <Icon as={FaArrowLeft} mr={2} />
-            Zurück
+            {t('countryDetail.back')}
           </Button>
           <Heading as="h1" size="2xl" color="var(--card-text)">
-            {countryName ?? country?.toUpperCase() ?? ''} - Medaillen
+            {t('countryDetail.medalsTitle', { country: countryName ?? country?.toUpperCase() ?? '' })}
           </Heading>
         </HStack>
 
